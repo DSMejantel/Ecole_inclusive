@@ -1,0 +1,34 @@
+{
+    "component": "shell",
+    "title": "P.A.S.",
+    "link": "/",
+    "icon": "home",
+    "language":"fr-FR",
+    "norobot": "TRUE",
+    "menu_item": [
+        {"title": "Élèves", "submenu": [
+            {"link": "eleves.sql", "title": "Liste complète"},
+            {"link": "eleves_attente.sql", "title": "Élèves en attente"},
+            {"link": "eleves_historique.sql", "title": "Dernières modifications"},
+            {"link": "eleve.sql", "title": "Ajouter un élève"}
+        ]},
+        {"title": "AESH", "submenu": [
+            {"link": "aesh.sql", "title": "Liste complète"},
+            {"link": "aesh_ajout.sql", "title": "Ajouter"}
+        ]},
+        {"title": "Établissement", "submenu": [
+            {"link": "etablissement.sql", "title": "Liste"},
+            {"link": "etab_ajout.sql", "title": "Ajouter"}
+        ]},
+        {"link": "referent.sql", "title": "Réf. MDPH"},
+        {"title": "Paramétrage", "submenu": [
+            {"link": "parametres.sql?tab=Tableau de bord", "title": "Tableau de bord"},
+            {"link": "parametres.sql?tab=Carte", "title": "Carte"},
+            {"link": "parametres.sql?tab=Paramètres", "title": "Paramètres"}
+        ]},
+        {"title": "Mon compte", "submenu": [
+            {"link": "parametres.sql?tab=Profil", "title": "Mon profil"},
+            {"link": "logout.sql", "title": "Se déconnecter"}
+        ]}
+    ]
+}

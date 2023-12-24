@@ -1,0 +1,6 @@
+{
+  "database_url": "sqlite://./sqlpage/sqlpage.db?mode=rwc",
+    "max_uploaded_file_size": 20000,
+      "port": "8080",
+  "allow_exec":true
+}
