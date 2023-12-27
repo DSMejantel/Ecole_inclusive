@@ -13,7 +13,7 @@ DELETE FROM image WHERE eleve_id=$id;
 --
 set file_path = sqlpage.uploaded_file_path('Image');
 --set file_name = sqlpage.random_string(10)||'.png';
-set file_name = './avatar/'||sqlpage.random_string(10)||'.png';
+set file_name = './avatar/'||sqlpage.random_string(10)||'.jpg';
 set mv_result = sqlpage.exec('mv', $file_path, $file_name);
 
 -- ajouter une photo

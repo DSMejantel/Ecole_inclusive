@@ -14,7 +14,6 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $restriction IS NOT NULL;   
 
--- ACTIONS SUR BASE DE DONNEES
 -- Mets à jour les infos de dernières modifications de l'élève	
 SET edition = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') )
 SET modif = (SELECT datetime(current_timestamp, 'localtime'))
@@ -61,7 +60,6 @@ SELECT
 	$info as info	
 	WHERE $objectifs IS NOT NULL;
 UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $objectifs IS NOT NULL;
--- FIN DES ACTIONS SUR BASE DE DONNEES
 
 -- écrire le nom de l'élève dans le titre de la page
 SELECT 
@@ -122,6 +120,11 @@ select
     'red' as outline,
         $group_id::int<3 as disabled,
     'upload_form.sql?id='||$id as link FROM eleve where eleve.id=$id;
+/*    
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;*/
 select 
     'Ajouter notification' as title,
     'notif_ajout.sql?id=' || $id as link,
@@ -232,6 +235,18 @@ SELECT
   FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id and $tab='Profil';
 
 -- Liste des suivis
+/*select 
+    'button' as component,
+    'sm'     as size,
+    'center' as justify,
+    'pill'   as shape
+    WHERE $tab='Suivi';
+select 
+    'Liste des Suivis' as title,
+    'list-check' as icon,
+    'lime' as outline
+    WHERE $tab='Suivi';
+*/
 SELECT 
     'text' as component
     WHERE $tab='Suivi';
@@ -299,6 +314,18 @@ END as Actions
 
   
 -- Liste des notifications
+/*select 
+    'button' as component,
+    'sm'     as size,
+    'center' as justify,
+    'pill'   as shape
+     where $tab='Notification';
+select 
+    'Historique des notifications' as title,
+    'certificate' as icon,
+    'lime' as outline
+    where $tab='Notification';
+*/
 SELECT 
     'text' as component
         where $tab='Notification';
@@ -308,7 +335,6 @@ SELECT 'table' as component,
     'acces' as accès,
     'datedeb' as Début,
     'datefin' as Fin,
-    'modalite' as Modalité,
     'referent' as Référent,
     'Actions' as markdown
         where $tab='Notification';
@@ -323,7 +349,6 @@ SELECT
        WHEN notification.origine=0 THEN 'MDPH'
     END AS Origine,
     notification.Departement as Département,
-     notification.modalite as Modalité,
      group_concat(DISTINCT modalite.type) as Droits,
     notification.acces as accès,
    strftime('%d/%m/%Y',datedeb) AS Début,

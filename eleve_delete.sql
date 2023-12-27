@@ -31,7 +31,6 @@ SELECT
     'Toute suppression est définitive !' as description,
     'alert-triangle' as icon,
     'red' as color;
-    
 -- Set a variable 
 SET var_suivi = (SELECT count(suivi.id) FROM suivi where suivi.eleve_id=$id); 
 SET var_amenag = (SELECT count(amenag.id) FROM amenag where amenag.eleve_id=$id); 
@@ -87,6 +86,7 @@ SELECT
 SELECT 'table' as component,
     'actions' AS markdown,
     'notification.datefin' as Fin,
+    'notification.modalite' as Modalité,
     'eleve.nom' as Nom, 
     'eleve.prenom' as Prénom;
 SELECT 
@@ -97,8 +97,8 @@ SELECT
         '[
     ![](./icons/trash.svg)
 ](notif_delete_confirm.sql?id='||notification.id||'&eleve_id='||$id||') ' as actions
-FROM notification INNER JOIN eleve on notification.eleve_id=eleve.id LEFT join notif on notif.eleve_id=eleve.id LEFT join modalite on modalite.id=notif.modalite_id  Where notification.eleve_id=$id GROUP BY notification.id ;
-
+/*FROM notification INNER JOIN eleve on notification.eleve_id=eleve.id LEFT join notif on notif.eleve_id=eleve.id LEFT join modalite on modalite.id=notif.modalite_id  Where notification.eleve_id=$id GROUP BY notification.id ; */
+FROM notif INNER JOIN notification on notif.notification_id=notification.id join eleve on notif.eleve_id=eleve.id LEFT join modalite on modalite.id=notif.modalite_id  Where notification.eleve_id=$id GROUP BY notification.id ;
 -- Isolement de ses aménagements dans une liste
 SELECT 
     'alert' as component,
