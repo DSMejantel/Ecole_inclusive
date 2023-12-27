@@ -58,7 +58,6 @@ SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id);
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id);
 SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and suivi.aesh_id<>1);
-
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
     'datagrid' as component,
@@ -114,8 +113,42 @@ select
     'Nombre de dispositifs' as ytitle;
 select 
     eleve.classe as x,
-    count(affectation.dispositif_id) as value
-    FROM affectation  JOIN dispositif on dispositif.id=affectation.dispositif_id  JOIN eleve on affectation.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
+    coalesce(count(affectation.dispositif_id),0) as value
+    FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
+    
+-- Différents Dispositifs en place par Classe
+/*select 
+    'chart'               as component,
+    'Différents dispositifs par classe' as title,
+    'bar'             as type,
+        400 as height,
+    TRUE as labels,
+    1 as toolbar,
+    1 as stacked,
+    'pink' as color,
+    'Classes' as xtitle,
+    'Nombre de dispositifs' as ytitle;
+select 
+    dispositif.dispo as series,
+    eleve.classe as x,
+    coalesce(count(affectation.dispositif_id),0) as value
+    FROM affectation LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN eleve on affectation.eleve_id=eleve.id LEFT JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe, dispositif.dispo ORDER BY eleve.classe;
+*/    
+-- Graphique Dispositifs sur établissement
+select 
+    'chart'               as component,
+    'Nombre de dispositifs sur l''établissement' as title,
+    'bar'             as type,
+        400 as height,
+    TRUE as labels,
+    1 as toolbar,
+    1 as stacked,
+    'orange' as color,
+    'Nombre de dispositifs' as ytitle;
+select 
+    dispo as x,
+    coalesce(count(affectation.dispositif_id),0) as value
+    FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY dispo ORDER BY eleve.classe ASC;
 
     
 
