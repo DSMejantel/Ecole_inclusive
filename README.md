@@ -17,3 +17,6 @@ L'application fonctionne de manière sécurisée (possibilité de travailler en 
 Le logiciel fonctionne de manière dynamique et il est possible de suivre les notifications de chaque élève, d'insérer une photo,
 de préciser des aménagements que l'on retrouve automatiquement côté AESH ou référent... 
 
+L'utilisateur par défaut est admin et le mot de passe est admin
+Cet utilisateur n'apparaît pas dans la liste des comptes afin de ne pas l'effacer par errreur.
+
