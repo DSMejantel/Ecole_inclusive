@@ -75,64 +75,63 @@ SELECT
     $NB_aesh as description,
     TRUE           as active,
     'user-plus' as icon;
+  
+-- Sous-menu / classes
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    CASE WHEN $classe_select is Null THEN 'sélectionner une classe'
+    ELSE 'Classe : ' || $classe_select 
+    END as title,
+    'users-group' as icon,
+    'red' as outline;
+select 
+    eleve.classe as title,
+    'etab_stats_classes.sql?id=' || etab.id || '&classe_select=' || eleve.classe as link,
+    'users-group' as icon,
+    'green' as outline
+    FROM etab INNER JOIN eleve on eleve.etab_id=etab.id where etab.id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
 
--- Graphique Dispositifs sur établissement
-select 
-    'chart'               as component,
-    'Nombre de dispositifs sur l''établissement' as title,
-    'bar'             as type,
-        400 as height,
-    TRUE as labels,
-    1 as toolbar,
-    1 as stacked,
-    'orange' as color,
-    'Nombre de dispositifs' as ytitle;
-select 
-    dispo as x,
-    coalesce(count(affectation.dispositif_id),0) as value
-    FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY dispo ORDER BY eleve.classe ASC;
+-- Set a variable 
+SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id and eleve.classe=$classe_select);
+-- Personnalisation NB_accomp pour version classe :
+SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id and eleve.classe=$classe_select);
+SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id and eleve.classe=$classe_select);
+SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and eleve.classe=$classe_select and suivi.aesh_id<>1);
 
-      
--- Graphique élèves suivis par Classe
+SELECT 'text' AS component, 'Classe :  ' || $classe_select AS contents;
+-- écrire les infos de l'établissement dans le titre de la page [GRILLE]
+SELECT 
+    'datagrid' as component,
+    type || ' ' || nom_etab ||' --- Classe : ' || $classe_select as title FROM etab WHERE id = $id;
+SELECT 
+    ' Élèves accompagnés : ' as title,
+    $NB_accomp as description,
+    'users-plus' as icon;
+SELECT 
+    ' Élèves à suivre : ' as title,
+    $NB_eleve as description,
+    TRUE           as active,
+    'briefcase' as icon;
+SELECT 
+' AESH ' as title,
+    $NB_aesh as description,
+    'user-plus' as icon;    
+-- Différents Dispositifs en place par Classe
 select 
-    'chart'               as component,
-    'Nombre d''élèves suivis par classe' as title,
-    'bar'             as type,
-            400 as height,
-    TRUE as labels,
-    1 as toolbar,
-    'azure' as color,
-    'Classes' as xtitle,
-    'Élèves' as ytitle;
+    'chart'   as component,
+    'Dispositifs en '||$classe_select as title,
+    'pie'     as type,
+    400 as height,
+    TRUE       as toolbar,
+    TRUE      as labels;
 select 
-    eleve.classe as label,
-    eleve.classe as x,
-    count(DISTINCT eleve.id)::int as y
-    FROM eleve JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
-select 
-    'moyenne' as label,
-    'moyenne' as x,
-    count(DISTINCT eleve.id)/count(distinct eleve.classe) as y
-    FROM eleve JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id;
-
-   
--- Graphique Dispositifs en place par Classe
-select 
-    'chart'               as component,
-    'Nombre de dispositifs par classe' as title,
-    'bar'             as type,
-        400 as height,
-    TRUE as labels,
-    1 as toolbar,
-    1 as stacked,
-    'pink' as color,
-    'Classes' as xtitle,
-    'Nombre de dispositifs' as ytitle;
-select 
-    eleve.classe as x,
-    coalesce(count(affectation.dispositif_id),0) as value
-    FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
-
+    Nom_dispositif as label,
+    Nombre   as value
+    FROM stats01 WHERE etab=$id and classe=$classe_select;
+    
 -- Bouton vers détails par classe
 select 
     'button' as component,
@@ -140,28 +139,8 @@ select
     'pill'   as shape,
     'center' as justify;
 select 
-    'Détails par classe' as title,
-    'etab_stats_classes.sql?id=' || $id as link,
+    'Statistiques Établissement' as title,
+    'etab_stats.sql?id=' || $id as link,
     'chart-histogram' as icon,
     'orange' as color;
-    
--- Différents Dispositifs en place par Classe
-/*select 
-    'chart'               as component,
-    'Différents dispositifs par classe' as title,
-    'bar'             as type,
-        500 as height,
-    TRUE as labels,
-    --1 as toolbar,
-    TRUE as stacked,
-    'Classes' as xtitle,
-    'Nombre de dispositifs' as ytitle;
-select 
-    Nom_dispositif as series,
-    classe as x,
-    classe as label,
-    coalesce(Nombre,0) as value
-    FROM stats01 WHERE etab=$id ORDER BY classe;
-*/  
-
 
