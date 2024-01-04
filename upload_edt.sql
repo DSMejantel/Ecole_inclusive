@@ -8,7 +8,7 @@ SELECT 'redirect' AS component,
 
 
 
--- Supprime l'ancienne photo
+-- Supprime l'ancienne emploi du temps
 DELETE FROM edt WHERE aesh_id=$id;    
 
 --

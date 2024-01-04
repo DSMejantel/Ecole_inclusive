@@ -112,7 +112,7 @@ select
 select 
     'moyenne' as label,
     'moyenne' as x,
-    count(DISTINCT eleve.id)/count(distinct eleve.classe) as y
+    count(DISTINCT eleve.id)*100/count(distinct eleve.classe)/100 as y
     FROM eleve JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id;
 
    

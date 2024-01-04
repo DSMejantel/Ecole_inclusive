@@ -123,6 +123,22 @@ SELECT
 select 
     'chart'   as component,
     'Dispositifs en '||$classe_select as title,
+    'bar'     as type,
+    400 as height,
+    10  as xticks,
+    TRUE as stacked,
+    TRUE       as toolbar,
+    TRUE      as labels;
+select 
+    Nom_dispositif as series,
+    Nom_dispositif as x,
+    Nombre   as value
+    FROM stats01 WHERE etab=$id and classe=$classe_select;
+
+-- Différents Dispositifs en place par Classe
+select 
+    'chart'   as component,
+    'Dispositifs en '||$classe_select as title,
     'pie'     as type,
     400 as height,
     TRUE       as toolbar,
@@ -132,7 +148,7 @@ select
     Nombre   as value
     FROM stats01 WHERE etab=$id and classe=$classe_select;
     
--- Bouton vers détails par classe
+-- Bouton vers statistiques
 select 
     'button' as component,
     'sm'     as size,

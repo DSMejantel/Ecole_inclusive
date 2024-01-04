@@ -19,18 +19,6 @@ SET tps_ULIS_edit = (SELECT tps_ULIS FROM aesh WHERE id = $id);
 SET tps_mission_edit = (SELECT tps_mission FROM aesh WHERE id = $id);
 SET tps_synthese_edit = (SELECT tps_synthese FROM aesh WHERE id = $id);
 
--- écrire le nom de l'AESH dans le titre de la page
-SELECT 
-    'datagrid' as component;
-SELECT 
-    'AESH'||' - '||'Quotité : ' || quotite || ' h' as title,
-    aesh_name||' '||aesh_firstname as description, 'orange' as color, 1 as active
-     FROM aesh WHERE aesh.id = $id;
-SELECT 
-        tel_aesh as title,
-    courriel_aesh as description
-      FROM aesh WHERE aesh.id = $id;
-
 --Bouton retour sans valider
 select 
     'button' as component,
@@ -47,13 +35,26 @@ select
     'user-plus' as icon,
     'green' as outline;  
     
+-- écrire le nom de l'AESH dans le titre de la page
+SELECT 
+    'datagrid' as component;
+SELECT 
+    'AESH'||' - '||'Quotité : ' || quotite || ' h' as title,
+    aesh_name||' '||aesh_firstname as description, 'orange' as color, 1 as active
+     FROM aesh WHERE aesh.id = $id;
+SELECT 
+        tel_aesh as title,
+    courriel_aesh as description
+      FROM aesh WHERE aesh.id = $id;
+
+    
 -- Rappel nom de l'AESH en cours de modification 
 SELECT 'text' AS component, 
 'red' as color,
 1 as center,
 'Modification de : ' || $nom_edit || ' ' || $prenom_edit AS contents;
     
-
+ 
 --- Formulaire de Mise à jour
 SELECT 
     'alert' as component,

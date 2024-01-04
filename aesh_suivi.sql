@@ -5,19 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
-    
--- écrire le nom de l'AESH dans le titre de la page
-SELECT 
-    'datagrid' as component;
-SELECT 
-    'AESH'||' - '||'Quotité : ' || quotite || ' h' as title,
-    aesh_name||' '||aesh_firstname as description, 'orange' as color, 1 as active
-     FROM aesh WHERE aesh.id = $id;
-SELECT 
-        tel_aesh as title,
-    courriel_aesh as description
-      FROM aesh WHERE aesh.id = $id;
-   
+
 -- Menu spécifique AESH : modifier
 select 
     'button' as component,
@@ -35,7 +23,19 @@ select
     'red' as outline,
         $group_id::int<2 as disabled,
     'upload_edt_form.sql?id='||$id as link FROM aesh where aesh.id=$id;
-
+   
+-- écrire le nom de l'AESH dans le titre de la page
+SELECT 
+    'datagrid' as component;
+SELECT 
+    'AESH'||' - '||'Quotité : ' || quotite || ' h' as title,
+    aesh_name||' '||aesh_firstname as description, 'orange' as color, 1 as active
+     FROM aesh WHERE aesh.id = $id;
+SELECT 
+        tel_aesh as title,
+    courriel_aesh as description
+      FROM aesh WHERE aesh.id = $id;
+     
 --Onglets
 SET tab=coalesce($tab,'Profils');
 select 'tab' as component,
@@ -106,6 +106,7 @@ SELECT 'table' as component,
     'classe' as Classe,
     'type' as Niveau,
     'nom_etab' as Établissement,
+    'modalite' as Suivi,
     1 as sort,
     1 as search
         WHERE $tab='Liste';
@@ -190,7 +191,6 @@ SELECT
   'etab_notif.sql?id=' || etab.id as link
   FROM etab JOIN eleve on eleve.etab_id = etab.id join suivi on suivi.eleve_id=eleve.id join aesh on suivi.aesh_id=aesh.id  WHERE aesh_id = $id and $tab='Carte';
 
--- Emploi du temps
 select 
     'card' as component,
     1      as columns;
