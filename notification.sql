@@ -61,48 +61,6 @@ SELECT
 	WHERE $objectifs IS NOT NULL;
 UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $objectifs IS NOT NULL;
 
--- écrire le nom de l'élève dans le titre de la page
-SELECT 
-    'datagrid' as component,
-    CASE WHEN EXISTS (SELECT eleve.id FROM image WHERE eleve.id=image.eleve_id)
-  THEN image_url 
-  ELSE './icons/profil.png'
-  END as image_url,
-    UPPER(nom) || ' ' || prenom as title
-    FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
-SELECT 
-    'né(e) le :' as title,
-    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
-    0 as active
-    FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
-SELECT 
-    'Dispositif(s) :' as title,
-    1 as active,
-    group_concat(DISTINCT dispositif.dispo)   as description, 'orange' as color,
-    'etab_dispositifs.sql?id='||etab.id as link
-    FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id = $id;
-select 
-    etab.type||' '||etab.nom_etab as title,
-    'Classe : ' || classe  as description,
-    1 as active, 'green' as color,
-    'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
-    FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
-
--- Informations sur la dernière intervention     
-
-SELECT 'text' AS component;
-SELECT
-'grey' as color,
-1 as italics,
-COALESCE((SELECT
-    format('Modifié par %s le : %s à %s',
-            editeur,
-            strftime('%d/%m/%Y',modification),
-            strftime('%Hh%M',modification)
-            )
-    FROM eleve WHERE id = $id
-), 'pas d''information sur la dernière modification') AS contents;     
-     
 -- Menu spécifique élève : modifier, ajouter notif, ajouter suivi
 select 
     'button' as component,
@@ -150,7 +108,48 @@ select
     'user-plus' as icon,
     'orange' as outline;
 
+-- écrire le nom de l'élève dans le titre de la page
+SELECT 
+    'datagrid' as component,
+    CASE WHEN EXISTS (SELECT eleve.id FROM image WHERE eleve.id=image.eleve_id)
+  THEN image_url 
+  ELSE './icons/profil.png'
+  END as image_url,
+    UPPER(nom) || ' ' || prenom as title
+    FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
+SELECT 
+    'né(e) le :' as title,
+    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+    0 as active
+    FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
+SELECT 
+    'Dispositif(s) :' as title,
+    1 as active,
+    group_concat(DISTINCT dispositif.dispo)   as description, 'orange' as color,
+    'etab_dispositifs.sql?id='||etab.id as link
+    FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id = $id;
+select 
+    etab.type||' '||etab.nom_etab as title,
+    'Classe : ' || classe  as description,
+    1 as active, 'green' as color,
+    'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
+    FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
 
+-- Informations sur la dernière intervention     
+
+SELECT 'text' AS component;
+SELECT
+'grey' as color,
+1 as italics,
+COALESCE((SELECT
+    format('Modifié par %s le : %s à %s',
+            editeur,
+            strftime('%d/%m/%Y',modification),
+            strftime('%Hh%M',modification)
+            )
+    FROM eleve WHERE id = $id
+), 'pas d''information sur la dernière modification') AS contents;     
+     
 
 --Onglets
 SET tab=coalesce($tab,'Profil');

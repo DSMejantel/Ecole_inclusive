@@ -8,6 +8,22 @@ SELECT 'redirect' AS component,
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
+  
+--Bouton retour sans valider
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'Retour à la liste' as title,
+    'eleves.sql' as link,
+    'arrow-back-up' as icon,
+    'green' as outline;      
+select 
+    'Retour à la fiche élève' as title,
+    'notification.sql?id='|| $id || '&tab=Suivi' as link,
+    'briefcase' as icon,
+    'green' as outline; 
 
 -- écrire le nom de l'élève dans le titre de la page
 SELECT 
@@ -35,22 +51,6 @@ select
     1 as active, 'green' as color,
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
-  
---Bouton retour sans valider
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-select 
-    'Retour à la liste' as title,
-    'eleves.sql' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;      
-select 
-    'Retour à la fiche élève' as title,
-    'notification.sql?id='|| $id || '&tab=Suivi' as link,
-    'briefcase' as icon,
-    'green' as outline; 
     
 -- Formulaire pour ajouter un suivi
 SELECT 'form' as component, 
@@ -59,7 +59,6 @@ SELECT 'form' as component,
     'Ajouter' as validate,
     'green'           as validate_color,
     'Recommencer'           as reset;
-    
 SELECT 'AESH' as name, 'select' AS type, 3 as width, json_group_array(json_object("label", aesh_name, "value", id)) as options FROM (select * FROM aesh ORDER BY aesh_name ASC);
      SELECT 'Temps de suivi hebdomadaire' AS label, 'temps' AS name, 'number' as type, 0.5 as step, 0 as value, 3 as width;     
      SELECT 'mutualisation' as name, 'select' as type, 3 as width, '[{"label": "non", "value": 1}, {"label": "oui", "value": 2}]' as options;

@@ -9,6 +9,22 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
+--Bouton retour sans valider
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'Retour à la liste' as title,
+    'eleves.sql' as link,
+    'arrow-back-up' as icon,
+    'green' as outline;      
+select 
+    'Retour à la fiche élève' as title,
+    'notification.sql?id='|| $id || '&tab=Suivi' as link,
+    'briefcase' as icon,
+    'green' as outline; 
+
 -- écrire le nom de l'élève dans le titre de la page
 SELECT 
     'datagrid' as component,
@@ -36,22 +52,6 @@ select
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
   
---Bouton retour sans valider
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-select 
-    'Retour à la liste' as title,
-    'eleves.sql' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;      
-select 
-    'Retour à la fiche élève' as title,
-    'notification.sql?id='|| $id || '&tab=Suivi' as link,
-    'briefcase' as icon,
-    'green' as outline; 
-    
 -- Formulaire pour ajouter un suivi
 SELECT 'form' as component, 
 'Mettre en place des aménagements' as title, 
@@ -61,7 +61,6 @@ SELECT 'form' as component,
     'Recommencer'           as reset;
 
      SELECT 'Commentaires' AS 'label', 'info' as name,'textarea' as type, 12 as width;
---     SELECT 'dispositif[]' as name, 3 as width, 'select' as type, true as multiple, json_group_array(json_object("label", dispo, "value", id)) as options FROM dispositif;
      SELECT 'Aménagements' AS 'label', 'amenagements' as name,'textarea' as type, 6 as width;
      SELECT 'Objectifs' AS 'label', 'objectifs' as name,'textarea' as type, 6 as width;
     

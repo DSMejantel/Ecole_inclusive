@@ -28,6 +28,22 @@ SET classe_edit = (SELECT classe FROM eleve WHERE id = $id);
 SET referent_edit = (SELECT referent_id FROM eleve WHERE id = $id);
 SET comm_edit = (SELECT comm_eleve FROM eleve WHERE id = $id); 
 
+--Bouton retour sans valider
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'Retour à la liste' as title,
+    'eleves.sql' as link,
+    'arrow-back-up' as icon,
+    'green' as outline;      
+select 
+    'Retour à la fiche élève' as title,
+    'notification.sql?id='|| $id as link,
+    'briefcase' as icon,
+    'green' as outline;  
+    
 -- écrire le nom de l'élève dans le titre de la page
 SELECT 
     'datagrid' as component,
@@ -55,23 +71,6 @@ select
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
 
---Bouton retour sans valider
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-select 
-    'Retour à la liste' as title,
-    'eleves.sql' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;      
-select 
-    'Retour à la fiche élève' as title,
-    'notification.sql?id='|| $id as link,
-    'briefcase' as icon,
-    'green' as outline;  
-    
---- Formulaire de Mise à jour
 
     SELECT 
     'form' as component,

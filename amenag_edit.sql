@@ -18,6 +18,17 @@ SET amenagements_edit = (SELECT amenagements FROM amenag WHERE id = $id);
 SET objectifs_edit = (SELECT objectifs FROM amenag WHERE id = $id);
 SET info_edit = (SELECT info FROM amenag WHERE id = $id);
 
+--Bouton retour sans valider
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'Retour à la fiche élève' as title,
+    'notification.sql?id='||$eleve_edit|| '&tab=Profil' as link,
+    'arrow-back-up' as icon,
+    'green' as outline;  
+    
 -- écrire le nom de l'élève dans le titre de la page / attention variable $eleve
 SELECT 
     'datagrid' as component,
@@ -45,17 +56,6 @@ select
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $eleve;
   
-
---Bouton retour sans valider
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-select 
-    'Retour à la fiche élève' as title,
-    'notification.sql?id='||$eleve_edit|| '&tab=Profil' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;  
 
 --- Formulaire de Mise à jour
     SELECT 

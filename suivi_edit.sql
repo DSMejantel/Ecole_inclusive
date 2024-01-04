@@ -20,6 +20,17 @@ SET mut_edit = (SELECT mut FROM suivi WHERE id = $id);
 SET ind_edit = (SELECT ind FROM suivi WHERE id = $id);
 SET mission_edit = (SELECT mission FROM suivi WHERE id = $id); 
 
+ 
+--Bouton retour sans valider
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'Retour à la fiche élève' as title,
+    'notification.sql?id='||$eleve_edit|| '&tab=Suivi' as link,
+    'arrow-back-up' as icon,
+    'green' as outline;    
 
 -- écrire le nom de l'élève dans le titre de la page / attention variable $eleve
 SELECT 
@@ -49,18 +60,6 @@ select
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $eleve;
   
 
-  
---Bouton retour sans valider
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-select 
-    'Retour à la fiche élève' as title,
-    'notification.sql?id='||$eleve_edit|| '&tab=Suivi' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;     
-    
 --- Formulaire de Mise à jour
 
     SELECT 
@@ -69,14 +68,12 @@ select
     'suivi_edit_confirm.sql?id='||$id||'&eleve_edit='||$eleve_edit as action,
     'orange'           as validate_color;
     
-
      SELECT 'AESH' as label, 'AESH2' as name, 3 as width, $aesh_edit::integer as value, 'select' AS type, 
      json_group_array(json_object("label", aesh_name, "value", id)) as options FROM aesh;
      SELECT 'Temps de suivi hebdomadaire' AS label, 'temps2' AS name, 'number' as type, 0.5 as step, $temps_edit as value, 3 as width;     
      SELECT 'mutualisation' as label, 'mutualisation2' as name, 3 as width, $mut_edit::integer as value,'select' as type, '[{"label": "non", "value": 1}, {"label": "oui", "value": 2}]' as options;
      SELECT 'individuel' as label, 'individuel2' as name, 3 as width, $ind_edit::integer as value,'select' as type, '[{"label": "non", "value": 0}, {"label": "oui", "value": 1}]' as options;
      SELECT 'Mission de l''accompagnant' as label, 'mission2' as name, 'textarea' as type, $mission_edit as value, 12 as width;
-
 
  
 
