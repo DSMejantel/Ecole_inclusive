@@ -32,7 +32,7 @@ nom AS Nom,
   prenom AS Prénom,
   groupe as Permissions,
       '[
-    ![](https://tabler-icons.io/static/tabler-icons/icons/trash.svg)
+    ![](./icons/trash.svg)
 ](comptes_delete_confirm.sql?id='||$id||') ' as Actions
 FROM user_info Where username=$id;
 
