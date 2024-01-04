@@ -7,7 +7,6 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties; 
 
 -- basculer vers notifications / Aesh
-
 select 
     'button' as component,
     'sm'     as size,
@@ -100,16 +99,15 @@ select
     
 SELECT 'table' as component,   
     'Actions' as markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-        'temps' as Temps,
+    'nom' as Élève,
+    'temps' as Temps,
     'classe' as Classe,
+    'modalite' as Suivi,
     1 as sort,
     1 as search
         WHERE $tab='Acc';
     SELECT 
-    eleve.nom as Nom,
-    eleve.prenom as Prénom,
+    SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as Élève,
     suivi.temps as Temps,
     eleve.classe AS Classe,
            CASE
@@ -232,6 +230,7 @@ SELECT 'table' as component,
     'prenom' as Prénom,
         'temps' as Temps,
     'classe' as Classe,
+    'modalite' as Suivi,
     1 as sort,
     1 as search
         WHERE $tab='Last';
