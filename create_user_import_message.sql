@@ -11,18 +11,30 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
--- Outil de création de mot de passe
-SELECT 'form' AS component;
-SELECT 'password' AS name, 'Password to create a hash for' AS label, :password AS value;
-
-SELECT 'code' AS component;
-SELECT sqlpage.hash_password(:password) AS contents;
+-- Bilan
+SELECT 
+    'alert' as component,
+    'Bilan de l''importation' as title,
+    'Bilan : '||$imp||' comptes ont été importés sur '||$up||' dans le fichier envoyé.' as description,
+    CASE WHEN $imp=$up
+    THEN 'check' 
+    ELSE 'alert-circle'
+    END as icon,
+    CASE WHEN $imp=$up
+    THEN 'green' 
+    ELSE 'red'
+    END as color;
 
 --Bouton retour
 select 
     'button' as component,
     'sm'     as size,
     'pill'   as shape;
+select 
+    'Importation' as title,
+    'comptes_import.sql' as link,
+    'arrow-back-up' as icon,
+    'red' as outline; 
 select 
     'Liste des Comptes' as title,
     'comptes.sql' as link,
@@ -33,3 +45,4 @@ select
     'parametres.sql?tab=Comptes' as link,
     'arrow-back-up' as icon,
     'green' as outline;
+    

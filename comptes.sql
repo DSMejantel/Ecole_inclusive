@@ -49,6 +49,7 @@ SELECT
   ELSE 'Administrateur'
   END as Permissions,
   username as Identifiant,
+  strftime('%d/%m/%Y %H:%M',connexion) as Connexion,
       '[
     ![](./icons/pencil.svg)
 ](comptes_edit.sql?id='||username||')[

@@ -21,12 +21,6 @@ select
     'arrow-back-up' as icon,
     'green' as outline;  
 
-/*   -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET password_hash=sqlpage.hash_password(:password) WHERE username=$id and :password is not null
- RETURNING
-   'text' AS component,
-   'Le mot de passe pour ' || username ||  ' a été mis à jour.'  as contents_md;
-*/
 -- Compte concerné par la modification
 SELECT 
     'alert' as component,

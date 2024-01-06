@@ -69,7 +69,21 @@ select
     'lock' as icon,
     'green' as outline
     where $tab='Profil';
-
+/*select 
+    'Nouveau Compte' as title,
+    'comptes_ajout.sql' as link,
+    'square-rounded-plus' as icon,
+    $group_id::int<3 as disabled,
+    'red' as outline
+    where $tab='Profil';
+select 
+    'Comptes' as title,
+    'comptes.sql' as link,
+    'user-circle' as icon,
+    $group_id::int<3 as disabled,
+    'red' as outline
+    where $tab='Profil';
+*/    
 -- Profil
 SET user_edit = (SELECT login_session.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'table' as component,
@@ -102,11 +116,32 @@ select
     'red' as outline
     where $tab='Comptes';
 select 
+    'Importation' as title,
+    'comptes_import.sql' as link,
+    'upload' as icon,
+    $group_id::int<3 as disabled,
+    'red' as outline
+    where $tab='Comptes';
+select 
     'Comptes' as title,
     'comptes.sql' as link,
     'user-circle' as icon,
     $group_id::int<3 as disabled,
     'red' as outline
+    where $tab='Comptes';
+    
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'start' as justify
+    where $tab='Comptes';    
+select 
+    'Outil Mot de passe' as title,
+    'generate_password_hash.sql' as link,
+    'tool' as icon,
+    $group_id::int<3 as disabled,
+    'orange' as outline
     where $tab='Comptes';
 select 
     'Accentuation' as title,

@@ -17,6 +17,7 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 SELECT 
     'alert' as component,
     'Alerte' as title,
+        'red' as color,
   'Ce compte va être supprimé. Toute suppression est définitive !' 
  as description;
       

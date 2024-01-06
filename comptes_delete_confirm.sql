@@ -17,6 +17,9 @@ DELETE FROM user_info
 WHERE username = $id
 RETURNING
    'text' AS component,
-   'Le compte ' || username ||  ' a été supprimé.
+   'Le compte ' || username ||  ' a été supprimé.' as contents_md;
 
-[Retour à la liste des comptes](comptes.sql)' as contents_md;
+SELECT 
+    'hero' as component,
+    'comptes.sql' as link,
+    'Retour à la liste' as link_text;
