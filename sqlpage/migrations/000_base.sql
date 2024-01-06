@@ -109,6 +109,7 @@ CREATE TABLE user_info (
     prenom TEXT,
     tel TEXT,
     courriel TEXT,
-    groupe INTEGER
+    groupe INTEGER,
+    connexion TIMESTAMP DEFAULT Null
 );
     
