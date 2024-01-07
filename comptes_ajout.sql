@@ -20,7 +20,7 @@ SELECT 'form' AS component,
 
 
 SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-SELECT 'password' AS name, 'password' AS type, '^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+!*$@%_])([-+!*$@%_\w]{8,15})$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre majuscule et une lettre minuscule, au moins un chiffre et au moins un caractère spécial.' AS description, 'Mot de passe' as label, 6 as width;
+SELECT 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre majuscule et une lettre minuscule, au moins un chiffre et au moins un caractère spécial.' AS description, 'Mot de passe' as label, 6 as width;
 SELECT 'nom' AS name, 'Nom' as label, 6 as width;
 SELECT 'prenom' AS name, 'Prénom' as label, 6 as width;
     SELECT 'Téléphone' AS label, 'tel' AS name, 4 as width;

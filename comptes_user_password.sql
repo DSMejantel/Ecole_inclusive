@@ -25,6 +25,7 @@ select
     'parametres.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;  
+    
 -- Rappel info user
 SELECT 'text' AS component,
 COALESCE((SELECT
@@ -34,13 +35,6 @@ COALESCE((SELECT
             user_info.username)
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents;    
-
-/*   -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET  password_hash=sqlpage.hash_password(:password) WHERE username=$user_edit and :password is not null
- RETURNING
-   'text' AS component,
-   'Compte mis à jour. [Retour au tableau de bord](parametres.sql)' as contents_md;
-*/    
 
 -- Compte concerné par la modification
 SELECT 
@@ -69,6 +63,6 @@ SELECT
     'comptes_user_password_confirm.sql?user_edit='||$user_edit as action,
     'Mettre à jour' as validate;
     
-   SELECT 'Nouveau mot de passe' AS label, 'password' AS name, 'password' AS type, '^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+!*$@%_])([-+!*$@%_\w]{8,15})$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre, au moins un chiffre et un caractère spécial parmi $ @ % * + - _ ! ' AS description;
+   SELECT 'Nouveau mot de passe' AS label, 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre, au moins un chiffre et un caractère spécial parmi $ @ % * + - _ ! ' AS description;
 
 
