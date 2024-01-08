@@ -104,12 +104,13 @@ CREATE TABLE suivi(
 
 CREATE TABLE user_info (
     username TEXT PRIMARY KEY,
-    password_hash TEXT NOT NULL,
+    password_hash TEXT,
     nom TEXT,
     prenom TEXT,
     tel TEXT,
     courriel TEXT,
     groupe INTEGER,
+    activation TEXT DEFAULT Null,
     connexion TIMESTAMP DEFAULT Null
 );
     
