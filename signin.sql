@@ -21,11 +21,33 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $error IS NOT NULL;
 
+SELECT 'alert' as component,
+    'Attention' as title,
+    'Votre code d''activation n''est pas valable.' as description_md,
+    'alert-circle' as icon,
+    'red' as color
+WHERE $activation IS NOT NULL;
+
 SELECT 'form' AS component,
     'Connexion' AS title,
-    'se connecter' AS validate,
-    'login.sql' AS action;
+    'auth' as id,
+    '' AS validate;
+    --'login.sql' AS action;
 
-SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-SELECT 'password' AS name, 'Mot de passe' as label, 'password' AS type, 6 as width;
+SELECT 'username' AS name, 'Identifiant' as label, 4 as width;
+SELECT 'password' AS name, 'Mot de passe' as label, 'password' AS type, 'Mot de passe' as placeholder, 4 as width;
+SELECT 'code' AS name, 'Code d''activation' as label, 'text' AS type, 'Code d''activation de 1ère connexion' as placeholder, 4 as width;
+
+select 
+    'button' as component;
+select 
+    'login.sql' as link,
+    'auth'            as form,
+    'green'          as color,
+    'Me connecter'         as title;
+select 
+    'comptes_user_activation.sql' as link,
+    'auth'         as form,
+    'orange'      as color,
+    'Activer mon compte'         as title;
 

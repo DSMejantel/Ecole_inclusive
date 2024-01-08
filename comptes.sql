@@ -10,14 +10,12 @@ SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
         WHERE $group_id<>'3';
 
---Menu
-SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
-    
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
         WHERE $group_id<>'3';
 
-
+--Menu
+SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 select 
     'button' as component,
     'sm'     as size,
@@ -32,7 +30,8 @@ select
     'parametres.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;
-   
+
+-- Liste   
 SELECT 'table' as component,
         'Admin' as markdown,
     'nom' as Nom,
@@ -49,6 +48,7 @@ SELECT
   ELSE 'Administrateur'
   END as Permissions,
   username as Identifiant,
+  activation as Code,
   strftime('%d/%m/%Y %H:%M',connexion) as Connexion,
       '[
     ![](./icons/pencil.svg)

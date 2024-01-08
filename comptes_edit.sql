@@ -10,14 +10,12 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 --
--- Set a variable 
+-- Set variables 
 SET nom_edit = (SELECT nom FROM user_info WHERE username = $id);
 SET prenom_edit = (SELECT prenom FROM user_info WHERE username = $id);
 SET group_edit = (SELECT groupe FROM user_info WHERE username = $id);
 SET tel_edit = (SELECT tel FROM user_info WHERE username = $id);
 SET courriel_edit = (SELECT courriel FROM user_info WHERE username = $id);
-/*SELECT 'text' AS component,
-$nom_edit as contents;*/
 
 --Bouton retour sans valider
 select 
@@ -29,13 +27,22 @@ select
     'comptes.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;  
+/* 
+-- En théorie l'administrateur ne devrait pas changer le mot de passe d'un utilisateur et ne devrait pas le connaître.
+-- Cela reste techniquement possible en réactivant le bloc ci-dessous.
 select 
     'Changer le mot de passe' as title,
     'comptes_edit_password.sql?id='||$id as link,
     'lock' as icon,
-    'red' as outline;  
+    'red' as outline;
+*/  
+select 
+    'Nouveau code d''activation' as title,
+    'comptes_edit_activation.sql?id='||$id as link,
+    'lock' as icon,
+    'red' as outline; 
 
--- Compte concerné par la modification
+-- Rappel du Compte concerné par la modification
 SELECT 
     'alert' as component,
     'Alerte' as title,

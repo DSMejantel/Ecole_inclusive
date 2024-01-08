@@ -19,9 +19,9 @@ RETURNING
     id AS value,
     FALSE AS secure; -- You can remove this if the site is served over HTTPS.
 
-UPDATE user_info
-SET connexion=$connect
-WHERE username = :username;
+-- Enregistrer la date de la connexion
+UPDATE user_info SET connexion=$connect WHERE username = :username;
+
 -- Redirect the user to the protected page.
 SELECT 'redirect' AS component, 
 CASE WHEN $visite::int=0

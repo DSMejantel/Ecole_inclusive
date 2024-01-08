@@ -10,20 +10,20 @@ SELECT 'redirect' AS component,
 
 
 -- temporarily store the data in a table with text columns
-create temporary table if not exists user_tmp(username text, password text, nom text, prenom text, tel text, courriel text, groupe text);
+create temporary table if not exists user_tmp(username text, nom text, prenom text, tel text, courriel text, groupe text, activation text);
 delete from user_tmp;
 
 -- copy the data from the CSV file into the temporary table
-copy user_tmp (username, password, nom, prenom, tel, courriel, groupe) from 'comptes_data_input'
-with (header true, delimiter ',', quote '"', null 'NaN'); -- all the options are optional;
+copy user_tmp (username, nom, prenom, tel, courriel, groupe, activation) from 'comptes_data_input'
+with (header true, delimiter ',', quote '"'); -- all the options are optional;
 
 -- Préparer l'analyse du nombre d'enregistrements importés
 SET USER1 = (SELECT count(username) from user_info);
 SET USER2 = (SELECT count(username) from user_tmp);
 
 -- insert the data into the final table
-INSERT OR IGNORE INTO user_info (username, password_hash, nom, prenom, tel, courriel, groupe)
-select username, password, nom, prenom, tel, courriel, CAST(groupe AS integer)   from user_tmp;
+INSERT OR IGNORE INTO user_info (username, nom, prenom, tel, courriel, groupe, activation)
+select username, nom, prenom, tel, courriel, CAST(groupe AS integer), activation   from user_tmp;
 
 SET USER3 = (SELECT count(username) from user_info);
 SET USER4 = $USER3- $USER1
