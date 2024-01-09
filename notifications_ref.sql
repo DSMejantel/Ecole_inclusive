@@ -34,7 +34,7 @@ select
     END as disabled,
     'orange' as outline;
 
--- écrire le nom de l'AESH dans le titre de la page
+-- écrire le nom du référent dans le titre de la page
 SELECT 
     'datagrid' as component;
 SELECT 
@@ -42,7 +42,10 @@ SELECT
     nom_ens_ref||' '||prenom_ens_ref as description, 'orange' as color, 1 as active
       FROM referent WHERE referent.id = $id;
 SELECT 
-        tel_ens_ref as title,
+    CASE WHEN $group_id::int>1 
+    THEN    tel_ens_ref
+    ELSE 'numéro masqué'
+    END as title,
     email as description
       FROM referent WHERE referent.id = $id;
      

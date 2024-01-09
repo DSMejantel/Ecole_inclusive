@@ -3,17 +3,16 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+--Menu
+SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
+
 -- Message si droits insuffisants sur une page
 SELECT 'alert' as component,
     'Attention !' as title,
     'Vous ne possédez pas les droits suffisants pour accéder à cette page.' as description_md,
     'alert-circle' as icon,
     'red' as color
-WHERE $restriction IS NOT NULL;   
-
---Menu
-SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
-
+WHERE $restriction IS NOT NULL;    
 --Sous-menu
 select 
     'button' as component,
@@ -70,7 +69,10 @@ SELECT 'table' as component,
 SELECT 
   nom_ens_ref AS Nom,
   prenom_ens_ref AS Prénom,
-  tel_ens_ref as Téléphone,
+  CASE WHEN $group_id::int>1 
+    THEN    tel_ens_ref
+    ELSE 'numéro masqué'
+    END as Téléphone,
   email as courriel,
 CASE WHEN $group_id::int=2 THEN
   '[

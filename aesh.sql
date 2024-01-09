@@ -20,7 +20,8 @@ select
             $group_id::int<2 as disabled,
     'green' as outline;
     
--- Tableau des AESH
+    -- Enregistrer l'aesh créé dans la base
+-- INSERT INTO aesh(aesh_name, aesh_firstname, tel_aesh, courriel_aesh, quotite) SELECT :aesh_name, :aesh_firstname, :tel_aesh, :courriel_aesh, :quotite WHERE :aesh_name IS NOT NULL;
 
 SELECT 'table' as component,
     'Actions' as markdown,
@@ -35,7 +36,10 @@ SELECT 'table' as component,
 SELECT 
   aesh_name AS Nom,
   aesh_firstname AS Prénom,
-  tel_aesh as Téléphone,
+  CASE WHEN $group_id::int>1 
+    THEN    tel_aesh 
+    ELSE 'numéro masqué'
+    END as Téléphone,
   courriel_aesh as courriel,
   quotite as Quotité,
       '[
@@ -62,3 +66,20 @@ ELSE
 END as Admin
 FROM aesh WHERE id<>1 ORDER BY aesh_name ASC;   
 
+/*SELECT 
+    'form' as component,
+    'Ajouter un AESH' as title,
+    'Renseigner un AESH' as contents,
+    'Valider' as validate;
+    
+    SELECT 'Nom' AS label, 'aesh_name' AS name;
+    SELECT 'Prénom' AS label, 'aesh_firstname' AS name;
+    SELECT 'Téléphone' AS label, 'tel_aesh' AS name;
+    SELECT 'Courriel' AS label, 'courriel_aesh' AS name;
+    SELECT 'Quotité' AS label, 'quotite' AS name, 'number' AS type;
+*/
+/*SELECT 
+    'hero' as component,
+    '/aesh_delete.sql' as link,
+    'Supprimer des AESH' as link_text;
+    */
