@@ -18,8 +18,6 @@ select
     'aesh.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;    
-
-set code0 = sqlpage.random_string(15);
     
  SELECT 
     'form' as component,
@@ -31,7 +29,7 @@ set code0 = sqlpage.random_string(15);
     'Recommencer'           as reset;
     
     SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-    SELECT 'code' AS name, 'text' AS type, $code0 AS value, 'Code d''activation' as label, 6 as width;
+    SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width;
     SELECT 'Nom' AS label, 'aesh_name' AS name, 6 as width;
     SELECT 'Prénom' AS label, 'aesh_firstname' AS name, 6 as width;
     SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,

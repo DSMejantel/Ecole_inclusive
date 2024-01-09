@@ -48,6 +48,6 @@ SELECT
     'comptes_edit_activation_confirm.sql?id='||$id as action,
     'Mettre à jour' as validate,
     'orange'           as validate_color;
-SELECT 'code' AS name, 'text' AS type, 'Nouveau code d''activation' as label, 6 as width;
+SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Nouveau code d''activation' as label, 6 as width;
 
 

@@ -43,8 +43,6 @@ select
     'referent.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;  
-
-set code0 = sqlpage.random_string(15);
     
 -- Saisir un nouvel enseignant référent    
 SELECT 
@@ -56,7 +54,7 @@ SELECT
     'Recommencer'           as reset;
 
     SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-    SELECT 'code' AS name, 'text' AS type, $code0 AS value, 'Code d''activation' as label, 6 as width;   
+    SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width;   
     SELECT 'Nom' AS label, 'nom' AS name, 6 as width;
     SELECT 'Prénom' AS label, 'prenom' AS name, 6 as width;
     SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,
