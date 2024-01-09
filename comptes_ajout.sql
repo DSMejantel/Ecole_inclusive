@@ -11,6 +11,9 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
+
+set code0 = sqlpage.random_string(15);
+
 SELECT 'form' AS component,
     'Nouveau compte utilisateur' AS title,
 'create_user.sql' AS action,
@@ -20,7 +23,7 @@ SELECT 'form' AS component,
 
 -- Formulaire
 SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-SELECT 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre majuscule et une lettre minuscule, au moins un chiffre et au moins un caractère spécial.' AS description, 'Mot de passe' as label, 6 as width;
+SELECT 'code' AS name, 'text' AS type, $code0 AS value, 'Code d''activation' as label, 6 as width;
 SELECT 'nom' AS name, 'Nom' as label, 6 as width;
 SELECT 'prenom' AS name, 'Prénom' as label, 6 as width;
     SELECT 'Téléphone' AS label, 'tel' AS name, 4 as width;

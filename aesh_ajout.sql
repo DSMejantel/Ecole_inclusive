@@ -19,7 +19,8 @@ select
     'arrow-back-up' as icon,
     'green' as outline;    
 
---Formulaire d'ajout    
+set code0 = sqlpage.random_string(15);
+    
  SELECT 
     'form' as component,
     'Ajouter un AESH' as title,
@@ -30,7 +31,7 @@ select
     'Recommencer'           as reset;
     
     SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-    SELECT 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre majuscule et une lettre minuscule, au moins un chiffre et au moins un caractère spécial.' AS description, 'Mot de passe' as label, 6 as width;
+    SELECT 'code' AS name, 'text' AS type, $code0 AS value, 'Code d''activation' as label, 6 as width;
     SELECT 'Nom' AS label, 'aesh_name' AS name, 6 as width;
     SELECT 'Prénom' AS label, 'aesh_firstname' AS name, 6 as width;
     SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,

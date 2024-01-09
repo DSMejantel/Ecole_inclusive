@@ -13,8 +13,8 @@ SELECT 'redirect' AS component,
     SELECT $username, $nom, $prenom, $tel_ens_ref, $email WHERE $nom IS NOT NULL
     ON CONFLICT (username) DO NOTHING;
       -- Enregistrer le référent créé dans les comptes utilisateurs
-INSERT INTO user_info (username, password_hash, nom, prenom, groupe, tel, courriel)
-    SELECT $username, sqlpage.hash_password(:password), $nom, $prenom, $groupe, $tel_ens_ref, $email
+INSERT INTO user_info (username, activation, nom, prenom, groupe, tel, courriel)
+    SELECT $username, $code, $nom, $prenom, $groupe, $tel_ens_ref, $email
     WHERE $nom IS NOT NULL
     ON CONFLICT (username) DO NOTHING
     RETURNING 
