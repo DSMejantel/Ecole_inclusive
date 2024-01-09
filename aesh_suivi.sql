@@ -32,7 +32,10 @@ SELECT
     aesh_name||' '||aesh_firstname as description, 'orange' as color, 1 as active
      FROM aesh WHERE aesh.id = $id;
 SELECT 
-        tel_aesh as title,
+    CASE WHEN $group_id::int>1 
+    THEN    tel_aesh 
+    ELSE 'numéro masqué'
+    END as title,
     courriel_aesh as description
       FROM aesh WHERE aesh.id = $id;
      
