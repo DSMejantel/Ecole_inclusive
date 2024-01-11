@@ -161,7 +161,7 @@ select
         WHERE $tab='SansAcc';
     
 SELECT 'table' as component,   
-    'Élève' as markdown,
+    'Actions' as markdown,
     'eleve.nom' as Nom,
     'eleve.prenom' as Prénom,
     'eleve.classe' as Classe,
@@ -174,9 +174,16 @@ SELECT 'table' as component,
     eleve.prenom as Prénom,
     eleve.classe AS Classe,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,    
-         '[
+CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id = amenag.eleve_id)
+THEN
+'[
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)' as Élève
+](notification.sql?id='||eleve.id||')' 
+ELSE
+'[
+    ![](./icons/alert-triangle-filled.svg)
+](notification.sql?id='||eleve.id||')' 
+END as Actions
 FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE not EXISTS (SELECT eleve.id FROM suivi WHERE eleve.id = suivi.eleve_id) and eleve.etab_id=$id AND $tab='SansAcc' GROUP BY eleve.id ORDER BY eleve.nom; 
 
   -- Liste des élèves en attente
