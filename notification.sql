@@ -199,7 +199,7 @@ WHEN $group_id::int>1 THEN
    CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id and $tab='Profil') and $group_id::int>1
      THEN ''
      ELSE '[![](./icons/pencil-plus.svg)
-]()'
+](amenag_ajout.sql?id=' || $id||')'
     END  as Actions,
     CASE
 WHEN $group_id::int=2 THEN 

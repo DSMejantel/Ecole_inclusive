@@ -21,7 +21,7 @@ select
     'green' as outline;      
 select 
     'Retour à la fiche élève' as title,
-    'notification.sql?id='|| $id || '&tab=Suivi' as link,
+    'notification.sql?id='|| $id || '&tab=Profil' as link,
     'briefcase' as icon,
     'green' as outline; 
 
