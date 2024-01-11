@@ -155,10 +155,10 @@ COALESCE((SELECT
 SET tab=coalesce($tab,'Profil');
 select 'tab' as component,
 TRUE as center;
-select  'Notification' as title, 'certificate' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Notification' as link, CASE WHEN $tab='Notification' THEN 'orange' ELSE 'green' END as color;
-select  'Aménagements' as title, 'list-check' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Profil' as link, CASE WHEN $tab='Profil' THEN 'orange' ELSE 'green' END as color;;
-select  'Suivi' as title, 'user-plus' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Suivi' as link, CASE WHEN $tab='Suivi' THEN 'orange' ELSE 'green' END as color;;
-select  'Graphique' as title, 'chart-bar' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Graphique' as link, CASE WHEN $tab='Graphique' THEN 'orange' ELSE 'green' END as color;;
+select CASE WHEN EXISTS (SELECT $id FROM notification WHERE $id=notification.eleve_id) THEN 'Notification' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM notification WHERE $id=notification.eleve_id) THEN 'certificate' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Notification' as link, CASE WHEN $tab='Notification' THEN 'orange' ELSE 'green' END as color;
+select  'Aménagements' as title, 'list-check' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Profil' as link, CASE WHEN $tab='Profil' THEN 'orange' ELSE 'green' END as color;
+select  CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'Suivi' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'user-plus' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Suivi' as link, CASE WHEN $tab='Suivi' THEN 'orange' ELSE 'green' END as color;
+select CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'Graphique' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'chart-bar' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Graphique' as link, CASE WHEN $tab='Graphique' THEN 'orange' ELSE 'green' END as color;
 
 -- Fiche des Aménagements 
 -- fiche détaillée de l'élève
