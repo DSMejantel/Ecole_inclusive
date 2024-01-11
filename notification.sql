@@ -196,10 +196,10 @@ WHEN $group_id::int>1 THEN
     ![](./icons/lifebuoy.svg)
 ](suivi_edit_dispo.sql?id='||$id||')'
      END as Dispositif,
-   CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id and $tab='Profil') and $group_id::int>1
-     THEN ''
-     ELSE '[![](./icons/pencil-plus.svg)
+CASE WHEN NOT EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id and $tab='Profil') and $group_id::int>1
+     THEN '[![](./icons/pencil-plus.svg)
 ](amenag_ajout.sql?id=' || $id||')'
+     ELSE ''
     END  as Actions,
     CASE
 WHEN $group_id::int=2 THEN 
