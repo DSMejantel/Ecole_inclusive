@@ -2,7 +2,16 @@ SELECT 'redirect' AS component,
         'signin.sql?error' AS link
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
-
+--Menu
+/*select 'shell' as component,
+    'P.A.S. Mende' as title,
+        'Source : Webmestre / Collège Henri Bourrillon / Mende -2023' as footer,
+        'fr-FR'                   as language,
+    'home' as icon,
+    '/' as link,
+    TRUE as norobot,
+    '["eleves", "aesh", "etablissement", "referent", "parametres", "logout"]' as menu_item;
+*/  
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
@@ -20,11 +29,6 @@ select
 SELECT 'table' as component,   
     'Suivis' AS markdown,
     'admin' AS markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-        'temps' as Temps,
-    'classe' as Classe,
-    'modalite' as Suivi,
     1 as sort,
     1 as search;
 SELECT 

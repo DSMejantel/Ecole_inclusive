@@ -89,15 +89,9 @@ select
     'user-plus' as icon,
     'warning' as outline;
 
-
-SELECT 
-    'text' as component;
 SELECT 'table' as component,   
     'Actions' as markdown,
     'aesh.aesh_name' as Nom,
-    'aesh.aesh_firstname' as Prénom,
-    'temps' as Temps,
-    'quotite' as Quotité,
     1 as sort,
     1 as search;
     SELECT 
@@ -120,6 +114,32 @@ SELECT 'table' as component,
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)' as Actions
   FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id and aesh.id<>1 GROUP BY aesh.aesh_name;  
+/*
+-- Graphique
+select 
+    'chart'               as component,
+    'Répartitions des suivis' as title,
+    'scatter'             as type,
+    1 as toolbar,
+    12                     as marker,
+    'Élève'         as xtitle,
+    'Heures' as ytitle,
+    0                     as xmin,
+    6                    as xmax,
+    0                     as ymin,
+    35                    as ymax,
+    1                     as zmin,
+    35                   as zmax,
+    6                    as xticks,
+    10                    as yticks,
+    35                    as zticks;
+   
+select 
+    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
+    SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as x,
+    suivi.temps        as y
+        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1  ORDER BY eleve.nom ASC;
+*/
 
 -- Graphique Bulle
 select 
@@ -150,7 +170,32 @@ select
     --SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as labels,
     coalesce(suivi.temps,0)        as z
         FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1 ;
+/*     
+-- Graphique Barres Elèves
+select 
+    'chart'               as component,
+    'Répartitions des suivis par élève' as title,
+    'bar'             as type,
+    500 as height,
+    1 as toolbar,
+    1 as stacked,
+    400 as height,
+    'Élève'         as xtitle,
+    'heures' as ytitle,
+    0                     as xmin,
+    50                    as xmax,
+    0                     as ymin,
+    35                   as ymax,
+    15                    as xticks,
+    7                    as yticks;
 
+   
+select 
+    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
+    SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as x,
+    sum(suivi.temps)        as y
+        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1 GROUP BY eleve.id ORDER BY eleve.id ASC;
+*/
 -- Graphique Barres AESH
 select 
     'chart'               as component,
@@ -171,7 +216,6 @@ select
 
    
 select 
-    --SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as label,
     SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom||' ('||eleve.classe||')' as series,
     sum(suivi.temps/mut)        as value

@@ -39,11 +39,6 @@ SET var_notif = (SELECT count(notification.id) FROM notification where notificat
 -- Isolement de l'élève dans une liste
 SELECT 'table' as component,
     'actions' AS markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'naissance' as Naissance, 
-    'classe' as Classe,
-    'nom_etab' AS Établissement,
     1 as sort,
     1 as search;
     
@@ -84,11 +79,7 @@ SELECT
     END as color;
     --
 SELECT 'table' as component,
-    'actions' AS markdown,
-    'notification.datefin' as Fin,
-    'notification.modalite' as Modalité,
-    'eleve.nom' as Nom, 
-    'eleve.prenom' as Prénom;
+    'actions' AS markdown;
 SELECT 
       eleve.nom as Nom,
       eleve.prenom as Prénom,
@@ -117,9 +108,7 @@ SELECT
     END as color;
     --
 SELECT 'table' as component,
-    'actions' AS markdown,
-    'eleve.nom' as Nom, 
-    'eleve.prenom' as Prénom;
+    'actions' AS markdown;
 SELECT 
       eleve.nom as Nom,
       eleve.prenom as Prénom,
@@ -148,11 +137,7 @@ SELECT
     END as color;
     --
 SELECT 'table' as component,
-    'actions' AS markdown,
-    'dispositif' as Dispositif,
-    'AESH_name' as AESH,
-    'eleve.nom' as Nom, 
-    'eleve.prenom' as Prénom;
+    'actions' AS markdown;
 SELECT 
       eleve.nom as Nom,
       eleve.prenom as Prénom,

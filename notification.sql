@@ -163,10 +163,6 @@ select CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'G
 -- Fiche des Aménagements 
 -- fiche détaillée de l'élève
 SELECT 'table' as component,
-    'dispositif.dispo' as Dispositif,   
-    'info' as commentaires,
-    'amenagements' as Aménagements,
-    'objectifs' as Objectifs,
     'Dispositif' as markdown,
         'Actions' as markdown
         WHERE $tab='Profil';
@@ -239,30 +235,11 @@ SELECT
   FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id and $tab='Profil';
 
 -- Liste des suivis
-/*select 
-    'button' as component,
-    'sm'     as size,
-    'center' as justify,
-    'pill'   as shape
-    WHERE $tab='Suivi';
-select 
-    'Liste des Suivis' as title,
-    'list-check' as icon,
-    'lime' as outline
-    WHERE $tab='Suivi';
-*/
 SELECT 
     'text' as component
     WHERE $tab='Suivi';
     
 SELECT 'table' as component,   
-    'aesh_name' as AESH,
-    'temps' as Temps,
-        'mut' as mut,
-    'dispositif' as Dispositif,
-    'amenagements' as Aménagements,
-    'objectifs' as Objectifs,
-    'comm_suivi' as commentaires,
     'Dispositif' as markdown,
     'Actions' as markdown
     WHERE $tab='Suivi';
@@ -318,28 +295,10 @@ END as Actions
 
   
 -- Liste des notifications
-/*select 
-    'button' as component,
-    'sm'     as size,
-    'center' as justify,
-    'pill'   as shape
-     where $tab='Notification';
-select 
-    'Historique des notifications' as title,
-    'certificate' as icon,
-    'lime' as outline
-    where $tab='Notification';
-*/
 SELECT 
     'text' as component
         where $tab='Notification';
 SELECT 'table' as component,
-    'origine' as origine,
-    'Departement' as Département,
-    'acces' as accès,
-    'datedeb' as Début,
-    'datefin' as Fin,
-    'referent' as Référent,
     'Actions' as markdown
         where $tab='Notification';
 SELECT 

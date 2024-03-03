@@ -57,8 +57,14 @@ SELECT 'card' as component,
 SELECT 
   eleve.nom || ' '|| eleve.prenom ||  ' (' || eleve.classe || ') '  AS title,
   'green' as color, 
-  coalesce(image_url, './icons/profil.png') as top_image,
-  coalesce('Mission de l''AESH : ' || suivi.mission, 'non saisi') as description,
+  CASE WHEN EXISTS (SELECT eleve.id FROM image WHERE eleve.id=image.eleve_id)
+  THEN image_url 
+  ELSE './icons/profil.png'
+  END as top_image,
+  CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id) 
+  THEN 'Mission de l''AESH : '|| suivi.mission
+  ELSE 'non saisi'
+  END  as description,
   group_concat(DISTINCT dispositif.dispo) as footer,
   '[
   ![](./icons/list-check.svg)
@@ -69,10 +75,7 @@ SELECT
    FROM eleve INNER JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN amenag on amenag.eleve_id=eleve.id  JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id=etab.id JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN image on eleve.id=image.eleve_id JOIN aesh on suivi.aesh_id=aesh.id WHERE aesh_id=$id and $tab='Profils' GROUP BY eleve.id ORDER BY eleve.nom ASC;
    
 -- Fiche détaillée
-SELECT 'table' as component,   
-    'info' as commentaires,
-    'amenagements' as Aménagements,
-    'objectifs' as Objectifs
+SELECT 'table' as component
     WHERE $tab='Détails';
 SELECT 
     eleve.nom||' '||eleve.prenom as élève,
@@ -89,6 +92,7 @@ SELECT
      ELSE 'non saisi'
     END  as Objectifs
 FROM eleve INNER JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN amenag on amenag.eleve_id=eleve.id  JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id=etab.id JOIN suivi on suivi.eleve_id=eleve.id  JOIN aesh on suivi.aesh_id=aesh.id WHERE aesh_id=$id and $tab='Détails' GROUP BY eleve.id ORDER BY eleve.nom ASC;
+
 -- Liste des suivis
 SELECT 
     'text' as component,
@@ -96,14 +100,6 @@ SELECT
     WHERE $tab='Liste';
 SELECT 'table' as component,   
     'Élève' as markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-        'temps' as Temps,
-        'mut' as mut,
-    'classe' as Classe,
-    'type' as Niveau,
-    'nom_etab' as Établissement,
-    'modalite' as Suivi,
     1 as sort,
     1 as search
         WHERE $tab='Liste';

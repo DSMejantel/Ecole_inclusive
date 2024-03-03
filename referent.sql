@@ -60,10 +60,6 @@ select
 ---------------------------
 SELECT 'table' as component,
     'Actions' as markdown,
-    'nom_ens_ref' as Nom,
-    'prenom_ens_ref' as Prénom,
-    'tel_ens_ref' as Téléphone,
-    'email' as courriel,
     1 as sort,
     1 as search;
 SELECT 

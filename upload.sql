@@ -24,9 +24,6 @@ values (
 )
 returning 
 'redirect' AS component,
---'text' AS component,
---'Photo insérée. ' as contents_md,
---'[Retour à la fiche de l''élève](notification.sql?id='||$id||'&tab=Profil)' as contents_md;
 'notification.sql?id='||$id||'&tab=Profil' as link;
 
 -- If the insert failed, warn the user

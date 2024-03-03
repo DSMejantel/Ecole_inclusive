@@ -77,6 +77,8 @@ select
 -- Personnalisation NB_eleve pour version dispositif :
 SET NB_accomp = (SELECT count(distinct affectation.eleve_id) FROM affectation JOIN eleve on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE  eleve.etab_id=$id and affectation.dispositif_id=$dispo_select);
 
+-- Use it in a query 
+-- SELECT 'text' AS component, 'Élèves suivis ' || $NB_eleve ||  'Notif ' || $NB_notif ||'Suivi ' || $NB_suivi || 'AESH ' || $NB_aesh AS contents; 
 SELECT 'text' AS component, 'Classe :  ' || $classe_selec AS contents;
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
@@ -109,8 +111,6 @@ SELECT 'table' as component,
     eleve.nom as Nom,
     eleve.prenom as Prénom,
     eleve.classe as Classe,
-    --SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name as AESH,
-    --    suivi.objectifs as Objectifs,
    CASE
        WHEN EXISTS (SELECT eleve.id FROM affectation 
     WHERE eleve.id = affectation.eleve_id) THEN 'black'

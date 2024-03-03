@@ -88,11 +88,6 @@ select
     'warning' as outline;
 
 SELECT 'table' as component,
-    'icon' as Origine,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'datefin' as Fin,
-    'nom_ens_ref' as Référent,
     'Actions' as markdown,
     1 as sort,
     1 as search;

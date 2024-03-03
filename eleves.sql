@@ -14,14 +14,6 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $restriction IS NOT NULL;    
 
-/*SELECT 
-    'tab' as component,
-    0 as center;
-SELECT 
-    'Ajouter un élève' as title,
-    'eleve.sql' as link,
-    'square-rounded-plus' as icon;
-    */
 select 
     'button' as component,
     'sm'     as size,
@@ -44,11 +36,6 @@ SELECT 'table' as component,
     'Suivis' AS markdown,
         'Aménagement' AS markdown,
         'admin' AS markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'naissance' as Naissance, 
-    'classe' as Classe,
-    'nom_etab' AS Établissement,
     1 as sort,
     1 as search;
 SELECT 

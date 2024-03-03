@@ -76,7 +76,6 @@ SELECT
     $NB_aesh as description,
     TRUE           as active,
     'user-plus' as icon;
-    
 -- Trombinoscope
 select 
     'card' as component,

@@ -69,7 +69,6 @@ select
     'green' as outline
     FROM etab INNER JOIN eleve on eleve.etab_id=etab.id where etab.id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
 
-
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id and eleve.classe=$classe_select);
 -- Personnalisation NB_accomp pour version classe :
@@ -78,7 +77,6 @@ SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on no
 SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and eleve.classe=$classe_select and suivi.aesh_id<>1);
 
 SELECT 'text' AS component, 'Classe :  ' || $classe_select AS contents;
-
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
     'datagrid' as component,
@@ -99,14 +97,10 @@ SELECT
 
 -- Liste des élèves
 SELECT 'table' as component,
+    TRUE    as hover,
+    TRUE    as small,
     'Actions' as markdown,
     'Admin' as markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'suivi.dispositif' as Dispositif,    
-    'aesh.aesh_name' as AESH,
-    'modalite' as Suivi,
-    'objectifs' as Aménagements,
     1 as sort,
     1 as search;
     SELECT 
@@ -172,10 +166,9 @@ SELECT
 SELECT 'text' as component,
    'Fiches des élèves suivis' as title;
 
-  SELECT 'table' as component,   
-    'info' as commentaires,
-    'amenagements' as Aménagements,
-    'objectifs' as Objectifs;
+  SELECT 'table' as component, 
+    TRUE    as hover,
+    TRUE    as small;
     SELECT 
     eleve.nom||' '||eleve.prenom as élève,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,    

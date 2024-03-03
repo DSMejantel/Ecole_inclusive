@@ -36,17 +36,6 @@ COALESCE((SELECT
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents;    
 
-/*   -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET nom=$nom, prenom=$prenom, tel=$tel, courriel=$courriel WHERE username=$user_edit and $nom is not null;
-      -- Mettre à jour le référent modifié dans la base AESH
- UPDATE referent SET nom_ens_ref=$nom, prenom_ens_ref=$prenom, tel_ens_ref=$tel, email=$courriel WHERE username=$user_edit and $nom is not null;
-     -- Mettre à jour l'AESH modifié dans la base AESH
- UPDATE aesh SET aesh_name=$nom, aesh_firstname=$prenom, tel_aesh=$tel, courriel_aesh=$courriel WHERE username=$user_edit and $nom is not null 
- RETURNING
-   'text' AS component,
-   'Compte mis à jour. [Retour au tableau de bord](parametres.sql)' as contents_md;
-*/    
-
 -- Compte concerné par la modification
 SELECT 
     'alert' as component,
@@ -55,11 +44,7 @@ SELECT
     'alert-triangle' as icon,
     'green' as color;
     
-SELECT 'table' as component,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'tel' as Téléphone,
-    'courriel' as courriel;
+SELECT 'table' as component;
 SELECT 
   nom AS Nom,
   prenom AS Prénom,
@@ -78,17 +63,6 @@ SELECT
     SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value;
     SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value;
     SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value;
-
-/*
-   -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET nom=$nom, prenom=$prenom, tel=$tel, courriel=$courriel WHERE username=$user_edit and $nom is not null;
-      -- Mettre à jour le référent modifié dans la base AESH
- UPDATE referent SET nom_ens_ref=$nom, prenom_ens_ref=$prenom, tel_ens_ref=$tel, email=$courriel WHERE username=$user_edit and $nom is not null;
-     -- Mettre à jour l'AESH modifié dans la base AESH
- UPDATE aesh SET aesh_name=$nom, aesh_firstname=$prenom, tel_aesh=$tel, courriel_aesh=$courriel WHERE username=$user_edit and $nom is not null 
- RETURNING
-   'text' AS component,
-   'Compte mis à jour. [Retour au tableau de bord](parametres.sql)' as contents_md;
- */   
+  
  
 

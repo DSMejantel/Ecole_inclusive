@@ -23,10 +23,7 @@ SELECT
       
 -- Isolement du compte dans une liste
 SELECT 'table' as component,
-    'Actions' as markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'groupe' as Permissions;
+    'Actions' as markdown;
    
 SELECT 
 nom AS Nom,

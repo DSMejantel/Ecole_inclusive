@@ -50,11 +50,7 @@ SELECT
     'alert-triangle' as icon,
     'green' as color;
     
-SELECT 'table' as component,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'tel' as Téléphone,
-    'courriel' as courriel;
+SELECT 'table' as component;
 SELECT 
   username as Identifiant,
   nom AS Nom,

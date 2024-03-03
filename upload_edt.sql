@@ -8,7 +8,7 @@ SELECT 'redirect' AS component,
 
 
 
--- Supprime l'ancienne emploi du temps
+-- Supprime l'ancien emploi du temps
 DELETE FROM edt WHERE aesh_id=$id;    
 
 --

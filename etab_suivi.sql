@@ -99,10 +99,6 @@ select
     
 SELECT 'table' as component,   
     'Actions' as markdown,
-    'nom' as Élève,
-    'temps' as Temps,
-    'classe' as Classe,
-    'modalite' as Suivi,
     1 as sort,
     1 as search
         WHERE $tab='Acc';
@@ -162,10 +158,6 @@ select
     
 SELECT 'table' as component,   
     'Actions' as markdown,
-    'eleve.nom' as Nom,
-    'eleve.prenom' as Prénom,
-    'eleve.classe' as Classe,
-    'dispositif.dispo' as Dispositif,
     1 as sort,
     1 as search
         WHERE $tab='SansAcc';
@@ -202,10 +194,6 @@ select
    
 SELECT 'table' as component,   
     'Actions' as markdown,
-    'eleve.nom' as Nom,
-    'eleve.prenom' as Prénom,
-    'eleve.classe' as Classe,
-    'dispositif.dispo' as Dispositif,
     1 as sort,
     1 as search
             WHERE $tab='Att';
@@ -233,11 +221,6 @@ select
     
 SELECT 'table' as component,   
     'Actions' as markdown,
-    'nom' as Nom,
-    'prenom' as Prénom,
-        'temps' as Temps,
-    'classe' as Classe,
-    'modalite' as Suivi,
     1 as sort,
     1 as search
         WHERE $tab='Last';

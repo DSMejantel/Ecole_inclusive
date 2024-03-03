@@ -51,12 +51,6 @@ SELECT
      
 -- Liste des notifications
 SELECT 'table' as component,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'datefin' as Fin,
-    'modalite' as Modalité,
-    'nom_ens_ref' as Référent,
-    'etab' as Établissement,
     'actions' as markdown,
     1 as sort,
     1 as search;
@@ -86,6 +80,7 @@ SELECT
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)' as actions
 FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where referent.id=$id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
+
 -- Télécharger les données
 SELECT 
     'csv' as component,

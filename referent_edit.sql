@@ -28,42 +28,10 @@ select
     'referent.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;  
-/*    
-   -- Mettre à jour le référent modifié dans la base
- UPDATE referent SET nom_ens_ref=$nom, prenom_ens_ref=$prenom, tel_ens_ref=$tel, email=$email WHERE id=$id and $nom is not null;
-     -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET nom=$nom, prenom=$prenom, tel=$tel, courriel=$email WHERE username=$username and $nom is not null;
-*/ 
-/*     -- Référent concerné
-SELECT 
-    'alert' as component,
-    'Alerte' as title,
-    'Visualiser les changements opérés' as description,
-    'alert-triangle' as icon,
-    'green' as color;
-    
-SELECT 'table' as component,
-    'nom_ens_ref' as Nom,
-    'prenom_ens_ref' as Prénom,
-    'tel_ens_ref' as Téléphone,
-    'email' as courriel;
-SELECT 
-      nom_ens_ref as Nom,
-      prenom_ens_ref as Prénom,
-      tel_ens_ref as Téléphone,
-      email as courriel
-FROM referent WHERE referent.id=$id;
- 
- 
+
+
 --- Formulaire de Mise à jour
-SELECT 
-    'alert' as component,
-    'Alerte' as title,
-    'Version antérieure :' as description,
-    'alert-triangle' as icon,
-    'red' as color;
-*/    
-SELECT 
+  SELECT 
     'form' as component,
     'Mettre à jour' as validate,
     'referent_edit_confirm.sql?id='||$id||'&username='||$username as action,

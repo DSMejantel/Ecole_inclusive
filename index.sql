@@ -97,19 +97,7 @@ ELSE
                  )
                 ) 
             END    AS properties FROM etab FULL JOIN referent on etab.id=referent.id;
-/*
-SELECT 'shell' AS component,
-'Pôle d''Appui à la Scolarité' as title,
-        'Source : Webmestre / Collège Henri Bourrillon / Mende -2023' as footer,
-        'fr-FR'                   as language,
-    'home' as icon,
-    '/' as link,
-    TRUE as norobot,
-        CASE COALESCE(sqlpage.cookie('session'), '')
-        WHEN '' THEN '["eleves", "aesh", "etablissement", "referent", "parametres", "login"]'
-        ELSE '["eleves", "aesh", "etablissement", "referent", "parametres", "logout"]'
-    END AS menu_item;
-*/   
+
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));    
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
