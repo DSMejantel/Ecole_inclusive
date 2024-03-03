@@ -58,7 +58,7 @@ SELECT
   eleve.nom || ' '|| eleve.prenom ||  ' (' || eleve.classe || ') '  AS title,
   'green' as color, 
   coalesce(image_url, './icons/profil.png') as top_image,
-  coalesce('Mission de l''AESH : '|| ' ' || suivi.mission, 'non saisi') as description,
+  coalesce('Mission de l''AESH : ' || suivi.mission, 'non saisi') as description,
   group_concat(DISTINCT dispositif.dispo) as footer,
   '[
   ![](./icons/list-check.svg)
