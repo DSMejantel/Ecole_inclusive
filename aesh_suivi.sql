@@ -57,14 +57,8 @@ SELECT 'card' as component,
 SELECT 
   eleve.nom || ' '|| eleve.prenom ||  ' (' || eleve.classe || ') '  AS title,
   'green' as color, 
-  CASE WHEN EXISTS (SELECT eleve.id FROM image WHERE eleve.id=image.eleve_id)
-  THEN image_url 
-  ELSE './icons/profil.png'
-  END as top_image,
-  CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id) 
-  THEN 'Mission de l''AESH : '|| ' ' || suivi.mission
-  ELSE 'non saisi'
-  END  as description,
+  coalesce(image_url, './icons/profil.png') as top_image,
+  coalesce('Mission de l''AESH : ' || suivi.mission, 'non saisi') as description,
   group_concat(DISTINCT dispositif.dispo) as footer,
   '[
   ![](./icons/list-check.svg)
