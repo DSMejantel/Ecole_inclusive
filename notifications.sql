@@ -42,11 +42,6 @@ select
      
 -- Liste des notifications
 SELECT 'table' as component,
-    'nom' as Nom,
-    'prenom' as Prénom,
-    'datefin' as Fin,
-    'nom_ens_ref' as Référent,
-    'etab' as Établissement,
     'Suivis' as markdown,
     1 as sort,
     1 as search;
@@ -62,20 +57,13 @@ SELECT
   etab.nom_etab as Établissement,
   nom_ens_ref as Référent,
   strftime('%d/%m/%Y',datefin) AS Fin,  
-        CASE
-       WHEN EXISTS (SELECT eleve.id FROM suivi WHERE suivi.eleve_id=eleve.id) THEN
-      '[
-    ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||')[
-    ![](./icons/user-plus.svg)
-]()' 
-ELSE
- '[
-    ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||')[
-    ![](./icons/user-off.svg)
-]()' 
-END as Suivis
+  printf('[ ![](./icons/briefcase.svg) ](notification.sql?id=%s)[ ![](%s) ]()',
+    eleve.id,
+    CASE WHEN EXISTS (SELECT 1 FROM suivi WHERE suivi.eleve_id=eleve.id)
+        THEN './icons/user-plus.svg'
+        ELSE './icons/user-off.svg'
+    END
+  ) as Suivis
 FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
 -- Télécharger les données
 SELECT 
