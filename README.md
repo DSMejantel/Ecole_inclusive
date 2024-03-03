@@ -20,3 +20,6 @@ de préciser des aménagements que l'on retrouve automatiquement côté AESH ou 
 L'utilisateur par défaut est admin et le mot de passe est admin
 Cet utilisateur n'apparaît pas dans la liste des comptes afin de ne pas l'effacer par errreur.
 
+## Schéma de la base de données
+
+![Schéma de la base de données d'École Inclusive](https://github.com/DSMejantel/Ecole_inclusive/assets/552629/1a41bd57-f904-4e5e-a0f1-7df648e37b98)
