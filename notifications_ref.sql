@@ -38,7 +38,7 @@ select
 SELECT 
     'datagrid' as component;
 SELECT 
-    'Referent - MDPH : ' as title,
+    'Referent - MDA/MDPH : ' as title,
     nom_ens_ref||' '||prenom_ens_ref as description, 'orange' as color, 1 as active
       FROM referent WHERE referent.id = $id;
 SELECT 
@@ -57,7 +57,6 @@ SELECT 'table' as component,
     'modalite' as Modalité,
     'nom_ens_ref' as Référent,
     'etab' as Établissement,
-    'icon' as icon,
     'actions' as markdown,
     1 as sort,
     1 as search;
@@ -74,13 +73,19 @@ SELECT
         ELSE 'green'
     END AS _sqlpage_color,
       CASE
-       WHEN notification.datefin < datetime(date('now', '+1 day')) THEN 'user-off'
-        ELSE 'user-plus'
-    END AS icon,
+      WHEN EXISTS (SELECT eleve.id FROM suivi WHERE suivi.eleve_id=eleve.id) THEN
+       '[
+    ![](./icons/user-plus.svg)
+](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)'
+        ELSE 
+        '[
+    ![](./icons/user-off.svg)
+]()'
+    END AS actions,
       '[
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)' as actions
-FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where referent.id=$id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
+FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where referent.id=$id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
 -- Télécharger les données
 SELECT 
     'csv' as component,
