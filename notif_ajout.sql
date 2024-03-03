@@ -61,10 +61,10 @@ SELECT 'form' as component,
     'green'           as validate_color,
     'Recommencer'           as reset;
 
-SELECT 'Origine' AS 'label', 'select' as type, '[{"label": "MDPH", "value": 0}, {"label": "CDAO", "value": 1}]' as options, 'origine' AS name, 2 as width;
-SELECT 'Département' AS 'label', 'text' as type, 'dpmt' AS name, 2 as width; 
-SELECT 'Début' AS 'label', 'date' as type, 'datedeb' AS name, 4 as width;
-SELECT 'Fin' AS 'label', 'date' as type, 'datefin' AS name, 4 as width;
-SELECT 'droits ouverts pour :' AS 'label', 'modalite[]' as name, 6 as width, 'select' as type, true as multiple, json_group_array(json_object("label", type, "value", id)) as options FROM (select * FROM modalite ORDER BY type ASC);
-SELECT 'Aide pour :' AS 'label', 'text' as type, 'acces' AS name, 6 as width;    
+SELECT 'Origine' AS 'label', 'select' as type, '[{"label": "MDPH", "value": 0}, {"label": "CDAO", "value": 1}]' as options, 'origine' AS name, 3 as width;
+SELECT 'Département' AS 'label', 'world' as prefix_icon, 'text' as type, 'dpmt' AS name, 3 as width; 
+SELECT 'Début' AS 'label', 'calendar-up' as prefix_icon, 'date' as type, 'datedeb' AS name, 3 as width;
+SELECT 'Fin' AS 'label', 'calendar-down' as prefix_icon, 'date' as type, 'datefin' AS name, 3 as width;
+SELECT 'Droits ouverts pour :' AS 'label', 'modalite[]' as name, 6 as width, 'select' as type, true as multiple, json_group_array(json_object("label", type, "value", id)) as options FROM (select * FROM modalite ORDER BY type ASC);
+SELECT 'Aide pour :' AS 'label', 'lifebuoy' as prefix_icon, 'text' as type, 'acces' AS name, 6 as width;    
 

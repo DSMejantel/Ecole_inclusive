@@ -53,6 +53,18 @@ select
         $group_id::int<2 as disabled,
     'red' as outline;
 
+select 
+    'list'             as component,
+    'Liste des notifications proposées par la MDPH' as title;
+select 
+    'Wikipedia'             as title,
+    'https://wikipedia.org' as link,
+    'An encyclopedia'       as description,
+    'blue'                  as color,
+    'world'                 as icon,
+    '?edit=wikipedia'       as edit_link,
+    '?delete=wikipedia'     as delete_link;
+
 
  SELECT 'card' as component,
   'Type de notifications' AS title,

@@ -5,6 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
+
 select 
     'button' as component,
     'sm'     as size,
@@ -24,6 +25,7 @@ select
 -- INSERT INTO aesh(aesh_name, aesh_firstname, tel_aesh, courriel_aesh, quotite) SELECT :aesh_name, :aesh_firstname, :tel_aesh, :courriel_aesh, :quotite WHERE :aesh_name IS NOT NULL;
 
 SELECT 'table' as component,
+    TRUE    as hover,
     'Actions' as markdown,
         'Admin' as markdown,
     'aesh_name' as Nom,

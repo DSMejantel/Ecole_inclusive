@@ -134,7 +134,7 @@ select
     FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
 
 -- Bouton vers détails par classe
-select 
+/*select 
     'button' as component,
     'sm'     as size,
     'pill'   as shape,
@@ -146,22 +146,20 @@ select
     'orange' as color;
     
 -- Différents Dispositifs en place par Classe
-/*select 
+
+select 
     'chart'               as component,
     'Différents dispositifs par classe' as title,
     'bar'             as type,
         500 as height,
     TRUE as labels,
-    --1 as toolbar,
     TRUE as stacked,
     'Classes' as xtitle,
     'Nombre de dispositifs' as ytitle;
 select 
     Nom_dispositif as series,
     classe as x,
-    classe as label,
     coalesce(Nombre,0) as value
     FROM stats01 WHERE etab=$id ORDER BY classe;
-*/  
-
+*/
 

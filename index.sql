@@ -8,6 +8,7 @@ json_object(
     'link', '/',
     'icon', 'home',
     'language','fr-FR',
+    'layout', 'fluid',
     'norobot', TRUE,    
     'menu_item', json_array(
         json_object(
@@ -22,6 +23,7 @@ ELSE
     'link', '/',
     'icon', 'home',
     'language','fr-FR',
+    'layout', 'fluid',
     'norobot', TRUE,    
     'menu_item', json_array(
         json_object(
@@ -85,7 +87,7 @@ ELSE
             'title', 'Mon compte',
             'submenu', json_array(
                 json_object(
-                    'link', 'parametres.sql?tab=Profil',
+                    'link', 'parametres.sql?tab=Mon profil',
                     'title', 'Mon profil'
                 ),
                 json_object(
@@ -95,9 +97,7 @@ ELSE
                  )
                 ) 
             END    AS properties FROM etab FULL JOIN referent on etab.id=referent.id;
-
 /*
--- Menu classique
 SELECT 'shell' AS component,
 'Pôle d''Appui à la Scolarité' as title,
         'Source : Webmestre / Collège Henri Bourrillon / Mende -2023' as footer,
@@ -109,8 +109,7 @@ SELECT 'shell' AS component,
         WHEN '' THEN '["eleves", "aesh", "etablissement", "referent", "parametres", "login"]'
         ELSE '["eleves", "aesh", "etablissement", "referent", "parametres", "logout"]'
     END AS menu_item;
-*/ 
-  
+*/   
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));    
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion

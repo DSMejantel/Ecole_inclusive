@@ -3,17 +3,25 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+--Menu
+SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
+    
 -- Message si droits insuffisants sur une page
 SELECT 'alert' as component,
     'Attention !' as title,
     'Vous ne possédez pas les droits suffisants pour accéder à cette page.' as description_md,
     'alert-circle' as icon,
     'red' as color
-WHERE $restriction IS NOT NULL;  
+WHERE $restriction IS NOT NULL;    
 
---Menu
-SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
-    
+/*SELECT 
+    'tab' as component,
+    0 as center;
+SELECT 
+    'Ajouter un élève' as title,
+    'eleve.sql' as link,
+    'square-rounded-plus' as icon;
+    */
 select 
     'button' as component,
     'sm'     as size,
@@ -31,6 +39,8 @@ select
       
 -- Liste des élèves
 SELECT 'table' as component,
+    TRUE    as hover,
+    TRUE    as small,
     'Suivis' AS markdown,
         'Aménagement' AS markdown,
         'admin' AS markdown,

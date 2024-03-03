@@ -77,13 +77,13 @@ select
     'Mettre à jour' as validate,
     'orange'           as validate_color;
        
-    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 5 as width;
-    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 4 as width;
-    SELECT 'Date de naissance' AS label, 'naissance' AS name, 'date' as type, $naissance_edit as value, 3 as width;
+    SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, $nom_edit as value, 5 as width;
+    SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, $prenom_edit as value, 4 as width;
+    SELECT 'Date de naissance' AS label, 'calendar-month' as prefix_icon, 'naissance' AS name, 'date' as type, $naissance_edit as value, 3 as width;
     SELECT 'Établissement' AS name, 4 as width, 
           $etab_edit::integer as value,
     'select' as type, json_group_array(json_object("label", nom_etab, "value", etab.id)) as options FROM etab;
-    SELECT 'Classe' AS label, 'classe' AS name, $classe_edit as value, 4 as width;
+    SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 4 as width;
     SELECT 'Référent' AS name, 
     'select' as type, 4 as width,
       $referent_edit::integer as value,

@@ -29,12 +29,12 @@ select 'tab' as component;
 select  'Tableau de bord'  as title, 'tool' as icon, 1  as active, CASE WHEN $tab='Tableau de bord' THEN 'orange' ELSE 'green' END as color;
 select  'Carte' as title, 'map' as icon, 0 as active, CASE WHEN $tab='Carte' THEN 'orange' ELSE 'green' END as color;
 select  'Paramètres' as title, 'tool' as icon, 1 as active, CASE WHEN $tab='Paramètres' THEN 'orange' ELSE 'green' END as color;
-select  'Profil' as title, 'user-circle' as icon, 1 as active, CASE WHEN $tab='Profil' THEN 'orange' ELSE 'green' END as color;
-select  'Comptes' as title, 'user-circle' as icon, CASE WHEN $tab='Comptes' THEN 'orange' ELSE 'green' END as color;
+select  'Mon profil' as title, 'user-circle' as icon, 1 as active, CASE WHEN $tab='Mon profil' THEN 'orange' ELSE 'green' END as color;
+select  CASE WHEN $group_id::int>2  THEN 'Comptes'  END as title, CASE WHEN $group_id::int>2  THEN  'user-circle' ELSE '' END as icon, CASE WHEN $tab='Comptes' THEN 'orange' ELSE 'green' END as color;
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
 SELECT 'text' AS component
-    where $tab='Profil';
+    where $tab='Mon profil';
 SELECT
 'green' as color,
 COALESCE((SELECT
@@ -48,7 +48,7 @@ COALESCE((SELECT
             END)
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents
-    where $tab='Profil';
+    where $tab='Mon profil';
 
  -- Boutons administration du profil
 select 
@@ -56,34 +56,20 @@ select
     'sm'     as size,
     'pill'   as shape,
     'start' as justify
-    where $tab='Profil';
+    where $tab='Mon profil';
 select 
     'Éditer mon Compte' as title,
     'comptes_user.sql' as link,
     'user-filled' as icon,
     'green' as outline
-    where $tab='Profil';
+    where $tab='Mon profil';
 select 
     'Changer mon mot de passe' as title,
     'comptes_user_password.sql' as link,
     'lock' as icon,
     'green' as outline
-    where $tab='Profil';
-/*select 
-    'Nouveau Compte' as title,
-    'comptes_ajout.sql' as link,
-    'square-rounded-plus' as icon,
-    $group_id::int<3 as disabled,
-    'red' as outline
-    where $tab='Profil';
-select 
-    'Comptes' as title,
-    'comptes.sql' as link,
-    'user-circle' as icon,
-    $group_id::int<3 as disabled,
-    'red' as outline
-    where $tab='Profil';
-*/    
+    where $tab='Mon profil';
+   
 -- Profil
 SET user_edit = (SELECT login_session.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'table' as component,
@@ -91,7 +77,7 @@ SELECT 'table' as component,
     'prenom' as Prénom,
     'tel' as Téléphone,
     'courriel' as courriel
-        where $tab='Profil';
+        where $tab='Mon profil';
 SELECT 
   username as Identifiant,
   nom AS Nom,
@@ -99,7 +85,7 @@ SELECT
   tel as Téléphone,
   courriel as courriel
 FROM user_info WHERE username=$user_edit
-    and $tab='Profil';
+    and $tab='Mon profil';
     
  -- Boutons administration des comptes
 select 
@@ -116,26 +102,19 @@ select
     'red' as outline
     where $tab='Comptes';
 select 
-    'Importation' as title,
-    'comptes_import.sql' as link,
-    'upload' as icon,
-    $group_id::int<3 as disabled,
-    'red' as outline
-    where $tab='Comptes';
-select 
     'Comptes' as title,
     'comptes.sql' as link,
     'user-circle' as icon,
     $group_id::int<3 as disabled,
     'red' as outline
     where $tab='Comptes';
-    
 select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape,
-    'start' as justify
-    where $tab='Comptes';    
+    'Importation' as title,
+    'comptes_import.sql' as link,
+    'upload' as icon,
+    $group_id::int<3 as disabled,
+    'red' as outline
+    where $tab='Comptes';   
 select 
     'Outil Mot de passe' as title,
     'generate_password_hash.sql' as link,
@@ -233,39 +212,45 @@ select
     'referent.sql' as link,
     'writing' as icon,
     'Orange' as color,
-    'orange' as outline
+    'orange' as outline,
+    TRUE     as space_after
     where $tab='Paramètres';
 select 
     'type de Notification' as title,
     'modalite.sql' as link,
     'certificate-2' as icon,
     'Orange' as color,
-    'orange' as outline
+    'orange' as outline,
+    TRUE     as space_after
                 where $tab='Paramètres';
 select 
     'Dispositifs' as title,
     'dispositif.sql' as link,
     'lifebuoy' as icon,
     'Orange' as color,
-    'orange' as outline
+    'orange' as outline,
+    TRUE     as space_after
                 where $tab='Paramètres';
 select 
     'Établissements' as title,
     'etablissement.sql' as link,
     'building-community' as icon,
-    'orange' as outline
+    'orange' as outline,
+    TRUE     as space_after
             where $tab='Paramètres';
 select 
     'Accompagnants' as title,
     'aesh.sql' as link,
     'user-plus' as icon,
-    'orange' as outline
+    'orange' as outline,
+    TRUE     as space_after
             where $tab='Paramètres';
 select 
     'Gestion des élèves' as title,
     'eleves.sql' as link,
     'users-group' as icon,
-    'orange' as outline
+    'orange' as outline,
+    TRUE     as space_after
             where $tab='Paramètres';
 
 --- Menu ajouter

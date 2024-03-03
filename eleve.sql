@@ -15,11 +15,11 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
     'green'           as validate_color,
     'Recommencer'           as reset;
     
-    SELECT 'Nom' AS label, 'nom' AS name, 5 as width;
-    SELECT 'Prénom' AS label, 'prenom' AS name, 4 as width;
-    SELECT 'Date de naissance' AS label, 'naissance' AS name, 'date' as type, 3 as width;
+    SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, 5 as width;
+    SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, 4 as width;
+    SELECT 'Date de naissance' AS label, 'calendar-month' as prefix_icon, 'naissance' AS name, 'date' as type, 3 as width;
     SELECT 'Etablissement' AS name, 'select' as type, 4 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select * FROM etab ORDER BY nom_etab ASC);
-    SELECT 'Classe' AS label, 'classe' AS name, 4 as width;
+    SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, 4 as width;
     SELECT 'Référent' AS name, 'select' as type, 4 as width,
     json_group_array(json_object("label" , nom_ens_ref, "value", id )) as options FROM (select * FROM referent ORDER BY nom_ens_ref ASC);
     SELECT 'Commentaire' AS label,'textarea' as type, 'comm_eleve' AS name;

@@ -4,6 +4,7 @@
     "link": "/",
     "icon": "home",
     "language":"fr-FR",
+    "layout": "fluid",
     "norobot": "TRUE",
     "menu_item": [
         {"title": "Élèves", "submenu": [
@@ -27,7 +28,7 @@
             {"link": "parametres.sql?tab=Paramètres", "title": "Paramètres"}
         ]},
         {"title": "Mon compte", "submenu": [
-            {"link": "parametres.sql?tab=Profil", "title": "Mon profil"},
+            {"link": "parametres.sql?tab=Mon profil", "title": "Mon profil"},
             {"link": "logout.sql", "title": "Se déconnecter"}
         ]}
     ]

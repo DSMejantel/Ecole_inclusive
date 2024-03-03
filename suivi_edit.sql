@@ -70,7 +70,7 @@ select
     
      SELECT 'AESH' as label, 'AESH2' as name, 3 as width, $aesh_edit::integer as value, 'select' AS type, 
      json_group_array(json_object("label", aesh_name, "value", id)) as options FROM aesh;
-     SELECT 'Temps de suivi hebdomadaire' AS label, 'temps2' AS name, 'number' as type, 0.5 as step, $temps_edit as value, 3 as width;     
+     SELECT 'Temps de suivi hebdomadaire' AS label, 'clock' as prefix_icon, 'temps2' AS name, 'number' as type, 0.5 as step, $temps_edit as value, 3 as width;     
      SELECT 'mutualisation' as label, 'mutualisation2' as name, 3 as width, $mut_edit::integer as value,'select' as type, '[{"label": "non", "value": 1}, {"label": "oui", "value": 2}]' as options;
      SELECT 'individuel' as label, 'individuel2' as name, 3 as width, $ind_edit::integer as value,'select' as type, '[{"label": "non", "value": 0}, {"label": "oui", "value": 1}]' as options;
      SELECT 'Mission de l''accompagnant' as label, 'mission2' as name, 'textarea' as type, $mission_edit as value, 12 as width;

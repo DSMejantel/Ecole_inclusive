@@ -57,26 +57,19 @@ SELECT 'text' AS component,
  
 --- Formulaire de Mise à jour
 SELECT 
-    'alert' as component,
-    'Alerte' as title,
-    'Version antérieure :' as description,
-    'alert-triangle' as icon,
-    'red' as color;
-    
-SELECT 
     'form' as component,
     'aesh_edit_confirm.sql?id='||$id||'&username='||$username as action,
     'Mettre à jour' as validate,
     'orange'           as validate_color;
     
-    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 6 as width;
-    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 6 as width;
-    SELECT 'Téléphone' AS label, 'tel' AS name, CHAR(10), $tel_edit as value, 6 as width;
-    SELECT 'Courriel' AS label, 'email' AS name, $email_edit as value, 6 as width;
-    SELECT 'Quotité' AS label, 'quotite' AS name, 'number' AS type, $quotite_edit as value, 3 as width;
-        SELECT 'Temps en ULIS' AS label, 'tps_ULIS' AS name, 'number' AS type, 0.5 as step, $tps_ULIS_edit as value, 3 as width;
-        SELECT 'Temps d''activités' AS label, 'tps_mission' AS name, 'number' AS type, 0.5 as step, $tps_mission_edit as value, 3 as width;
-        SELECT 'Temps de synthèse' AS label, 'tps_synthese' AS name, 'number' AS type, 0.5 as step, $tps_synthese_edit as value, 3 as width;
+    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 'user' as prefix_icon, 6 as width;
+    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 'user' as prefix_icon, 6 as width;
+    SELECT 'Téléphone' AS label, 'tel' AS name, CHAR(10), $tel_edit as value, 'phone' as prefix_icon, 6 as width;
+    SELECT 'Courriel' AS label, 'email' AS name, $email_edit as value, 'mail' as prefix_icon, 6 as width;
+    SELECT 'Quotité' AS label, 'quotite' AS name, 'number' AS type, $quotite_edit as value, 'calendar-time' as prefix_icon, 3 as width;
+        SELECT 'Temps en ULIS' AS label, 'tps_ULIS' AS name, 'number' AS type, 0.5 as step, $tps_ULIS_edit as value, 'clock' as prefix_icon, 3 as width;
+        SELECT 'Temps d''activités' AS label, 'tps_mission' AS name, 'number' AS type, 0.5 as step, $tps_mission_edit as value, 'clock-play' as prefix_icon, 3 as width;
+        SELECT 'Temps de synthèse' AS label, 'tps_synthese' AS name, 'number' AS type, 0.5 as step, $tps_synthese_edit as value, 'clock-question' as prefix_icon, 3 as width;
     
  
 

@@ -28,16 +28,50 @@ select
     'referent.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;  
-
+/*    
+   -- Mettre à jour le référent modifié dans la base
+ UPDATE referent SET nom_ens_ref=$nom, prenom_ens_ref=$prenom, tel_ens_ref=$tel, email=$email WHERE id=$id and $nom is not null;
+     -- Mettre à jour le compte modifié dans la base
+ UPDATE user_info SET nom=$nom, prenom=$prenom, tel=$tel, courriel=$email WHERE username=$username and $nom is not null;
+*/ 
+/*     -- Référent concerné
+SELECT 
+    'alert' as component,
+    'Alerte' as title,
+    'Visualiser les changements opérés' as description,
+    'alert-triangle' as icon,
+    'green' as color;
+    
+SELECT 'table' as component,
+    'nom_ens_ref' as Nom,
+    'prenom_ens_ref' as Prénom,
+    'tel_ens_ref' as Téléphone,
+    'email' as courriel;
+SELECT 
+      nom_ens_ref as Nom,
+      prenom_ens_ref as Prénom,
+      tel_ens_ref as Téléphone,
+      email as courriel
+FROM referent WHERE referent.id=$id;
+ 
+ 
+--- Formulaire de Mise à jour
+SELECT 
+    'alert' as component,
+    'Alerte' as title,
+    'Version antérieure :' as description,
+    'alert-triangle' as icon,
+    'red' as color;
+*/    
 SELECT 
     'form' as component,
     'Mettre à jour' as validate,
     'referent_edit_confirm.sql?id='||$id||'&username='||$username as action,
     'orange'           as validate_color;
     
-    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 6 as width;
-    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 6 as width;
-    SELECT 'Téléphone' AS label, 'tel' AS name, CHAR(10), $tel_edit as value, 6 as width;
-    SELECT 'Courriel' AS label, 'email' AS name, $email_edit as value, 6 as width;
+    SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, $nom_edit as value, 6 as width;
+    SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, $prenom_edit as value, 6 as width;
+    SELECT 'Téléphone' AS label, 'phone' as prefix_icon, 'tel' AS name, CHAR(10), $tel_edit as value, 6 as width;
+    SELECT 'Courriel' AS label, 'mail' as prefix_icon, 'email' AS name, $email_edit as value, 6 as width;
  
 

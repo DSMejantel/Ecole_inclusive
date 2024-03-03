@@ -53,15 +53,15 @@ SELECT
     'green'           as validate_color,
     'Recommencer'           as reset;
 
-    SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-    SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width;   
-    SELECT 'Nom' AS label, 'nom' AS name, 6 as width;
-    SELECT 'Prénom' AS label, 'prenom' AS name, 6 as width;
+    SELECT 'username' AS name, 'id' as prefix_icon, 'Identifiant' as label, 6 as width;
+    SELECT 'code' AS name, 'lock' as prefix_icon, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width;   
+    SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, 6 as width;
+    SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, 6 as width;
     SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,
     0        as value,
     '[{"label": "Consultant", "value": 1}, {"label": "Éditeur", "value": 2}, {"label": "administrateur", "value": 3}]' as options;
-    SELECT 'Téléphone' AS label, 'tel_ens_ref' AS name, CHAR(10), 4 as width;
-    SELECT 'Courriel' AS label, 'email' AS name, 4 as width;
+    SELECT 'Téléphone' AS label, 'phone' as prefix_icon, 'tel_ens_ref' AS name, CHAR(10), 4 as width;
+    SELECT 'Courriel' AS label, 'mail' as prefix_icon, 'email' AS name, 4 as width;
     
 
 SELECT 'table' as component,
