@@ -65,7 +65,7 @@ ELSE
                 ))),     
         json_object(
             'link', 'referent.sql',
-            'title', 'Référent MDPH'
+            'title', 'Référent MDA/MDPH'
                 ),     
         json_object(
             'title', 'Paramétrage',

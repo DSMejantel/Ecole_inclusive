@@ -21,7 +21,7 @@
             {"link": "etablissement.sql", "title": "Liste"},
             {"link": "etab_ajout.sql", "title": "Ajouter"}
         ]},
-        {"link": "referent.sql", "title": "Réf. MDPH"},
+        {"link": "referent.sql", "title": "Réf. MDA/MDPH"},
         {"title": "Paramétrage", "submenu": [
             {"link": "parametres.sql?tab=Tableau de bord", "title": "Tableau de bord"},
             {"link": "parametres.sql?tab=Carte", "title": "Carte"},

@@ -55,7 +55,7 @@ select
 
  SELECT 'card' as component,
   'Type de notifications' AS title,
-   'Liste des notifications proposées par la MDPH' AS description,
+   'Liste des notifications proposées par la MDA/MDPH' AS description,
   5 as columns;
 SELECT 
   type AS title,
