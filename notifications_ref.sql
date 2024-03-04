@@ -66,19 +66,9 @@ SELECT
        WHEN notification.datefin < datetime(date('now', '+350 day')) THEN 'orange'
         ELSE 'green'
     END AS _sqlpage_color,
-      CASE
-      WHEN EXISTS (SELECT eleve.id FROM suivi WHERE suivi.eleve_id=eleve.id) THEN
-       '[
-    ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)'
-        ELSE 
-        '[
-    ![](./icons/user-off.svg)
-]()'
-    END AS actions,
-      '[
-    ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)' as actions
+  '[ ![](./icons/briefcase.svg) ](notification.sql?id=' || eleve.id || ')' ||
+  coalesce('[ ![](./icons/user-plus.svg) ](aesh_suivi.sql?id=' || suivi.aesh_id || '&tab=Profils)',
+                 '  ![](./icons/user-off.svg) ') as actions
 FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where referent.id=$id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
 
 -- Télécharger les données
