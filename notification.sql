@@ -84,25 +84,25 @@ select
     'sm'     as size,
     'pill'   as shape;*/
 select 
-    '+ notification' as title,
+    '+ Notification' as title,
     'notif_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'certificate' as icon,
     'orange' as outline;
 select 
-    '+ dispositif' as title,
+    '+ Dispositif' as title,
     'dispo_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'lifebuoy' as icon,
     'orange' as outline;
 select 
-    '+ aménagement' as title,
+    '+ Aménagement' as title,
     'amenag_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'list-check' as icon,
     'orange' as outline;
 select 
-    '+ suivi' as title,
+    '+ Suivi' as title,
     'suivi_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'user-plus' as icon,
