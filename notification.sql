@@ -67,13 +67,13 @@ select
     'sm'     as size,
     'pill'   as shape;
 select 
-    'Modifier l''élève' as title,
+    'Fiche élève' as title,
     'pencil' as icon,
     'red' as outline,
         $group_id::int<2 as disabled,
     'eleve_edit.sql?id='||$id as link FROM eleve where eleve.id=$id;
 select 
-    'photo' as title,
+    '+ Photo' as title,
     'camera-plus' as icon,
     'red' as outline,
         $group_id::int<3 as disabled,
@@ -84,25 +84,25 @@ select
     'sm'     as size,
     'pill'   as shape;*/
 select 
-    'Ajouter notification' as title,
+    '+ notification' as title,
     'notif_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'certificate' as icon,
     'orange' as outline;
 select 
-    'affecter sur dispositif' as title,
+    '+ dispositif' as title,
     'dispo_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'lifebuoy' as icon,
     'orange' as outline;
 select 
-    'créer un aménagement' as title,
+    '+ aménagement' as title,
     'amenag_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'list-check' as icon,
     'orange' as outline;
 select 
-    'créer un suivi' as title,
+    '+ suivi' as title,
     'suivi_ajout.sql?id=' || $id as link,
         $group_id::int<2 as disabled,
     'user-plus' as icon,
@@ -217,7 +217,7 @@ ELSE
     ![](./icons/pencil-off.svg)
 ]()' 
 END as Actions
-  FROM eleve LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN amenag on amenag.eleve_id=eleve.id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id = aesh.id WHERE eleve.id = $id and $tab='Profil';
+  FROM eleve LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN amenag on amenag.eleve_id=eleve.id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id = aesh.id WHERE eleve.id = $id and $tab='Profil' GROUP BY amenag.id;
   
 -- Remarques éventuelles
 SELECT 'table' as component, 
