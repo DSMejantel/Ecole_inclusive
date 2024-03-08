@@ -7,7 +7,8 @@ CREATE TABLE aesh(
     courriel_aesh TEXT,
     quotite INTEGER,
     tps_mission INTEGER,
-    tps_synthese INTEGER, tps_ULIS DECIMAL
+    tps_synthese INTEGER, 
+    tps_ULIS DECIMAL
 );
     
 CREATE TABLE affectation(
@@ -102,6 +103,13 @@ CREATE TABLE suivi(
     temps DECIMAL,
     mut INTEGER DEFAULT 1,
     ind INTEGER DEFAULT 0, mission TEXT
+);
+
+CREATE TABLE edt (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    aesh_id INTEGER,
+    edt_url TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE user_info (
