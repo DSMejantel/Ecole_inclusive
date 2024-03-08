@@ -22,8 +22,8 @@ SET USER1 = (SELECT count(username) from user_info);
 SET USER2 = (SELECT count(username) from user_tmp);
 
 -- insert the data into the final table
-INSERT OR IGNORE INTO user_info (username, nom, prenom, tel, courriel, groupe, activation)
-select username, nom, prenom, tel, courriel, CAST(groupe AS integer), activation   from user_tmp;
+INSERT OR IGNORE INTO user_info (username, nom, prenom, tel, courriel, groupe, activation, password_hash)
+select username, nom, prenom, tel, courriel, CAST(groupe AS integer), activation, '$argon2id$v=19$m=19456,t=2,p=1$1sY4ksaDovz/IlaAwQHO/g$Wxf2S29maUh1kXZv5aNRLC71dpFkYNmHt7MOS9yMKeA'   from user_tmp;
 
 SET USER3 = (SELECT count(username) from user_info);
 SET USER4 = $USER3- $USER1
