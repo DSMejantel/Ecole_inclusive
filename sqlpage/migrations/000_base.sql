@@ -37,7 +37,9 @@ CREATE TABLE eleve(
     etab_id INTEGER REFERENCES etab(id),
     classe TEXT,
     referent_id INTEGER REFERENCES referent(id),
-    comm_eleve TEXT
+    comm_eleve TEXT,
+    modification TIMESTAMP, 
+    editeur TEXT
 );
 
 CREATE TABLE etab(
