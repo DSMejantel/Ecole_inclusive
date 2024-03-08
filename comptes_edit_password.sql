@@ -44,6 +44,6 @@ SELECT
     'comptes_edit_password_confirm.sql?id='||$id as action,
     'Mettre à jour' as validate,
     'orange'           as validate_color;
-SELECT 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre majuscule et une lettre minuscule, au moins un chiffre et au moins un caractère spécial.' AS description, 'Mot de passe' as label, 6 as width;
+SELECT 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*+-_!?&])[A-Za-z\d@$!%*+-_!?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre minuscule, au moins une lettre majuscule, au moins un chiffre et un caractère spécial parmi $ @ % * + - _ ! ? & ' AS description, 'Mot de passe' as label, 6 as width;
 
 

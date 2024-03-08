@@ -59,6 +59,6 @@ SELECT
     'comptes_user_password_confirm.sql?user_edit='||$user_edit as action,
     'Mettre à jour' as validate;
     
-   SELECT 'Nouveau mot de passe' AS label, 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre, au moins un chiffre et un caractère spécial parmi $ @ % * + - _ ! ' AS description;
+   SELECT 'Nouveau mot de passe' AS label, 'password' AS name, 'password' AS type, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*+-_!?&])[A-Za-z\d@$!%*+-_!?&]{8,}$' AS pattern, 'Le mot de passe doit comporter au moins 8 caractères : au moins une lettre minuscule, au moins une lettre majuscule, au moins un chiffre et un caractère spécial parmi $ @ % * + - _ ! ? & ' AS description;
 
 
