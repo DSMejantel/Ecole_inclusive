@@ -104,7 +104,7 @@ CREATE TABLE suivi(
 
 CREATE TABLE user_info (
     username TEXT PRIMARY KEY,
-    password_hash TEXT,
+    password_hash TEXT NOT NULL,
     nom TEXT,
     prenom TEXT,
     tel TEXT,
