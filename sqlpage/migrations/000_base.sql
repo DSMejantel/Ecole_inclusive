@@ -83,6 +83,7 @@ CREATE TABLE notification(
     origine TEXT,
     datedeb DATE,
     datefin DATE,
+    modalite TEXT,
     acces TEXT,
     Departement TEXT
 );
