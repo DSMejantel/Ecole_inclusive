@@ -4,7 +4,7 @@ SELECT 'redirect' AS component,
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<'2';
+        WHERE $group_id<'3';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -47,14 +47,7 @@ SELECT
     courriel_aesh as description
       FROM aesh WHERE aesh.id = $id;
 
-    
--- Rappel nom de l'AESH en cours de modification 
-SELECT 'text' AS component, 
-'red' as color,
-1 as center,
-'Modification de : ' || $nom_edit || ' ' || $prenom_edit AS contents;
-    
- 
+
 --- Formulaire de Mise à jour
 SELECT 
     'form' as component,

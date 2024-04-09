@@ -69,9 +69,6 @@ select
 
 
 -- Sous-menu / classes
-SET classe_etab = (SELECT classe FROM eleve INNER JOIN etab on eleve.etab_id = etab.id where etab.id=$id)
-SET classe_select = coalesce($Classe, coalesce($classe_select, $classe_etab));
-/*
 select 
     'button' as component,
     'sm'     as size,
@@ -88,24 +85,15 @@ select
     'users-group' as icon,
     'green' as outline
     FROM etab INNER JOIN eleve on eleve.etab_id=etab.id where etab.id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
-*/ 
 
-/*   
---alternative
- SELECT 
-    'form' as component,
-    'etab_classes.sql?id=' || $id || '&classe_select=' ||$Classe AS action,
-    'Valider' as validate,
-    'green'           as validate_color;   
-     SELECT 'Classe' AS name, 'select' as type, 3 as width, $classe_select as value, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN etab on eleve.etab_id=etab.id WHERE eleve.etab_id=$id  ORDER BY eleve.classe DESC);
-
--- Calcul des variables établissement
+-- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id and eleve.classe=$classe_select);
 -- Personnalisation NB_accomp pour version classe :
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id and eleve.classe=$classe_select);
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id and eleve.classe=$classe_select);
 SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and eleve.classe=$classe_select and suivi.aesh_id<>1);
 
+SELECT 'text' AS component, 'Classe :  ' || $classe_select AS contents;
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
     'datagrid' as component,
@@ -123,16 +111,8 @@ SELECT
 ' AESH ' as title,
     $NB_aesh as description,
     'user-plus' as icon;
-*/    
--- En-tête
-select 
-    'card' as component,
-     2      as columns;
-select 
-    '/classe/choix.sql?_sqlpage_embed'|| '&classe_select=' ||$classe_select||'&id=' || $id  as embed;
-select 
-    '/classe/tableau.sql?_sqlpage_embed'|| '&classe_select=' ||$classe_select||'&id=' || $id as embed;
-  
+    
+    
 --Onglets
 SET tab=coalesce($tab,'Résumé');
 select 'tab' as component;
@@ -194,7 +174,6 @@ ELSE
 END
 as Admin
   FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id WHERE eleve.etab_id=$id and eleve.classe=$classe_select and $tab='Résumé' GROUP BY eleve.id ORDER BY eleve.nom ASC;  
-  
 -- Télécharger les données
 SELECT 
     'csv' as component,

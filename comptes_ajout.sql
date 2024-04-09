@@ -6,7 +6,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -21,11 +21,12 @@ SELECT 'form' AS component,
 -- Formulaire
 SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
 SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width;
-SELECT 'nom' AS name, 'Nom' as label, 6 as width;
-SELECT 'prenom' AS name, 'Prénom' as label, 6 as width;
+SELECT 'nom' AS name, 'Nom' as label, 4 as width;
+SELECT 'prenom' AS name, 'Prénom' as label, 4 as width;
+    SELECT 'Etablissement' AS name, 'select' as type, 4 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select * FROM etab ORDER BY nom_etab ASC);
     SELECT 'Téléphone' AS label, 'tel' AS name, 4 as width;
     SELECT 'Courriel' AS label, 'courriel' AS name, 4 as width;
 SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,
     0        as value,
-    '[{"label": "Consultant", "value": 1}, {"label": "Éditeur", "value": 2}, {"label": "administrateur", "value": 3}]' as options;
+    '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options;
 

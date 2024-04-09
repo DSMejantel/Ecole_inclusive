@@ -3,45 +3,36 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+FROM eleve WHERE (SELECT user_info.etab FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') and user_info.etab<>$id);
+
 --Menu
-SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
+SELECT 'dynamic' AS component, 
+CASE WHEN $group_id=1
+THEN sqlpage.read_file_as_text('index.json')
+ELSE sqlpage.read_file_as_text('menu.json')
+            END    AS properties; 
+
 
 -- Sous-menu / bascule
 select 
     'button' as component,
     'sm'     as size,
-    'pill'   as shape,
+    --'pill'   as shape,
     'center' as justify;
 select 
-    'Carte' as title,
-    'etab_carte.sql?id=' || $id as link,
-    'map' as icon,
-    'orange' as outline;
-select 
-    'Stats' as title,
-    'etab_stats.sql?id=' || $id as link,
-    'chart-histogram' as icon,
-    'orange' as outline;
-select 
-    'Photos' as title,
-    'etab_trombi.sql?id=' || $id as link,
-    'camera' as icon,
-    'orange' as outline;
-select 
-    'Notifications' as title,
-    'etab_notif.sql?id=' || $id as link,
-    'certificate' as icon,
-    'orange' as outline;
+    'AESH' as title,
+    'etab_aesh.sql?id=' || $id as link,
+    'user-plus' as icon,
+    'orange' as outline
+     WHERE $group_id>1;
 select 
     'Suivis' as title,
     'etab_suivi.sql?id=' || $id  ||'&tab=Acc' as link,
     'list-check' as icon,
     'orange' as outline;
-select 
-    'AESH' as title,
-    'etab_aesh.sql?id=' || $id as link,
-    'user-plus' as icon,
-    'orange' as outline;
+
 select 
     'Classes' as title,
     'etab_classes.sql?id=' || $id as link,
@@ -51,6 +42,31 @@ select
     'Dispositifs' as title,
     'lifebuoy' as icon,    
     'orange' as color;
+select 
+    'Notifications' as title,
+    'etab_notif.sql?id=' || $id as link,
+    'certificate' as icon,
+    'orange' as outline;
+select 
+    'Examens' as title,
+    'etab_examen.sql?id=' || $id as link,
+    'school' as icon,
+    'orange' as outline;
+select 
+    'Carte' as title,
+    'etab_carte.sql?id=' || $id as link,
+    'map' as icon,
+    'teal' as outline;
+select 
+    'Stats' as title,
+    'etab_stats.sql?id=' || $id as link,
+    'chart-histogram' as icon,
+    'teal' as outline;
+select 
+    'Photos' as title,
+    'etab_trombi.sql?id=' || $id as link,
+    'camera' as icon,
+    'teal' as outline;
     
 -- Sous-menu / dispositifs
 select 
@@ -77,8 +93,7 @@ select
 -- Personnalisation NB_eleve pour version dispositif :
 SET NB_accomp = (SELECT count(distinct affectation.eleve_id) FROM affectation JOIN eleve on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE  eleve.etab_id=$id and affectation.dispositif_id=$dispo_select);
 
--- Use it in a query 
--- SELECT 'text' AS component, 'Élèves suivis ' || $NB_eleve ||  'Notif ' || $NB_notif ||'Suivi ' || $NB_suivi || 'AESH ' || $NB_aesh AS contents; 
+
 SELECT 'text' AS component, 'Classe :  ' || $classe_selec AS contents;
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
@@ -116,7 +131,7 @@ SELECT 'table' as component,
     WHERE eleve.id = affectation.eleve_id) THEN 'black'
         ELSE 'red'
     END AS _sqlpage_color,
-      CASE WHEN suivi.aesh_id<>1 THEN  '[
+      CASE WHEN suivi.aesh_id<>1 and $group_id>1 THEN  '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils) [
     ![](./icons/briefcase.svg)
@@ -131,7 +146,7 @@ ELSE
     ![](./icons/alert-triangle-filled.svg)
 ](notification.sql?id='||eleve.id||')' 
 END as Actions,
-CASE WHEN $group_id::int>1 THEN
+CASE WHEN $group_id::int>2 THEN
 '[
     ![](./icons/pencil.svg)
 ](eleve_edit.sql?id='||eleve.id||')'
@@ -142,7 +157,6 @@ ELSE
 END
 as Admin
   FROM eleve LEFT JOIN etab on eleve.etab_id = etab.id LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and affectation.dispositif_id=$dispo_select GROUP BY eleve.id ORDER BY eleve.nom ASC;  
-
 -- Télécharger les données
 SELECT 
     'csv' as component,

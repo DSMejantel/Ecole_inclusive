@@ -3,11 +3,9 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
--- Enregistrer la notification dans la base
- INSERT INTO dispositif(dispo, coordo) 
- SELECT $dispo as dispo,
- coalesce($coordo,0) as coordo
- WHERE $dispo IS NOT NULL;
+--Insertion dans la base
+ INSERT INTO examen(code, mesure) 
+    SELECT $code, $mesure WHERE $code IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -28,16 +26,18 @@ select
     'type de Notification' as title,
     'modalite.sql' as link,
     'certificate-2' as icon,
+    'orange' as color,
     'orange' as outline;
 select 
     'Aménagement d''examen' as title,
-    'examen.sql' as link,
     'school' as icon,
-    'orange' as outline;
+    'orange' as color;
 select 
     'Dispositifs' as title,
+    'dispositif.sql' as link,
     'lifebuoy' as icon,
-    'orange' as color;
+    'Orange' as color,
+    'orange' as outline;
 select 
     'Établissements' as title,
     'etab.sql' as link,
@@ -45,32 +45,11 @@ select
     'orange' as outline;
     
 
--- Sous Menu Ajout/suppression dispositif
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-/*select 
-    'Ajouter' as title,
-    'dispositif_ajout.sql' as link,
-    'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
-    'green' as outline;
-    */
-select 
-    'Supprimer' as title,
-    'dispositif_delete.sql' as link,
-    'trash' as icon,
-        $group_id::int<3 as disabled,
-    'red' as outline;
-
 -- Liste et ajout
 select 
     'card' as component,
      2      as columns;
 select 
-    '/dispositif/liste.sql?_sqlpage_embed' as embed;
+    '/examen/liste.sql?_sqlpage_embed' as embed;
 select 
-    '/dispositif/form.sql?_sqlpage_embed' as embed;
-
- 
+    '/examen/form.sql?_sqlpage_embed' as embed;

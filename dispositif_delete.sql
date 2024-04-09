@@ -3,7 +3,7 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));SELECT 'redirect' AS component,
         'parametres.sql?restriction' AS link
-        WHERE $group_id<'2';
+        WHERE $group_id<'3';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -12,8 +12,9 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 SELECT 
     'alert' as component,
     'Alerte' as title,
-    'Toute suppression est définitive' as description,
+    'Toute suppression est définitive. Les dispositifs déjà attribués à un élève ne peuvent pas être supprimés.' as description,
     'alert-triangle' as icon,
+    TRUE as important,
     'red' as color;       
 
 --Sous-menu Retour
@@ -23,7 +24,7 @@ select
     'pill'   as shape;
 select 
     'Retour à la liste' as title,
-    'modalite.sql' as link,
+    'dispositif.sql' as link,
     'arrow-back-up' as icon,
     'green' as outline;  
 
@@ -35,10 +36,15 @@ WHERE id = $id;
   'Liste des dispositifs' AS title,
    'Liste des dispositifs proposés sur les établissements' AS description;
 SELECT 
-  type AS title,
-  'trash' as icon,
-  'dispositif_delete.sql?id=' || id AS link
-FROM dispositif;   
+  dispo AS title,
+    CASE WHEN EXISTS (SELECT dispositif_id FROM affectation WHERE dispositif.id = affectation.dispositif_id)
+  THEN  'trash-off' 
+  ELSE 'trash' END as icon,
+  CASE WHEN EXISTS (SELECT dispositif_id FROM affectation WHERE dispositif.id = affectation.dispositif_id)
+  THEN ''
+  ELSE 'dispositif_delete.sql?id=' || id 
+  END AS link
+FROM dispositif order by dispo ASC;   
 
 SELECT 
     'hero' as component,

@@ -36,33 +36,18 @@ COALESCE((SELECT
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents;    
 
--- Compte concerné par la modification
-SELECT 
-    'alert' as component,
-    'Alerte' as title,
-    'Visualiser les changements opérés' as description,
-    'alert-triangle' as icon,
-    'green' as color;
-    
-SELECT 'table' as component;
-SELECT 
-  nom AS Nom,
-  prenom AS Prénom,
-  tel as Téléphone,
-  courriel as courriel
-FROM user_info WHERE username=$user_edit;    
-
 --- Formulaire de Mise à jour
 
 SELECT 
     'form' as component,
     'comptes_user_confirm.sql?user_edit='||$user_edit as action,
+    'Recommencer' as reset,
     'Mettre à jour' as validate;
     
-    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value;
-    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value;
-    SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value;
-    SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value;
+    SELECT 'Nom' AS label, 'nom' AS name, 6 as width, $nom_edit as value;
+    SELECT 'Prénom' AS label, 'prenom' AS name, 6 as width, $prenom_edit as value;
+    SELECT 'Téléphone' AS label, 'tel' AS name, 6 as width, $tel_edit as value;
+    SELECT 'Courriel' AS label, 'courriel' AS name, 6 as width, $courriel_edit as value;
   
  
 

@@ -3,6 +3,9 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+        WHERE $group_id::int<'2';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -26,6 +29,11 @@ select
     'Orange' as color,
     'orange' as outline;
 select 
+    'Aménagement d''examen' as title,
+    'examen.sql' as link,
+    'school' as icon,
+    'orange' as outline;
+select 
     'Dispositifs' as title,
     'dispositif.sql' as link,
     'lifebuoy' as icon,
@@ -45,7 +53,7 @@ select
     'Ajouter un établissement' as title,
     'etab_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<2 as disabled,
+        $group_id::int<3 as disabled,
     'green' as outline;
  --Carte   
     SELECT 
@@ -78,9 +86,16 @@ FROM etab;
    'Liste des écoles, collèges et lycées du PIAL' AS description;
 SELECT 
   type  AS description,
-  'green' as color,
+    CASE WHEN  type='Lycée'   THEN'red'
+    WHEN type='Collège' THEN 'orange'
+    ELSE 'yellow' 
+    END as color,
+    CASE WHEN type='Lycée'
+    THEN'building-community' 
+    WHEN type='Collège' THEN 'building-community'
+    ELSE 'building-cottage'      
+    END as icon,
   description as footer,
-  'building-community' as icon,
   nom_etab AS title,
   'etab_notif.sql?id=' || id as link
 FROM etab;

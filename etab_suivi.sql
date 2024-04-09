@@ -3,44 +3,35 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+FROM eleve WHERE (SELECT user_info.etab FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') and user_info.etab<>$id);
+
 --Menu
-SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties; 
+SELECT 'dynamic' AS component, 
+CASE WHEN $group_id=1
+THEN sqlpage.read_file_as_text('index.json')
+ELSE sqlpage.read_file_as_text('menu.json')
+            END    AS properties; 
+
 
 -- basculer vers notifications / Aesh
 select 
     'button' as component,
     'sm'     as size,
-    'pill'   as shape,
+    --'pill'   as shape,
     'center' as justify;
-select 
-    'Carte' as title,
-    'etab_carte.sql?id=' || $id as link,
-    'map' as icon,
-    'orange' as outline;
-select 
-    'Stats' as title,
-    'etab_stats.sql?id=' || $id as link,
-    'chart-histogram' as icon,
-    'orange' as outline;
-select 
-    'Photos' as title,
-    'etab_trombi.sql?id=' || $id as link,
-    'camera' as icon,
-    'orange' as outline;
-select 
-    'Notifications' as title,
-    'etab_notif.sql?id=' || $id as link,
-    'certificate' as icon,
-    'orange' as outline;
-select 
-    'Suivis' as title,
-    'list-check' as icon,
-    'orange' as color;
 select 
     'AESH' as title,
     'etab_aesh.sql?id=' || $id as link,
     'user-plus' as icon,
-    'orange' as outline;
+    'orange' as outline
+     WHERE $group_id>1;
+select 
+    'Suivis' as title,
+    'list-check' as icon,
+    'orange' as color;
+
 select 
     'Classes' as title,
     'etab_classes.sql?id=' || $id as link,
@@ -51,6 +42,31 @@ select
     'etab_dispositifs.sql?id=' || $id as link,
     'lifebuoy' as icon,    
     'orange' as outline;
+select 
+    'Notifications' as title,
+    'etab_notif.sql?id=' || $id as link,
+    'certificate' as icon,
+    'orange' as outline;
+select 
+    'Examens' as title,
+    'etab_examen.sql?id=' || $id as link,
+    'school' as icon,
+    'orange' as outline;
+select 
+    'Carte' as title,
+    'etab_carte.sql?id=' || $id as link,
+    'map' as icon,
+    'teal' as outline;
+select 
+    'Stats' as title,
+    'etab_stats.sql?id=' || $id as link,
+    'chart-histogram' as icon,
+    'teal' as outline;
+select 
+    'Photos' as title,
+    'etab_trombi.sql?id=' || $id as link,
+    'camera' as icon,
+    'teal' as outline;
 
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
@@ -86,16 +102,10 @@ select  'Derniers changements' as title, 'clock' as icon, 1 as active, 'etab_sui
 
 -- Liste des suivis avec accompagnement
 select 
-    'button' as component,
-    'sm'     as size,
-    'center' as justify,
-    'pill'   as shape
+    'divider' as component,
+    'Liste des élèves avec accompagnement' as contents,
+    'orange' as color
         WHERE $tab='Acc';
-select 
-    'Liste des élèves avec accompagnement' as title,
-    'user-plus' as icon,
-    'orange' as outline
-    WHERE $tab='Acc';
     
 SELECT 'table' as component,   
     'Actions' as markdown,
@@ -113,11 +123,16 @@ SELECT 'table' as component,
       group_concat(DISTINCT modalite.type) as Droits,
     group_concat(DISTINCT SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name) as AESH,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,
+    CASE WHEN $group_id::int>1 THEN
          '[
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)' as Actions
+](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)' 
+     ELSE '[
+    ![](./icons/briefcase.svg)
+](notification.sql?id='||eleve.id||'&tab=Profil)'
+     END as Actions
 FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and suivi.aesh_id<>1 and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom;
  
 -- Télécharger les données
@@ -143,18 +158,12 @@ SELECT
 FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and suivi.aesh_id<>1 and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom; 
   
   -- Liste des suivis sans accompagnement
+select 
+    'divider' as component,
+    'Liste des élèves sans accompagnements' as contents,
+    'orange' as color
+        WHERE $tab='SansAcc';
 
-select 
-    'button' as component,
-    'sm'     as size,
-    'center' as justify,
-    'pill'   as shape
-        WHERE $tab='SansAcc';
-select 
-    'Liste des élèves sans accompagnements' as title,
-    'user-off' as icon,
-    'orange' as outline
-        WHERE $tab='SansAcc';
     
 SELECT 'table' as component,   
     'Actions' as markdown,
@@ -179,18 +188,12 @@ END as Actions
 FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE not EXISTS (SELECT eleve.id FROM suivi WHERE eleve.id = suivi.eleve_id) and eleve.etab_id=$id AND $tab='SansAcc' GROUP BY eleve.id ORDER BY eleve.nom; 
 
   -- Liste des élèves en attente
-
 select 
-    'button' as component,
-    'sm'     as size,
-    'center' as justify,
-    'pill'   as shape
+    'divider' as component,
+    'Liste des élèves en attente' as contents,
+    'orange' as color
         WHERE $tab='Att';
-select 
-    'Liste des élèves en attente' as title,
-    'alert-triangle-filled' as icon,
-    'red' as outline
-            WHERE $tab='Att';
+
    
 SELECT 'table' as component,   
     'Actions' as markdown,
@@ -208,16 +211,10 @@ FROM suivi RIGHT JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_i
 
 -- Liste des derniers changements
 select 
-    'button' as component,
-    'sm'     as size,
-    'center' as justify,
-    'pill'   as shape
+    'divider' as component,
+    'Liste des derniers changements' as contents,
+    'orange' as color
         WHERE $tab='Last';
-select 
-    'Liste des derniers changements' as title,
-    'clock' as icon,
-    'orange' as outline
-    WHERE $tab='Last';
     
 SELECT 'table' as component,   
     'Actions' as markdown,

@@ -3,6 +3,10 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+        WHERE $group_id::int<'2';
+
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
@@ -18,7 +22,7 @@ select
     'Ajouter un Accompagnant' as title,
     'aesh_ajout.sql' as link,
     'square-rounded-plus' as icon,
-            $group_id::int<2 as disabled,
+            $group_id::int<3 as disabled,
     'green' as outline;
     
 SELECT 'table' as component,
@@ -30,7 +34,7 @@ SELECT 'table' as component,
 SELECT 
   aesh_name AS Nom,
   aesh_firstname AS Prénom,
-  CASE WHEN $group_id::int>1 
+  CASE WHEN $group_id::int>2 
     THEN    tel_aesh 
     ELSE 'numéro masqué'
     END as Téléphone,
@@ -39,13 +43,13 @@ SELECT
       '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)' as Actions,
-CASE WHEN $group_id::int=2 THEN
+CASE WHEN $group_id::int=3 THEN
       '[
     ![](./icons/pencil.svg)
 ](aesh_edit.sql?id='||aesh.id||')[
     ![](./icons/trash-off.svg)
 ]()' 
-WHEN $group_id::int=3 THEN
+WHEN $group_id::int=4 THEN
       '[
     ![](./icons/pencil.svg)
 ](aesh_edit.sql?id='||aesh.id||'&username='||aesh.username||')[

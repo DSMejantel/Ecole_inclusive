@@ -3,8 +3,8 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'redirect' AS component,
-        'index.sql?restriction' AS link
-        WHERE $group_id<'2';
+        'notification.sql?restriction&id='||$id AS link
+        WHERE $group_id<'3';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -64,7 +64,8 @@ FROM eleve LEFT JOIN etab on eleve.etab_id=etab.id Where eleve.id=$id;
 -- Isolement de ses notifications dans une liste
 SELECT 
     'alert' as component,
-    'Alerte' as title,
+    TRUE as important,
+    'NOTIFICATION(S)' as title,
     CASE WHEN $var_notif>=1
     THEN 'alert-triangle' 
     ELSE 'thumb-up'
@@ -93,7 +94,8 @@ FROM notif INNER JOIN notification on notif.notification_id=notification.id join
 -- Isolement de ses aménagements dans une liste
 SELECT 
     'alert' as component,
-    'Alerte' as title,
+    TRUE as important,
+    'AMÉNAGEMENT(S)' as title,
     CASE WHEN $var_amenag>=1
     THEN 'alert-triangle' 
     ELSE 'thumb-up'
@@ -122,7 +124,8 @@ FROM amenag INNER JOIN eleve on amenag.eleve_id=eleve.id Where amenag.eleve_id=$
 -- Isolement de ses suivis dans une liste
 SELECT 
     'alert' as component,
-    'Alerte' as title,
+    TRUE as important,
+    'SUIVI(S)' AS title,
     CASE WHEN $var_suivi>=1
     THEN 'alert-triangle' 
     ELSE 'thumb-up'

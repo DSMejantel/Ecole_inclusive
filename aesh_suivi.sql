@@ -3,6 +3,10 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+        WHERE $group_id::int<'2';
+
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
@@ -15,13 +19,13 @@ select
     'Modifier' as title,
     'pencil' as icon,
     'orange' as outline,
-        $group_id::int<2 as disabled,
+        $group_id::int<3 as disabled,
     'aesh_edit.sql?id='||$id||'&username='||username as link FROM aesh WHERE aesh.id = $id;
 select 
     'Planning' as title,
     'clock-share' as icon,
     'red' as outline,
-        $group_id::int<2 as disabled,
+        $group_id::int<3 as disabled,
     'upload_edt_form.sql?id='||$id as link FROM aesh where aesh.id=$id;
    
 -- écrire le nom de l'AESH dans le titre de la page
@@ -32,7 +36,7 @@ SELECT
     aesh_name||' '||aesh_firstname as description, 'orange' as color, 1 as active
      FROM aesh WHERE aesh.id = $id;
 SELECT 
-    CASE WHEN $group_id::int>1 
+    CASE WHEN $group_id::int>2 
     THEN    tel_aesh 
     ELSE 'numéro masqué'
     END as title,

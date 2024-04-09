@@ -4,15 +4,15 @@ SELECT 'redirect' AS component,
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<'3';
+        WHERE $group_id<'4';
     
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -34,20 +34,22 @@ select
 -- Liste   
 SELECT 'table' as component,
         'Admin' as markdown,
-    'nom' as Nom,
-    'aprenom' as Prénom,
-    'groupe' as Permissions,
-    'username' as Identifiant,
+    TRUE    as hover,
+    TRUE    as striped_rows,
+    TRUE    as small,
     1 as sort,
     1 as search;
 SELECT 
   nom AS Nom,
   prenom AS Prénom,
-  CASE WHEN groupe='1' THEN 'consultation'
-  WHEN groupe='2' THEN 'Éditeur'
-  ELSE 'Administrateur'
-  END as Permissions,
   username as Identifiant,
+  CASE WHEN groupe=1 THEN 'consultation Enseignant'
+                WHEN groupe=2 THEN 'consultation AESH'
+                WHEN groupe=3 THEN 'édition'
+                WHEN groupe=4 THEN 'administration'
+  END as Permissions,
+    etab.nom_etab as Établissement,
+    classe as Classe,
   activation as Code,
   strftime('%d/%m/%Y %H:%M',connexion) as Connexion,
       '[
@@ -55,6 +57,4 @@ SELECT
 ](comptes_edit.sql?id='||username||')[
     ![](./icons/trash.svg)
 ](comptes_delete.sql?id='||username||')' as Admin
-FROM user_info WHERE username<>'admin' ORDER BY nom ASC;   
-
-
+FROM user_info LEFT JOIN etab on user_info.etab=etab.id WHERE username<>'admin' ORDER BY nom ASC;   

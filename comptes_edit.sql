@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id::int<>'3';
+        WHERE $group_id::int<>'4';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -14,6 +14,8 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 SET nom_edit = (SELECT nom FROM user_info WHERE username = $id);
 SET prenom_edit = (SELECT prenom FROM user_info WHERE username = $id);
 SET group_edit = (SELECT groupe FROM user_info WHERE username = $id);
+SET etab_edit = (SELECT etab FROM user_info WHERE username = $id);
+SET classe_edit = (SELECT classe FROM user_info WHERE username = $id);
 SET tel_edit = (SELECT tel FROM user_info WHERE username = $id);
 SET courriel_edit = (SELECT courriel FROM user_info WHERE username = $id);
 
@@ -55,9 +57,11 @@ SELECT
   username as Identifiant,
   nom AS Nom,
   prenom AS Prénom,
+  etab.nom_etab AS Établissement,
+  classe AS Classe,
   tel as Téléphone,
   courriel as courriel
-FROM user_info WHERE username=$id; 
+FROM user_info JOIN etab on user_info.etab=etab.id WHERE username=$id; 
     
 --- Formulaire de Mise à jour
 SELECT 
@@ -65,12 +69,17 @@ SELECT
     'comptes_edit_confirm.sql?id='||$id as action,
     'Mettre à jour' as validate,
     'orange'           as validate_color;
-    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 6 as width;
-    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 6 as width;
+    SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 4 as width;
+    SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 4 as width;
+    SELECT 'Etablissement' AS name, 'select' as type, 2 as width, json_group_array(json_object('label', nom_etab, 'value', nom_etab)) as options FROM (select distinct etab.nom_etab as nom_etab, user_info.etab as value FROM etab LEFT JOIN user_info on etab.id=user_info.etab UNION ALL SELECT 'Aucun' as label, NULL as value  ORDER BY etab.nom_etab ASC);
+    
+
+
+    SELECT 'Classe' AS name, 'select' as type, 2 as width, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN user_info on eleve.etab_id=user_info.etab UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY eleve.classe DESC);
+  
     SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 4 as width;
     SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 4 as width;
-    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant", "value": 1}, {"label": "Éditeur", "value": 2}, {"label": "administrateur", "value": 3}]' as options, $group_edit::integer as value, 4 as width;
-
+    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit::integer as value, 4 as width;
 
 
  

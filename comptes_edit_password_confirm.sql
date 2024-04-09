@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id::int<>'3';
+        WHERE $group_id::int<>'4';
 
    -- Mettre à jour le compte modifié dans la base
  UPDATE user_info SET password_hash=sqlpage.hash_password(:password) WHERE username=$id and :password is not null

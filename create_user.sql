@@ -6,10 +6,10 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
         
-    INSERT INTO user_info (username, activation, nom, prenom, groupe, tel, courriel)
-    VALUES (:username, :code, :nom, :prenom, :groupe, :tel, :courriel)
+    INSERT INTO user_info (username, activation, nom, prenom, etab, groupe, tel, courriel)
+    VALUES (:username, :code, :nom, :prenom, :Etablissement, :groupe, :tel, :courriel)
     ON CONFLICT (username) DO NOTHING
     RETURNING 
      'redirect' AS component,

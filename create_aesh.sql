@@ -6,7 +6,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
         
 -- Enregistrer l'aesh créé dans la base
  INSERT INTO aesh(username, aesh_name, aesh_firstname, tel_aesh, courriel_aesh, quotite, tps_ULIS, tps_mission, tps_synthese) SELECT $username, $aesh_name, $aesh_firstname, $tel_aesh, $courriel_aesh, $quotite, $tps_ULIS, $tps_mission, $tps_synthese WHERE $aesh_name IS NOT NULL

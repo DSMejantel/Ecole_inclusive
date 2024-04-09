@@ -6,7 +6,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -21,6 +21,6 @@ select
     'file'               as type,
     'text/csv'           as accept,
     'Fichier utilisateur'           as label,
-    'Envoyer un fichier CSV avec comme colonnes : username, nom, prenom, tel, courriel, groupe, activation' as description,
+    'Envoyer un fichier CSV avec comme colonnes : username, nom, prenom, tel, courriel, groupe, activation, etab' as description,
     TRUE                 as required;
 

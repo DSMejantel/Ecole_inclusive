@@ -6,7 +6,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
 
 -- Enregistrer le référent créé dans la base
  INSERT INTO referent(username, nom_ens_ref, prenom_ens_ref, tel_ens_ref, email) 
