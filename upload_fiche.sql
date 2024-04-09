@@ -6,25 +6,20 @@ SELECT 'redirect' AS component,
         'notification.sql?id='||$id||'&restriction' AS link
         WHERE $group_id<'3';
 
+set user_id = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
--- Supprime l'ancienne photo
-DELETE FROM image WHERE eleve_id=$id;    
-
---
-set file_path = sqlpage.uploaded_file_path('Image');
---set file_name = sqlpage.random_string(10)||'.png';
-set file_name = './avatar/'||sqlpage.random_string(10)||'.jpg';
-set mv_result = sqlpage.exec('mv', $file_path, $file_name);
-
--- ajouter une photo
-insert or ignore into image (eleve_id, image_url)
+-- ajouter une fiche
+insert into fiche (titre, contenu, tag, auteur, fiche_url)
 values (
-    $id,
-    $file_name
+    $titre,
+    $contenu,
+    $tag,
+    $user_id,
+    sqlpage.persist_uploaded_file('fiche', 'fiches', 'pdf,jpg,jpeg,png,gif,webp')
 )
 returning 
 'redirect' AS component,
-'notification.sql?id='||$id||'&tab=Profil' as link;
+'fiches.sql' as link;
 
 -- If the insert failed, warn the user
 select 'alert' as component,

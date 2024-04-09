@@ -1,0 +1,24 @@
+{
+    "component": "shell",
+    "title": "P.A.S.",
+    "link": "/",
+    "icon": "home",
+    "language":"fr-FR",
+    "layout": "fluid",
+    "norobot": "TRUE",
+    "menu_item": [
+     {"title": "Fiches-Outils",
+            "link": "fiches.sql" }
+        ,
+     {"title": "Élèves",
+            "link": "eleves_etab.sql" }
+        ,
+                {"title": "Établissement",
+            "link": "etablissement.sql" }
+        ,
+                {"title": "Mon compte", "submenu": [
+            {"link": "parametres.sql?tab=Mon profil", "title": "Mon profil"},
+            {"link": "logout.sql", "title": "Se déconnecter"}
+        ]}
+    ]
+}

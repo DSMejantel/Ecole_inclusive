@@ -4,7 +4,7 @@ SELECT 'redirect' AS component,
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'redirect' AS component,
         'parametres.sql?restriction' AS link
-        WHERE $group_id<'2';
+        WHERE $group_id<'3';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -59,7 +59,7 @@ SELECT
     SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, 6 as width;
     SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,
     0        as value,
-    '[{"label": "Consultant", "value": 1}, {"label": "Éditeur", "value": 2}, {"label": "administrateur", "value": 3}]' as options;
+    '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options;
     SELECT 'Téléphone' AS label, 'phone' as prefix_icon, 'tel_ens_ref' AS name, CHAR(10), 4 as width;
     SELECT 'Courriel' AS label, 'mail' as prefix_icon, 'email' AS name, 4 as width;
     

@@ -23,6 +23,11 @@ select
     'certificate-2' as icon,
     'orange' as color;
 select 
+    'Aménagement d''examen' as title,
+    'examen.sql' as link,
+    'school' as icon,
+    'orange' as outline;
+select 
     'Dispositifs' as title,
     'dispositif.sql' as link,
     'lifebuoy' as icon,
@@ -44,20 +49,20 @@ select
     'Ajouter' as title,
     'modalite_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<2 as disabled,
+        $group_id::int<3 as disabled,
     'green' as outline;
 select 
     'Supprimer' as title,
     'modalite_delete.sql' as link,
     'trash' as icon,
-        $group_id::int<2 as disabled,
+        $group_id::int<3 as disabled,
     'red' as outline;
 
- SELECT 'card' as component,
-  'Type de notifications' AS title,
-   'Liste des notifications proposées par la MDA/MDPH' AS description,
-  5 as columns;
+-- Liste des notifications possibles
+SELECT 'table' as component,
+  'Type de notification MDA/MDPH' AS title,
+  'icone' as icon;
 SELECT 
-  type AS title,
-  'certificate' as icon
-FROM modalite order by type;    
+  'certificate' as icone,
+  type AS Modalité
+FROM modalite order by type;  

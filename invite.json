@@ -1,0 +1,13 @@
+{
+    "component": "shell",
+    "title": "P.A.S.",
+    "link": "/",
+    "icon": "home",
+    "language":"fr-FR",
+    "layout": "fluid",
+    "norobot": "TRUE",
+    "menu_item": [
+                {"title": "Connexion/Déconnexion",
+            "link": "signin.sql" }
+        ]
+}

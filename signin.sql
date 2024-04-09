@@ -5,6 +5,7 @@ json_object(
     'footer', 'Source : Webmestre / Collège Henri Bourrillon / Mende -2023',
     'link', '/',
     'icon', 'home',
+    'layout','fluid',
     'language','fr-FR',
     'norobot', TRUE,    
     'menu_item', json_array(

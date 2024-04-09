@@ -1,104 +1,10 @@
-SELECT 'dynamic' AS component, 
-CASE COALESCE(sqlpage.cookie('session'), '')
-        WHEN '' THEN
-json_object(
-    'component', 'shell',
-    'title', 'Pôle d''Appui à la Scolarité',
-    'footer', 'Source : Webmestre / Collège Henri Bourrillon / Mende -2023',
-    'link', '/',
-    'icon', 'home',
-    'language','fr-FR',
-    'layout', 'fluid',
-    'norobot', TRUE,    
-    'menu_item', json_array(
-        json_object(
-            'title', 'Connexion',
-            'link', 'signin.sql'
-                ))) 
-ELSE                
-                json_object(
-    'component', 'shell',
-    'title', 'Pôle d''Appui à la Scolarité',
-    'footer', 'Source : Webmestre / Collège Henri Bourrillon / Mende -2023',
-    'link', '/',
-    'icon', 'home',
-    'language','fr-FR',
-    'layout', 'fluid',
-    'norobot', TRUE,    
-    'menu_item', json_array(
-        json_object(
-            'title', 'Élèves',
-            'submenu', json_array(
-                json_object(
-                    'link', 'eleves.sql',
-                    'title', 'Liste complète'
-                ),
-                json_object(
-                    'link', 'eleves_attente.sql',
-                    'title', 'Élèves en attente'
-                ),
-                json_object(
-                    'link', 'eleves_historique.sql',
-                    'title', 'Dernières modifications'
-                ),
-                json_object(
-                    'link', 'eleve.sql',
-                    'title', 'Ajouter un élève'
-                ))),
-        json_object(
-            'title', 'AESH',
-            'submenu', json_array(
-                json_object(
-                    'link', 'aesh.sql',
-                    'title', 'Liste complète'
-                ),
-                json_object(
-                    'link', 'aesh_ajout.sql',
-                    'title', 'Ajouter'
-                ))),   
-        json_object(
-            'title', 'Étab.',
-            'submenu', json_group_array(
-                json_object(
-                    'link', 'etab_carte.sql?id='||etab.id,
-                    'title', nom_etab
-                ))),     
-        json_object(
-            'link', 'referent.sql',
-            'title', 'Référent MDA/MDPH'
-                ),     
-        json_object(
-            'title', 'Paramétrage',
-            'submenu', json_array(
-                json_object(
-                    'link', 'parametres.sql?tab=Tableau de bord',
-                    'title', 'Tableau de bord'
-                ),
-                json_object(
-                    'link', 'parametres.sql?tab=Carte',
-                    'title', 'Carte'
-                ),
-                json_object(
-                    'link', 'parametres.sql?tab=Paramètres',
-                    'title', 'Paramètres'
-                )))
-                , 
-         json_object(
-            'title', 'Mon compte',
-            'submenu', json_array(
-                json_object(
-                    'link', 'parametres.sql?tab=Mon profil',
-                    'title', 'Mon profil'
-                ),
-                json_object(
-                    'link', 'logout.sql',
-                    'title', 'Se déconnecter'
-                )))    
-                 )
-                ) 
-            END    AS properties FROM etab FULL JOIN referent on etab.id=referent.id;
-
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));    
+
+SELECT 'dynamic' AS component, 
+CASE WHEN COALESCE(sqlpage.cookie('session'), '')='' or $group_id=1
+THEN sqlpage.read_file_as_text('index.json')
+ELSE sqlpage.read_file_as_text('menu.json')
+            END    AS properties; 
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
 select 
@@ -113,6 +19,8 @@ select
     'parametres.sql?tab=Profil' as link,
     'user-circle' as icon,
     'orange' as outline; 
+ 
+     
 SELECT 'text' AS component;
 SELECT
 'orange' as color,
@@ -121,17 +29,28 @@ COALESCE((SELECT
             user_info.prenom,
             user_info.nom,
             CASE groupe
-                WHEN 1 THEN 'consulation'
-                WHEN 2 THEN 'édition'
-                WHEN 3 THEN 'administration'
+                WHEN 1 THEN 'consultation Enseignant'
+                WHEN 2 THEN 'consultation AESH'
+                WHEN 3 THEN 'édition'
+                WHEN 4 THEN 'administration'
             END)
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'L''accès aux informations de cette application nécessite d''être identifié.') AS contents;
+
+SELECT 'alert' as component,
+    'Info RGPD !' as title,
+    'Vous disposez de la possibilité de modifier vos informations personnelles dans le menu "Mon compte"--> "Mon Profil".' AS description_md,
+    'info-square-rounded' as icon,
+    TRUE              as important,
+    TRUE              as dismissible,
+    'orange' as color
+    WHERE $group_id>0;
   
 -- Message si droits insuffisants sur une page
 SELECT 'alert' as component,
     'Attention !' as title,
-    'Vous ne possédez pas les droits suffisants pour accéder à cette page.' as description_md,
+    'Vous ne possédez pas les droits suffisants pour accéder à cette page.' 
+    as description_md,
     'alert-circle' as icon,
     'red' as color
 WHERE $restriction IS NOT NULL;
@@ -167,7 +86,30 @@ SELECT
     'etablissement.sql' as link,
     'building-community' as icon,  
     'green' as outline; 
- 
+    
+select 
+    'button' as component,
+    'sm'     as size,
+    'center' as justify,
+    'pill'   as shape;
+select 
+    'Mon établissement' as title,
+    'building-community' as icon,
+    'green' as color,
+    'etab_carte.sql?id=' || user_info.etab as link
+     FROM etab JOIN user_info on user_info.etab=etab.id WHERE $group_id=1 GROUP BY etab.id;
+select 
+    'Fiches des classes' as title,
+    'users-group' as icon,
+    'green' as color,
+    'etab_classes_print.sql?id=' || user_info.etab ||'&classe_select=' as link
+     FROM etab JOIN user_info on user_info.etab=etab.id WHERE $group_id=1 GROUP BY etab.id;   
+select 
+    'Élèves' as title,
+    'users-group' as icon,
+    'green' as color,
+    'eleves_etab.sql' as link
+    WHERE $group_id=1; 
     
 SELECT 'hero' as component,
 'École Inclusive' as title,

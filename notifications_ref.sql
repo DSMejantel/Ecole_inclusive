@@ -3,6 +3,10 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+        WHERE $group_id::int<'2';
+
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
@@ -21,7 +25,7 @@ select
     'type de Notification' as title,
     'modalite.sql' as link,
     'certificate-2' as icon,
-    CASE WHEN $group_id<2
+    CASE WHEN $group_id<3
     THEN TRUE 
     END as disabled,
     'orange' as outline;
@@ -29,7 +33,7 @@ select
     'Établissements' as title,
     'etab.sql' as link,
     'building-community' as icon,
-    CASE WHEN $group_id<2
+    CASE WHEN $group_id<3
     THEN TRUE       
     END as disabled,
     'orange' as outline;
@@ -42,7 +46,7 @@ SELECT
     nom_ens_ref||' '||prenom_ens_ref as description, 'orange' as color, 1 as active
       FROM referent WHERE referent.id = $id;
 SELECT 
-    CASE WHEN $group_id::int>1 
+    CASE WHEN $group_id::int>2 
     THEN    tel_ens_ref
     ELSE 'numéro masqué'
     END as title,

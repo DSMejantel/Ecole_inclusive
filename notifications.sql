@@ -21,7 +21,7 @@ select
     'type de Notification' as title,
     'modalite.sql' as link,
     'certificate-2' as icon,
-    CASE WHEN $group_id<2
+    CASE WHEN $group_id<3
     THEN TRUE 
     END as disabled,
     'orange' as outline;
@@ -35,7 +35,7 @@ select
     'Établissements' as title,
     'etab.sql' as link,
     'building-community' as icon,
-    CASE WHEN $group_id<2
+    CASE WHEN $group_id<3
     THEN TRUE       
     END as disabled,
     'orange' as outline;

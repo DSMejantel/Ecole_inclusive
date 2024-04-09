@@ -9,9 +9,20 @@ SELECT 'redirect' AS component,
 -- Mets à jour les infos de dernières modifications de l'élève	
 SET edition = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') )
 SET modif = (SELECT datetime(current_timestamp, 'localtime'))
-UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$eleve_edit;  
+UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id;
 
-UPDATE suivi SET aesh_id=:AESH2, temps=$temps2, mut=:mutualisation2, ind=:individuel2, mission=$mission2 WHERE id=$id
+-- Supprime l'affectation à un dispositif
+DELETE FROM examen_eleve WHERE eleve_id=$eleve_edit;
+-- Insère l'affectation à un dispositif
+INSERT INTO examen_eleve(eleve_id, code_id)
+SELECT
+$eleve_edit as eleve_id,
+CAST(value AS integer) as code_id from json_each($mesure) WHERE :mesure IS NOT NULL
+
 RETURNING
    'redirect' AS component,
-   'notification.sql?id='||$eleve_edit||'&tab=Suivi' as link;
+   'notification.sql?id='||$eleve_edit||'&tab=Examen' as link;
+
+
+  
+

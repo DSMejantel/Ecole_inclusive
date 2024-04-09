@@ -6,17 +6,10 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id<>'3';
+        WHERE $group_id<>'4';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
-
--- Outil de création de mot de passe
-SELECT 'form' AS component;
-SELECT 'password' AS name, 'Password to create a hash for' AS label, :password AS value;
-
-SELECT 'code' AS component;
-SELECT sqlpage.hash_password(:password) AS contents;
 
 --Bouton retour
 select 
@@ -33,3 +26,17 @@ select
     'parametres.sql?tab=Comptes' as link,
     'arrow-back-up' as icon,
     'green' as outline;
+
+-- Outil de création de mot de passe
+SELECT 'form' AS component;
+SELECT 'password' AS name, 'Mot de passe à crypter' AS label, :password AS value;
+
+Select 
+    'divider' as component,
+    'Mot de passe généré :' as contents,
+    'orange' as color where :password is not null;
+    
+SELECT 'text' AS component,
+ sqlpage.hash_password(:password) AS contents;
+
+

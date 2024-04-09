@@ -52,18 +52,17 @@ select
 SELECT 
     'form' as component,
     'Mettre à jour' as validate,
-    'suivi_edit_dispo_confirm.sql?id='||$id||'&eleve_edit='||$id as action,    
+    'suivi_edit_examen_confirm.sql?id='||$id||'&eleve_edit='||$id as action,    
     'orange'           as validate_color;
     
-SELECT 'dispositif[]' as name, 'nouvelle situation' as label, 6 as width, 'select' as type, TRUE as multiple,
-     'Les dispositifs connus sont déjà sélectionnés. La touche ''CTRL'' permet une sélection multiple.' as description,
-     json_group_array(json_object("label", dispo, 
-     "value", dispositif.id,
-     'selected', affectation.dispositif_id is not null
+SELECT 'mesure[]' as name, 'Mesure(s)' as label, 6 as width, 'select' as type, TRUE as multiple,
+     'Les aménagements connus sont déjà sélectionnés. La touche ''CTRL'' permet une sélection multiple.' as description,
+     json_group_array(json_object("label", code, 
+     "value", examen.id,
+     'selected', examen_eleve.code_id is not null
      )) as options  
-     FROM dispositif
-     Left Join affectation on affectation.dispositif_id=dispositif.id 
-     AND affectation.eleve_id=$id;
+     FROM examen LEFT JOIN examen_eleve on examen_eleve.code_id=examen.id  
+     AND examen_eleve.eleve_id=$id;
 
 
 
