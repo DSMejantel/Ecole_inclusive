@@ -27,6 +27,7 @@ CREATE TABLE amenag(
 
 CREATE TABLE dispositif(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    coordo INTEGER DEFAULT 0,
     dispo TEXT
 );
 
@@ -121,7 +122,31 @@ CREATE TABLE user_info (
     tel TEXT,
     courriel TEXT,
     groupe INTEGER,
+    etab INTEGER DEFAULT Null,
+    classe INTEGER DEFAULT Null,   
     activation TEXT DEFAULT Null,
     connexion TIMESTAMP DEFAULT Null
+);
+
+CREATE TABLE examen(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT,
+    mesure TEXT
+);
+
+CREATE TABLE examen_eleve(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    eleve_id INTEGER,
+    mesure_id INTEGER
+);
+
+CREATE TABLE fiche(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titre TEXT,
+    tag TEXT,
+    contenu TEXT,
+    auteur INTEGER,
+    fiche_url TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
     
