@@ -19,13 +19,13 @@ select
     'Enseignant-Référent' as title,
     'referent.sql' as link,
     'writing' as icon,
-    'Orange' as color,
+    'orange' as color,
     'orange' as outline;
 select 
     'type de Notification' as title,
     'modalite.sql' as link,
     'certificate-2' as icon,
-    'Orange' as color,
+    'orange' as color,
     'orange' as outline;
 select 
     'Établissements' as title,
@@ -33,7 +33,7 @@ select
     'orange' as color;
     
     -- Enregistrer la notification dans la base
- INSERT INTO etab(type, nom_etab, description, Lat, Lon) SELECT $type, $nom_etab, $description, $Lat, $Lon WHERE $description IS NOT NULL;
+-- INSERT INTO etab(type, nom_etab, description, Lat, Lon) SELECT $type, $nom_etab, $description, $Lat, $Lon WHERE $description IS NOT NULL;
  
  -- Fiches des établissments
  SELECT 'card' as component,
@@ -47,36 +47,58 @@ SELECT
   nom_etab AS title,
   'etab_notif.sql?id=' || id as link
 FROM etab;
-
+/*
 -- Nouvel établissement    
 SELECT 
     'form' as component,
     'Nouvel établissement' as title,
-    'etab_ajout' as id,
-    ''     as validate,
-    'Recommencer' as reset;
+    'Créer' as validate,
+    'green'           as validate_color,
+    'Recommencer'           as reset;
     
     SELECT 'Catégorie' AS label, 'type' AS name, 6 as width, 'select' as type, 1 as value, '[{"label": "---", "value": "---"}, {"label": "École", "value": "école"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options;
-    SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 6 as width, $search as value;
+    SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 6 as width;
     SELECT 'Adresse' AS label, 'description' AS name;
-    SELECT 'Latitude' AS label, 'Lat' AS name, 6 as width, $lat as value;
-    SELECT 'Longitude' AS label, 'Lon' AS name, 6 as width, $lon as value;
+    SELECT 'Latitude' AS label, 'Lat' AS name, 6 as width;
+    SELECT 'Longitude' AS label, 'Lon' AS name, 6 as width;
+*/
+select 
+    'form' as component,
+    'GET' as method,
+    'Chercher sur la carte'  as validate;
+select 'user_search' as name, 'Ville ou adresse' as label, $user_search as value;
+ 
+set url = '{
+    "url": "https://nominatim.openstreetmap.org/search?format=json&q=' || sqlpage.url_encode($user_search) ||'",
+    "headers": {"user-agent": "ecole-inclusive/1.0"} 
+}'
+set api_results = sqlpage.fetch($url);
+set lat = CAST($api_results->>0->>'lat' AS FLOAT)
+set lon = CAST($api_results->>0->>'lon' AS FLOAT)
 
+select 'map' as component,
+  15 as zoom,
+  $lat as latitude,
+  $lon as longitude
+  WHERE $user_search is not Null;
+  
+select $user_search as title,
+  $lat as latitude,
+  $lon as longitude
+    WHERE $user_search is not Null;
+  
 select 
-    'button' as component;    
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify
+        WHERE $user_search is not Null;
 select 
-    'etab_ajout'         as form,
-    'green'      as color,
+    'Ajouter' as title,
+    'etab_ajout.sql?search='||$user_search||'&lat='||$lat||'&lon='||$lon as link,
     'square-plus' as icon,
-    'Ajouter'         as title;
-select 
-    'etab_ajout_carte.sql' as link,
-    'etab_ajout'            as form,
-    'orange'          as outline,
-    'world' as icon,
-    'Ajouter depuis une carte'         as title;    
-    
-
+    'green' as color
+        WHERE $user_search is not Null;
 
    
 
