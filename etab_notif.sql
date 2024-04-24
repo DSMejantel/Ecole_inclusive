@@ -149,7 +149,6 @@ FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id JOIN refe
 -- Carte 
 SELECT 
     'map' as component,
-    'PIAL Mende' as title,
     16 as zoom,
     Lat as latitude,
     Lon as longitude,

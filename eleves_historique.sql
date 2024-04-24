@@ -4,7 +4,7 @@ SELECT 'redirect' AS component,
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 --Menu
 /*select 'shell' as component,
-    'P.A.S. Mende' as title,
+    'P.A.S.' as title,
         'Source : Webmestre / Collège Henri Bourrillon / Mende -2023' as footer,
         'fr-FR'                   as language,
     'home' as icon,

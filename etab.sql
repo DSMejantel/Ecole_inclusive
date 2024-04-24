@@ -58,7 +58,6 @@ select
  --Carte   
     SELECT 
     'map' as component,
-    'Pôle de Mende' as title,
     12 as zoom,
     400 as height,
     AVG(Lat) as latitude,

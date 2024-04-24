@@ -174,7 +174,6 @@ SET AVG_Lat = (SELECT AVG(Lat) FROM etab JOIN eleve on eleve.etab_id = etab.id j
 SET AVG_Lon = (SELECT AVG(Lon) FROM etab JOIN eleve on eleve.etab_id = etab.id join suivi on suivi.eleve_id=eleve.id join aesh on suivi.aesh_id=aesh.id  WHERE aesh_id = $id);
     SELECT 
     'map' as component,
-    'Pôle de Mende' as title,
     12 as zoom,
     400 as height,
     $AVG_Lat as latitude,
