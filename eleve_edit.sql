@@ -12,7 +12,7 @@ SELECT 'redirect' AS component,
    -- Mettre à jour l'élève modifié dans la base
    SET edition = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') )
 SET modif = (SELECT current_timestamp)
- UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, classe=$classe, etab_id=:Établissement, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null
+ UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, classe=$classe, etab_id=:Établissement, niveau=:Niveau, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null
  returning 
 'redirect' AS component,
 'notification.sql?id='||$id||'&tab=Profil' as link;
@@ -27,6 +27,7 @@ SET nom_edit = (SELECT nom FROM eleve WHERE id = $id);
 SET prenom_edit = (SELECT prenom FROM eleve WHERE id = $id);
 SET naissance_edit = (SELECT naissance FROM eleve WHERE id = $id);
 SET etab_edit = (SELECT etab_id FROM eleve WHERE id = $id);
+SET niv_edit = (SELECT niveau FROM eleve WHERE id = $id);
 SET classe_edit = (SELECT classe FROM eleve WHERE id = $id);
 SET referent_edit = (SELECT referent_id FROM eleve WHERE id = $id);
 SET comm_edit = (SELECT comm_eleve FROM eleve WHERE id = $id); 
@@ -86,7 +87,8 @@ select
     SELECT 'Établissement' AS name, 4 as width, 
           $etab_edit::integer as value,
     'select' as type, json_group_array(json_object("label", nom_etab, "value", etab.id)) as options FROM etab;
-    SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 4 as width;
+    SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit::integer as value, json_group_array(json_object("label", niv, "value", id)) as options FROM (select * FROM niveaux ORDER BY niv ASC);
+    SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 2 as width;
     SELECT 'Référent' AS name, 
     'select' as type, 4 as width,
       $referent_edit::integer as value,

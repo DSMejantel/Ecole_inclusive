@@ -18,6 +18,7 @@ SET etab_edit = (SELECT etab FROM user_info WHERE username = $id);
 SET classe_edit = (SELECT classe FROM user_info WHERE username = $id);
 SET tel_edit = (SELECT tel FROM user_info WHERE username = $id);
 SET courriel_edit = (SELECT courriel FROM user_info WHERE username = $id);
+SET cas_edit = (SELECT CAS FROM user_info WHERE username = $id);
 
 --Bouton retour sans valider
 select 
@@ -77,9 +78,10 @@ SELECT
 
     SELECT 'Classe' AS name, 'select' as type, 2 as width, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN user_info on eleve.etab_id=user_info.etab UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY eleve.classe DESC);
   
-    SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 4 as width;
-    SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 4 as width;
-    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit::integer as value, 4 as width;
+    SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 3 as width;
+    SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 3 as width;
+    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit::integer as value, 3 as width;
+    SELECT 'Identifiant ENT' AS label, 'cas' AS name, $cas_edit as value, 3 as width;
 
 
  

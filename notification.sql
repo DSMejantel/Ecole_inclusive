@@ -162,7 +162,10 @@ SELECT
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id = $id;
 select 
     etab.type||' '||etab.nom_etab as title,
-    'Classe : ' || classe  as description,
+    CASE WHEN classe<>''
+    THEN 'Classe : ' || classe 
+    ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.id=eleve.niveau)
+    END as description,
     1 as active, 'green' as color,
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;

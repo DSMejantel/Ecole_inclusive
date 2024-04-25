@@ -24,9 +24,10 @@ SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code
 SELECT 'nom' AS name, 'Nom' as label, 4 as width;
 SELECT 'prenom' AS name, 'Prénom' as label, 4 as width;
     SELECT 'Etablissement' AS name, 'select' as type, 4 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select * FROM etab ORDER BY nom_etab ASC);
-    SELECT 'Téléphone' AS label, 'tel' AS name, 4 as width;
-    SELECT 'Courriel' AS label, 'courriel' AS name, 4 as width;
-SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 4 as width,
+    SELECT 'Téléphone' AS label, 'tel' AS name, 3 as width;
+    SELECT 'Courriel' AS label, 'courriel' AS name, 3 as width;
+SELECT 'groupe' AS name, 'Permissions' as label, 'select' as type, 3 as width,
     0        as value,
     '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options;
+        SELECT 'Identifiant ENT' AS label, 'cas' AS name, 3 as width;
 

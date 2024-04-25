@@ -46,10 +46,9 @@ COALESCE((SELECT
             user_info.prenom,
             user_info.nom,
            CASE groupe
-                WHEN 1 THEN 'consultation Enseignant'
-                WHEN 2 THEN 'consultation AESH'
-                WHEN 3 THEN 'édition'
-                WHEN 4 THEN 'administration'
+                WHEN 1 THEN 'Consultation'
+                WHEN 2 THEN 'Édition'
+                WHEN 3 THEN 'Administration'
             END)
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents
@@ -259,7 +258,7 @@ select
     'orange' as outline
     where $tab='Paramètres';
 select 
-    'Type de Notification' as title,
+    'Notifications' as title,
     'modalite.sql' as link,
     'certificate-2' as icon,
     'Orange' as color,
@@ -283,6 +282,12 @@ select
     'Établissements' as title,
     'etablissement.sql' as link,
     'building-community' as icon,
+    'orange' as outline
+            where $tab='Paramètres';
+select 
+    'Niveaux' as title,
+    'niveaux.sql' as link,
+    'stairs' as icon,
     'orange' as outline
             where $tab='Paramètres';
 select 
@@ -314,7 +319,7 @@ select
         $group_id::int<3 as disabled
     where $tab='Paramètres';
 select 
-    'Type de Notification' as title,
+    'Notifications' as title,
     'modalite_ajout.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
@@ -337,6 +342,13 @@ select
 select 
     'Établissements' as title,
     'etab_ajout.sql' as link,
+    'square-rounded-plus' as icon,
+    'green' as outline,
+        $group_id::int<3 as disabled
+            where $tab='Paramètres';
+select 
+    'Niveaux' as title,
+    'niveaux.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
         $group_id::int<3 as disabled
