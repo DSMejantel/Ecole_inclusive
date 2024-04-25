@@ -1,0 +1,4 @@
+CREATE TABLE niveaux(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    niv TEXT
+    );
