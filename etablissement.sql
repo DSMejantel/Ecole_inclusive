@@ -54,6 +54,9 @@ SELECT
     END as icon,
   type || ' ' || nom_etab AS title,
   description as description,
+    '[
+  ![](./icons/pencil.svg)
+](etab_edit.sql?id='||etab.id||')' as footer_md,
   CASE WHEN $group_id::int=1 and user_info.etab<>etab.id 
   THEN '' 
   WHEN $group_id::int=1 and user_info.etab=etab.id 
