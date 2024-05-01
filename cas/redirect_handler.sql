@@ -48,8 +48,8 @@ returning
     CASE 
       WHEN EXISTS (SELECT $cas_id FROM user_info)
       THEN 'session' END as name, 
-      id as value,
-    FALSE AS secure; -- You can remove this if the site is served over HTTPS.
+      id as value;
+      --FALSE AS secure; -- You can remove this if the site is served over HTTPS.
 
 -- remove the session cookie
 select 'cookie' as component, 'session' as name, true as remove where $cas_user='inconnu';
@@ -61,8 +61,23 @@ SET connect = (SELECT datetime(current_timestamp, 'localtime'));
 UPDATE user_info SET connexion=$connect WHERE username = $cas_user;
 
 -- Redirect the user to the home page
-select 'redirect' as component, 
-CASE WHEN $cas_user='inconnu'
-THEN '../index.sql?cas_user=0'
-ELSE '../index.sql'
-END as link;
+select 
+    'steps'  as component,
+    TRUE     as counter,
+    'green' as color;
+select 
+    'Authentification serveur' as title,
+    'network'             as icon;
+select 
+    'Connexion établie'    as title,
+    'plug-connected'                  as icon,
+    TRUE                     as active;
+select 
+    'École Inclusive' as title,
+    'briefcase' as icon;
+
+SELECT 'button' as component,
+       'center' as justify;
+SELECT 
+'Poursuivre vers École Inclusive' as title,
+'../index.sql'as link;
