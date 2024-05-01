@@ -1,33 +1,25 @@
-SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));    
+SET group_id = coalesce((SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')),0);    
 
-SELECT 'dynamic' AS component, 
-CASE WHEN COALESCE(sqlpage.cookie('session'), '')='' or $group_id=1
-THEN sqlpage.read_file_as_text('index.json')
-ELSE sqlpage.read_file_as_text('menu.json')
-            END    AS properties; 
+SELECT 'dynamic' AS component,
+sqlpage.read_file_as_text('connexion.json')  AS properties where $group_id=0;
+
+SELECT 'dynamic' AS component,
+sqlpage.read_file_as_text('index.json')  AS properties where $group_id=1;
+
+SELECT 'dynamic' AS component,
+sqlpage.read_file_as_text('menu.json')  AS properties where $group_id>1;
+
+set id_ent = coalesce((select user_cas from login_session where id = sqlpage.cookie('session')),'inactif');
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
-select 
-    CASE COALESCE(sqlpage.cookie('session'), '')
-        WHEN '' THEN 'Non connecté'
-        ELSE 'Mon profil' 
-        END as title,
-    'parametres.sql?tab=Profil' as link,
-    'user-circle' as icon,
-    'orange' as outline; 
- 
-     
 SELECT 'text' AS component;
 SELECT
 'orange' as color,
 COALESCE((SELECT
-    format('Connecté en tant que %s %s (mode : %s)',
+    format('Connexion pour %s %s (ENT : %s - MODE : %s)',
             user_info.prenom,
             user_info.nom,
+            $id_ent,
             CASE groupe
                 WHEN 1 THEN 'consultation Enseignant'
                 WHEN 2 THEN 'consultation AESH'
@@ -55,6 +47,24 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $restriction IS NOT NULL;
 
+-- Message si pas de serveur CAS configuré
+SELECT 'alert' as component,
+    'Attention !' as title,
+    'Le serveur CAS n''est pas configuré. Contactez l''administrateur.' 
+    as description_md,
+    'alert-circle' as icon,
+    'orange' as color
+WHERE $cas<>1;
+
+-- Message si utilisateur CAS 
+SELECT 'alert' as component,
+    'Attention !' as title,
+    'Votre compte CAS ne correspond pas à un utilisateur de ce logiciel.' 
+    as description_md,
+    'alert-circle' as icon,
+    'red' as color
+WHERE $cas_user=0;
+
 -------Sous-Menu
 select 
     'button' as component,
@@ -76,16 +86,35 @@ select
     END AS icon,
         'orange' as outline; 
 select 
+    CASE COALESCE(sqlpage.cookie('session'), '')
+        WHEN '' THEN 'Connexion ENT'
+        ELSE 'Déconnexion ENT'
+    END AS title,
+    CASE COALESCE(sqlpage.cookie('session'), '')
+        WHEN '' THEN '/cas/login.sql'
+        ELSE '/cas/logout.sql'
+    END AS link,
+     CASE COALESCE(sqlpage.cookie('session'), '')
+        WHEN '' THEN 'login-2'
+        ELSE 'logout'
+    END AS icon,
+        'orange' as outline
+        WHERE (SELECT etat FROM cas_service)=1;
+        
+        
+select 
     'Tableau de bord' as title,
     'parametres.sql?tab=Tableau de bord' as link,
     'tool' as icon,
-    'green' as outline;    
+    'green' as outline
+    where $group_id>1;    
 
 SELECT 
     'Établissements' as title,
     'etablissement.sql' as link,
     'building-community' as icon,  
-    'green' as outline; 
+    'green' as outline
+    where $group_id>1; 
     
 select 
     'button' as component,

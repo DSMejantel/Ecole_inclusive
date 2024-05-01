@@ -120,6 +120,13 @@ select
     'red' as outline
     where $tab='Comptes';   
 select 
+    'Serveur CAS' as title,
+    'cas_param.sql' as link,
+    'network' as icon,
+    $group_id::int<4 as disabled,
+    'red' as outline
+    where $tab='Comptes';
+select 
     'Outil Mot de passe' as title,
     'generate_password_hash.sql' as link,
     'tool' as icon,

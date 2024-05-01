@@ -1,0 +1,15 @@
+{
+    "component": "shell",
+    "title": "P.A.S.",
+    "link": "/",
+    "icon": "home",
+    "language":"fr-FR",
+    "layout": "fluid",
+    "norobot": "TRUE",
+    "menu_item": [
+                 {"title": "Connexion", "submenu": [
+            {"link": "signin.sql", "title": "Se connecter"},
+            {"link": "/cas/login.sql", "title": "Se connecter avec l'ENT"}
+        ]}
+    ]
+}
