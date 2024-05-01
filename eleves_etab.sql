@@ -44,23 +44,23 @@ SELECT
       WHEN EXISTS (SELECT eleve.id FROM suivi WHERE suivi.eleve_id=eleve.id)
       THEN  '[
     ![](./icons/user-plus.svg)
-]() [
+](eleves_etab.sql "présence AESH") [
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)' 
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")' 
  WHEN EXISTS (SELECT eleve.id FROM affectation WHERE affectation.eleve_id=eleve.id)
       THEN '[
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)'
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")'
       ELSE
 '[
     ![](./icons/alert-triangle-filled.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)' 
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier incomplet pour cet élève")' 
 END as Suivis, 
 CASE WHEN EXISTS (SELECT eleve.id FROM examen_eleve WHERE eleve.id = examen_eleve.eleve_id)
 THEN
 '[
     ![](./icons/school.svg)
-](notification.sql?id='||eleve.id||'&tab=Examen)' 
+](notification.sql?id='||eleve.id||'&tab=Examen  "Aménagements d''examen")' 
 ELSE ''
 END as Suivis
 FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT JOIN user_info WHERE user_info.etab=etab.id  GROUP BY eleve.id ORDER BY eleve.nom ASC;
