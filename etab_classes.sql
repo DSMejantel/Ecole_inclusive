@@ -163,24 +163,24 @@ SELECT
     END AS _sqlpage_color,
       CASE WHEN suivi.aesh_id>1 and $group_id>1 THEN  '[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils) [
+](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils "Fiche AESH") [
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)' 
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier élève")' 
 WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id = amenag.eleve_id)
 THEN
 '[
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||')' 
+](notification.sql?id='||eleve.id||' "Dossier élève")' 
 ELSE
 '[
     ![](./icons/alert-triangle-filled.svg)
-](notification.sql?id='||eleve.id||')' 
+](notification.sql?id='||eleve.id||' "Dossier incomplet pour l''élève")' 
 END as Actions,
 CASE WHEN EXISTS (SELECT eleve.id FROM examen_eleve WHERE eleve.id = examen_eleve.eleve_id)
 THEN
 '[
     ![](./icons/school.svg)
-](notification.sql?id='||eleve.id||'&tab=Examen)' 
+](notification.sql?id='||eleve.id||'&tab=Examen "Aménagements d''examen")' 
 ELSE ''
 END as Actions,
 CASE WHEN $group_id::int>2 THEN

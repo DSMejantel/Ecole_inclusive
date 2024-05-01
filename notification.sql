@@ -224,32 +224,32 @@ SELECT 'table' as component,
 WHEN $group_id::int>2 THEN
     '[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)'
+](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")'
      END as Dispositif,
     CASE
 WHEN $group_id::int>2 THEN
     '[
     ![](./icons/lifebuoy.svg)
-](suivi_edit_dispo.sql?id='||$id||')'
+](suivi_edit_dispo.sql?id='||$id||' "Modifier le dispositif")'
      END as Dispositif,
 CASE WHEN NOT EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id and $tab='Profil') and $group_id::int>1
      THEN '[![](./icons/pencil-plus.svg)
-](amenag_ajout.sql?id=' || $id||')'
+](amenag_ajout.sql?id=' || $id||' "Éditer")'
      ELSE ''
     END  as Actions,
     CASE
 WHEN $group_id::int=3 THEN 
          '[
     ![](./icons/trash.svg)
-](eleve_delete.sql?id='||amenag.eleve_id||')[
+](eleve_delete.sql?id='||amenag.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
-](amenag_edit.sql?id='||amenag.id||'&eleve='||amenag.eleve_id||')' 
+](amenag_edit.sql?id='||amenag.id||'&eleve='||amenag.eleve_id||' "Éditer")' 
 WHEN $group_id::int=4 THEN   
          '[
     ![](./icons/trash.svg)
-](eleve_delete.sql?id='||amenag.eleve_id||')[
+](eleve_delete.sql?id='||amenag.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
-](amenag_edit.sql?id='||amenag.id||'&eleve='||amenag.eleve_id||')' 
+](amenag_edit.sql?id='||amenag.id||'&eleve='||amenag.eleve_id||' "Éditer")' 
 ELSE   
          '[
     ![](./icons/trash-off.svg)
@@ -271,7 +271,7 @@ SELECT
    CASE WHEN $group_id::int>2 THEN 
   '[
     ![](./icons/pencil.svg)
-](eleve_edit.sql?id='||$id||')'
+](eleve_edit.sql?id='||$id||' "Éditer")'
    ELSE '[
     ![](./icons/pencil-off.svg)
 ]()'
@@ -304,31 +304,31 @@ SELECT
 WHEN $group_id::int>2 THEN
     '[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)'
+](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")'
      END as Dispositif,
          CASE
 WHEN $group_id::int>2 THEN
     '[
     ![](./icons/lifebuoy.svg)
-](suivi_edit_dispo.sql?id='||$id||')'
+](suivi_edit_dispo.sql?id='||$id||' "Modifier le dispositif")'
      END as Dispositif,
        CASE
 WHEN $group_id::int=3 THEN 
          '[
     ![](./icons/trash.svg)
-](eleve_delete.sql?id='||suivi.eleve_id||')[
+](eleve_delete.sql?id='||suivi.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
-](suivi_edit.sql?id='||suivi.id||'&eleve='||suivi.eleve_id||')' 
+](suivi_edit.sql?id='||suivi.id||'&eleve='||suivi.eleve_id||' "Éditer")' 
 WHEN $group_id::int=4 THEN   
          '[
     ![](./icons/trash.svg)
-](eleve_delete.sql?id='||suivi.eleve_id||')[
+](eleve_delete.sql?id='||suivi.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
-](suivi_edit.sql?id='||suivi.id||'&eleve='||suivi.eleve_id||')' 
+](suivi_edit.sql?id='||suivi.id||'&eleve='||suivi.eleve_id||' "Éditer")' 
 WHEN $group_id::int=2 THEN 
          '[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)[
+](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")[
     ![](./icons/trash-off.svg)
 ]()[
     ![](./icons/pencil-off.svg)

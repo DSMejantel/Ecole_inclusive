@@ -16,6 +16,17 @@ SELECT 'redirect' AS component,
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
+
+-- Message si droits insuffisants sur une page
+SELECT 'alert' as component,
+    'Importation terminée' as title,
+    'Les identifiants CAS ont été importés.' 
+    as description_md,
+    TRUE as dismissible,
+    'alert-circle' as icon,
+    'green' as color
+WHERE $CAS IS NOT NULL;
+
 select 
     'button' as component,
     'sm'     as size,

@@ -93,24 +93,28 @@ FROM user_info WHERE username=$user_edit
     
  -- Boutons administration des comptes
 select 
+    'divider' as component,
+    'Gestion des utilisateurs'   as contents
+    where $tab='Comptes';
+select 
     'button' as component,
     'sm'     as size,
     'pill'   as shape,
-    'start' as justify
+    'center' as justify
     where $tab='Comptes';
 select 
     'Nouveau Compte' as title,
     'comptes_ajout.sql' as link,
     'square-rounded-plus' as icon,
     $group_id::int<4 as disabled,
-    'red' as outline
+    'green' as outline
     where $tab='Comptes';
 select 
     'Comptes' as title,
     'comptes.sql' as link,
     'user-circle' as icon,
     $group_id::int<4 as disabled,
-    'red' as outline
+    'green' as outline
     where $tab='Comptes';
 select 
     'Importation' as title,
@@ -118,13 +122,42 @@ select
     'upload' as icon,
     $group_id::int<4 as disabled,
     'red' as outline
-    where $tab='Comptes';   
+    where $tab='Comptes'; 
+
+select 
+    'divider' as component,
+    'Intégration à une authentification CAS'   as contents
+    where $tab='Comptes';    
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify
+    where $tab='Comptes';  
 select 
     'Serveur CAS' as title,
     'cas_param.sql' as link,
     'network' as icon,
     $group_id::int<4 as disabled,
     'red' as outline
+    where $tab='Comptes';
+select 
+    'Import CAS' as title,
+    'comptes_import_CAS.sql' as link,
+    'users' as icon,
+    $group_id::int<4 as disabled,
+    'red' as outline
+    where $tab='Comptes';
+
+select 
+    'divider' as component,
+    'Outils et astuces'   as contents
+    where $tab='Comptes';    
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify
     where $tab='Comptes';
 select 
     'Outil Mot de passe' as title,

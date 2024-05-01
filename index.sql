@@ -16,10 +16,9 @@ SELECT 'text' AS component;
 SELECT
 'orange' as color,
 COALESCE((SELECT
-    format('Connexion pour %s %s (ENT : %s - MODE : %s)',
+    format('Connexion pour %s %s (MODE : %s)',
             user_info.prenom,
             user_info.nom,
-            $id_ent,
             CASE groupe
                 WHEN 1 THEN 'consultation Enseignant'
                 WHEN 2 THEN 'consultation AESH'
