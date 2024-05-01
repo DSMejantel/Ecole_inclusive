@@ -32,6 +32,12 @@ select
     'square-rounded-plus' as icon,
         $group_id::int<3 as disabled,
     'green' as outline;
+    
+ select 
+    'text' as component,
+   '##### Légende :
+![Cartable](./icons/briefcase.svg) Dossier de l''élève /  ![Incomplet](./icons/alert-triangle-filled.svg) Dossier incomplet /  ![Examens](./icons/school.svg) Aménagements d''examen /  ![AESH](./icons/user-plus.svg) Présence AESH 
+' as contents_md;
       
 -- Liste des élèves
 SELECT 'table' as component,
