@@ -137,7 +137,7 @@ CREATE TABLE examen(
 CREATE TABLE examen_eleve(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     eleve_id INTEGER,
-    mesure_id INTEGER
+    code_id INTEGER
 );
 
 CREATE TABLE fiche(
