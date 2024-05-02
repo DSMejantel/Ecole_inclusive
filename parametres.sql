@@ -46,9 +46,10 @@ COALESCE((SELECT
             user_info.prenom,
             user_info.nom,
            CASE groupe
-                WHEN 1 THEN 'Consultation'
-                WHEN 2 THEN 'Édition'
-                WHEN 3 THEN 'Administration'
+                WHEN 1 THEN 'consultation Enseignant'
+                WHEN 2 THEN 'consultation AESH'
+                WHEN 3 THEN 'édition'
+                WHEN 4 THEN 'administration'
             END)
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents
