@@ -48,7 +48,13 @@ select
     'etab.sql' as link,
     'building-community' as icon,
     'orange' as outline;
-    
+select 
+    'Niveaux' as title,
+    'niveaux.sql' as link,
+    'stairs' as icon,
+    'Orange' as color,
+    'orange' as outline;
+        
 -- Sous Menu référent
 select 
     'button' as component,

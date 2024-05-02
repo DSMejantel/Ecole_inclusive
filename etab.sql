@@ -43,6 +43,12 @@ select
     'Établissements' as title,
     'building-community' as icon,
     'orange' as color;
+select 
+    'Niveaux' as title,
+    'niveaux.sql' as link,
+    'stairs' as icon,
+    'Orange' as color,
+    'orange' as outline;
     
 -- Sous Menu établissement
 select 

@@ -28,9 +28,27 @@ select
     'Orange' as color,
     'orange' as outline;
 select 
+    'Aménagement d''examen' as title,
+    'examen.sql' as link,
+    'school' as icon,
+    'Orange' as color,
+    'orange' as outline;
+select 
+    'Dispositifs' as title,
+    'dispositif.sql' as link,
+    'lifebuoy' as icon,
+    'Orange' as color,
+    'orange' as outline;
+select 
     'Établissements' as title,
     'building-community' as icon,
     'orange' as color;
+select 
+    'Niveaux' as title,
+    'niveaux.sql' as link,
+    'stairs' as icon,
+    'Orange' as color,
+    'orange' as outline;
     
     -- Enregistrer la notification dans la base
  INSERT INTO etab(type, nom_etab, description, Lat, Lon) SELECT $type, $nom_etab, $description, $Lat, $Lon WHERE $description IS NOT NULL;
