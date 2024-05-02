@@ -51,7 +51,17 @@ WHERE classes.etab = $id
 FROM classes join etab on classes.etab=etab.id 
 WHERE classes.etab = $id order by classes.classe;
 
+-- Message si utilisateur CAS 
+SELECT 'alert' as component,
+    'Information' as title,
+    'Vous pouvez sélectionner la classe dans le menu déroulant en haut à droite.' 
+    as description_md,
+    'alert-circle' as icon,
+    TRUE as dismissible,
+    'red' as color
+WHERE $classe_select=0;
 
+-- Liste
   SELECT 'table' as component, 
     TRUE    as hover,
     TRUE    as striped_rows,
