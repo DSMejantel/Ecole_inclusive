@@ -59,7 +59,7 @@ SELECT 'alert' as component,
     'alert-circle' as icon,
     TRUE as dismissible,
     'red' as color
-WHERE $classe_select=0;
+WHERE $classe_select='-';
 
 -- Liste
   SELECT 'table' as component, 

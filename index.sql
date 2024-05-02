@@ -130,7 +130,7 @@ select
     'Fiches des classes' as title,
     'users-group' as icon,
     'green' as color,
-    'etab_classes_print.sql?id=' || user_info.etab ||'&classe_select=0' as link
+    'etab_classes_print.sql?id=' || user_info.etab ||'&classe_select=-' as link
      FROM etab JOIN user_info on user_info.etab=etab.id WHERE $group_id=1 GROUP BY etab.id;   
 select 
     'Élèves' as title,
