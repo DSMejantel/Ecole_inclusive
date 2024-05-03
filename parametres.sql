@@ -18,22 +18,18 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $restriction IS NOT NULL;
 
-select 
-    'button' as component,
-    'lg'     as size,
-    'pill'   as shape,
-    'center' as justify;
-select 
-    'Vue d''ensemble et paramétrage' as title,
-    'orange' as outline;
+SELECT 'title' as component,
+   'Informations et paramétrages' as contents,
+   TRUE as center,
+   2 as level;
         
 --Onglets
 SET tab=coalesce($tab,'Tableau de bord');
 select 'tab' as component;
 select  'Tableau de bord'  as title, 'tool' as icon, 1  as active, CASE WHEN $tab='Tableau de bord' THEN 'orange' ELSE 'green' END as color;
+select  'Mon profil' as title, 'user-circle' as icon, 1 as active, CASE WHEN $tab='Mon profil' THEN 'orange' ELSE 'green' END as color;
 select  'Carte' as title, 'map' as icon, 0 as active, CASE WHEN $tab='Carte' THEN 'orange' ELSE 'green' END as color;
 select  'Paramètres' as title, 'tool' as icon, 1 as active, CASE WHEN $tab='Paramètres' THEN 'orange' ELSE 'green' END as color WHERE $group_id>2 ;
-select  'Mon profil' as title, 'user-circle' as icon, 1 as active, CASE WHEN $tab='Mon profil' THEN 'orange' ELSE 'green' END as color;
 select  CASE WHEN $group_id::int>3  THEN 'Comptes'  END as title, CASE WHEN $group_id::int>3  THEN  'user-circle' ELSE '' END as icon, CASE WHEN $tab='Comptes' THEN 'orange' ELSE 'green' END as color;
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
@@ -124,6 +120,13 @@ select
     $group_id::int<4 as disabled,
     'red' as outline
     where $tab='Comptes'; 
+select 
+    'Mise à jour élève' as title,
+    'comptes_import_MAJ_eleve.sql' as link,
+    'upload' as icon,
+    $group_id::int<4 as disabled,
+    'red' as outline
+    where $tab='Comptes';
 
 select 
     'divider' as component,
@@ -163,10 +166,18 @@ select
 select 
     'Outil Mot de passe' as title,
     'generate_password_hash.sql' as link,
-    'tool' as icon,
+    'key' as icon,
     $group_id::int<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
+select 
+    'Suppresion codes d''activation' as title,
+    'tool_raz_activation.sql' as link,
+    'recharging' as icon,
+    $group_id::int<4 as disabled,
+    'orange' as outline
+    where $tab='Comptes';
+
 select 
     'Accentuation' as title,
     'tool_accent_01.sql' as link,
@@ -174,25 +185,9 @@ select
     $group_id::int<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
-    
--- Tableau de bord 
-select 
-    'button' as component,
-    'lg'     as size,
-    'pill'   as shape,
-    'center' as justify
-        where $tab='Tableau de bord';
-select 
-    'Tableau de bord' as title,
-    'tool' as icon,
-    'orange' as outline
-        where $tab='Tableau de bord';
-    
-SELECT 
-    'text' as component,
-    ' ' as contents_md
-        where $tab='Tableau de bord';
         
+-- Tableau de bord 
+    
  
 
 -- Compteurs
@@ -203,6 +198,7 @@ SET NB_etab = (SELECT count(etab.id) FROM etab);
 SET NB_aesh = (SELECT count(aesh.id) FROM aesh Where aesh.id<>1);
 SET NB_eleve = (SELECT count(eleve.id) FROM eleve);
 
+ 
 select 
     'button' as component,
     'lg'     as size,
@@ -284,7 +280,12 @@ select
     'eleves_etab.sql' as link
     WHERE $group_id=1 and $tab='Tableau de bord';
 
--- Menu
+-- Menu Établissements & Acteurs
+select 
+    'divider' as component,
+    'Établissements & Acteurs'   as contents
+    where $tab='Paramètres';
+
 select 
     'button' as component,
     'sm'     as size,
@@ -292,11 +293,86 @@ select
     'center' as justify
     where $tab='Paramètres';
 select 
+    'Établissements' as title,
+    'etablissement.sql' as link,
+    'building-community' as icon,
+    'orange' as outline
+            where $tab='Paramètres';
+select 
     'Référent' as title,
     'referent.sql' as link,
     'writing' as icon,
     'Orange' as color,
     'orange' as outline
+    where $tab='Paramètres';
+select 
+    'Accompagnants' as title,
+    'aesh.sql' as link,
+    'user-plus' as icon,
+    'orange' as outline
+            where $tab='Paramètres';
+select 
+    'Élèves' as title,
+    'eleves.sql' as link,
+    'users-group' as icon,
+    'orange' as outline
+            where $tab='Paramètres';
+
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify
+    where $tab='Paramètres';
+select 
+    'Établissements' as title,
+    'etab_ajout.sql' as link,
+    'square-rounded-plus' as icon,
+    'green' as outline,
+        $group_id::int<3 as disabled
+            where $tab='Paramètres';
+select 
+    'Référent' as title,
+    'referent_ajout.sql' as link,
+    'square-rounded-plus' as icon,
+    'green' as outline,
+        $group_id::int<3 as disabled
+    where $tab='Paramètres';
+   
+select 
+    'Accompagnants' as title,
+    'aesh_ajout.sql' as link,
+    'square-rounded-plus' as icon,
+    'green' as outline,
+        $group_id::int<3 as disabled
+        where $tab='Paramètres';
+select 
+    'Élèves' as title,
+    'eleve.sql' as link,
+    'square-rounded-plus' as icon,
+    'green' as outline,
+        $group_id::int<3 as disabled
+            where $tab='Paramètres';
+--    
+SELECT 
+    'text' as component,
+    '
+| Établissements | Enseignants-référents  |  Accompagnants  |  Élèves  |
+| ---- | ---- | ---- | ---- |
+| Écoles, collèges et lycées du secteur avec leurs coordonnées géographiques. | Identité et coordonnées des enseignants-référents MDA/MDPH qui assurent les suivis de scolarisation.  |Identité, coordonnées et informations des Accompagnants des élèves. |Identité et informations sur les élèves nécessitant suivi et/ou aménagements. |
+
+' as contents_md
+where $tab='Paramètres';            
+--- Menu Paramètres pédagogiques
+select 
+    'divider' as component,
+    'Paramètres pédagogiques '   as contents
+    where $tab='Paramètres';   
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify
     where $tab='Paramètres';
 select 
     'Notifications' as title,
@@ -320,44 +396,16 @@ select
     'orange' as outline
                 where $tab='Paramètres';
 select 
-    'Établissements' as title,
-    'etablissement.sql' as link,
-    'building-community' as icon,
-    'orange' as outline
-            where $tab='Paramètres';
-select 
     'Niveaux' as title,
     'niveaux.sql' as link,
     'stairs' as icon,
     'orange' as outline
             where $tab='Paramètres';
 select 
-    'Accompagnants' as title,
-    'aesh.sql' as link,
-    'user-plus' as icon,
-    'orange' as outline
-            where $tab='Paramètres';
-select 
-    'Élèves' as title,
-    'eleves.sql' as link,
-    'users-group' as icon,
-    'orange' as outline
-            where $tab='Paramètres';
-
---- Menu ajouter
-
-select 
     'button' as component,
     'sm'     as size,
     'pill'   as shape,
     'center' as justify
-    where $tab='Paramètres';
-select 
-    'Référent' as title,
-    'referent_ajout.sql' as link,
-    'square-rounded-plus' as icon,
-    'green' as outline,
-        $group_id::int<3 as disabled
     where $tab='Paramètres';
 select 
     'Notifications' as title,
@@ -381,42 +429,22 @@ select
         $group_id::int<3 as disabled
         where $tab='Paramètres';
 select 
-    'Établissements' as title,
-    'etab_ajout.sql' as link,
-    'square-rounded-plus' as icon,
-    'green' as outline,
-        $group_id::int<3 as disabled
-            where $tab='Paramètres';
-select 
     'Niveaux' as title,
     'niveaux.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
         $group_id::int<3 as disabled
             where $tab='Paramètres';
-select 
-    'Accompagnants' as title,
-    'aesh_ajout.sql' as link,
-    'square-rounded-plus' as icon,
-    'green' as outline,
-        $group_id::int<3 as disabled
-        where $tab='Paramètres';
-select 
-    'Élèves' as title,
-    'eleve.sql' as link,
-    'square-rounded-plus' as icon,
-    'green' as outline,
-        $group_id::int<3 as disabled
-            where $tab='Paramètres';
+
 
 
 --    
 SELECT 
     'text' as component,
     '
-| Enseignants-référents | Types de Notifications  | Établissements  |  Accompagnants  |  Élèves  |
-| ---- | ---- | ---- | ---- | ---- |
-| Identité et coordonnées des enseignants-référents MDPH qui assurent les suivis de scolarisation. | Tous les dispositifs attribués par la MDPH, mais aussi des aménagements propres à chaque étéblissement. | Écoles, collèges et lycées du secteur avec leurs coordonnées géographiques. |Identité et coordonnées des Accompagnants des élèves. |Identité et informations sur les élèves nécessitant suivi et/ou aménagements. |
+| Types de Notifications  | Mesures d''examen  |  Dispositifs  |  Niveaux  |
+| ---- | ---- | ---- | ---- |
+| Tous les dispositifs attribués par la MDPH, mais aussi des aménagements propres à chaque étéblissement. | Types d''aménagement d''examen pouvant être notifiés |Types de dispositifs d''aide pour l''accompagnement des élèves |Niveaux de classe des élèves suivis |
 
 ' as contents_md
 where $tab='Paramètres';

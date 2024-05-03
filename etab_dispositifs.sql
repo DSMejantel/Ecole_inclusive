@@ -179,8 +179,9 @@ SELECT
 
     
 -- fiche détaillée des élèves suivis
-SELECT 'text' as component,
-   'Fiches des élèves suivis' as title;
+SELECT 'title' as component,
+   'Fiches des élèves suivis' as contents,
+   4 as level;
 
   SELECT 'table' as component,   
     'comm_suivi' as commentaires,
