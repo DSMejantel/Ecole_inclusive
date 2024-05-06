@@ -19,10 +19,10 @@ SELECT 'form' AS component,
     'Recommencer'           as reset;
 
 -- Formulaire
-SELECT 'username' AS name, 'Identifiant' as label, 6 as width;
-SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width;
-SELECT 'nom' AS name, 'Nom' as label, 4 as width;
-SELECT 'prenom' AS name, 'Prénom' as label, 4 as width;
+SELECT 'username' AS name, 'Identifiant' as label, 6 as width, TRUE as required;
+SELECT 'code' AS name, 'text' AS type, sqlpage.random_string(20) AS value, 'Code d''activation' as label, 6 as width, TRUE as required;
+SELECT 'nom' AS name, 'Nom' as label, 4 as width, TRUE as required;
+SELECT 'prenom' AS name, 'Prénom' as label, 4 as width, TRUE as required;
     SELECT 'Etablissement' AS name, 'select' as type, 4 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select * FROM etab ORDER BY nom_etab ASC);
     SELECT 'Téléphone' AS label, 'tel' AS name, 3 as width;
     SELECT 'Courriel' AS label, 'courriel' AS name, 3 as width;

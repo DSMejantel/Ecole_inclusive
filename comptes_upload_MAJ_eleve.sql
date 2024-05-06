@@ -30,5 +30,5 @@ WHERE eleve_tmp.id=eleve.id;
 
 SELECT
     'redirect' AS component,
-    'eleves.sql?eleves=update' AS link;
+    'eleves.sql?update=1' AS link;
     

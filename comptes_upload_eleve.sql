@@ -10,25 +10,18 @@ SELECT 'redirect' AS component,
 
 
 -- temporarily store the data in a table with text columns
-create temporary table if not exists eleve_tmp(id integer, nom text, prenom text, etab_id integer, classe text, niveau text);
+create temporary table if not exists eleve_tmp(nom text, prenom text, etab_id integer, classe text, niveau text);
 delete from eleve_tmp;
 
 -- copy the data from the CSV file into the temporary table
-copy eleve_tmp (id, nom, prenom, etab_id, classe, niveau) from 'comptes_data_input'
+copy eleve_tmp (nom, prenom, etab_id, classe, niveau) from 'comptes_data_input'
 with (header true, delimiter ',', quote '"'); -- all the options are optional;
 
-
 -- insert the data into the final table
-UPDATE eleve 
-SET 
-etab_id=eleve_tmp.etab_id, 
-classe=eleve_tmp.classe, 
-niveau=eleve_tmp.niveau 
-FROM eleve_tmp
-WHERE eleve_tmp.id=eleve.id;
-
+INSERT OR IGNORE INTO eleve (nom, prenom, etab_id, classe, niveau)
+select nom, prenom, CAST(etab_id AS integer), classe, niveau  from eleve_tmp;
 
 SELECT
     'redirect' AS component,
-    'eleves.sql?eleves=update' AS link;
+    'eleves.sql?upload=1' AS link;
     

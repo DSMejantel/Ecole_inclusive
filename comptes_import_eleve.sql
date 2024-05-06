@@ -11,7 +11,23 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
+select 
+    'form'       as component,
+    'Importer des élèves' as title,
+    'Envoyer'  as validate,
+    './comptes_upload_eleve.sql' as action;
+select 
+    'comptes_data_input' as name,
+    'file'               as type,
+    'text/csv'           as accept,
+    'Fichier de mise à jour des élèves'           as label,
+    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules : id, nom, prenom, etab_id, classe, niveau' as description,
+    TRUE                 as required;
+
 -- Télécharger les données
+select 
+    'divider' as component,
+    'Outils d''importations'   as contents;
 SELECT 
     'csv' as component,
     'Exporter le fichier des élèves ' as title,
@@ -25,18 +41,25 @@ SELECT
     etab_id as etab_id,
     classe as classe,
     niveau as niveau
-  FROM eleve ORDER BY eleve.nom ASC;  
-
-select 
-    'form'       as component,
-    'CSV import' as title,
-    'Envoyer'  as validate,
-    './comptes_upload_MAJ_eleve.sql' as action;
-select 
-    'comptes_data_input' as name,
-    'file'               as type,
-    'text/csv'           as accept,
-    'Fichier de mise à jour des élèves'           as label,
-    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules : id, nom, prenom, etab_id, classe, niveau' as description,
-    TRUE                 as required;
-
+  FROM eleve ORDER BY eleve.nom ASC; 
+  
+SELECT 
+    'csv' as component,
+    'Nomenclature des Niveaux de classe ' as title,
+    'niveaux' as filename,
+    'file-download' as icon,
+    'green' as color;
+SELECT 
+    niv as niveaux
+  FROM niveaux ORDER BY niv ASC; 
+  
+SELECT 
+    'csv' as component,
+    'Codes des établissements ' as title,
+    'etablissements' as filename,
+    'file-download' as icon,
+    'green' as color;
+SELECT 
+    id as etab_id,
+    nom_etab as établissement
+  FROM etab ORDER BY id ASC; 

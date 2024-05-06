@@ -18,6 +18,20 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $restriction IS NOT NULL;    
 
+-- Messages d'importation
+SELECT 'alert' as component,
+    'Mise à jour de la base :' as title,
+    'l''opération s''est déroulée correctement.' as description_md,
+    'alert-circle' as icon,
+    'green' as color
+WHERE $update::int=1;
+SELECT 'alert' as component,
+    'Importation dans la base :' as title,
+    'l''opération s''est déroulée correctement.' as description_md,
+    'alert-circle' as icon,
+    'green' as color
+WHERE $upload::int=1;
+
 select 
     'button' as component,
     'sm'     as size,
