@@ -10,11 +10,11 @@ SELECT 'redirect' AS component,
 
 
 -- temporarily store the data in a table with text columns
-create temporary table if not exists user_tmp(username text, nom text, prenom text, tel text, courriel text, groupe text, activation text, etab integer);
+create temporary table if not exists user_tmp(username text, nom text, prenom text, tel text, courriel text, groupe text, activation text, etab integer, CAS text);
 delete from user_tmp;
 
 -- copy the data from the CSV file into the temporary table
-copy user_tmp (username, nom, prenom, tel, courriel, groupe, activation, etab) from 'comptes_data_input'
+copy user_tmp (username, nom, prenom, tel, courriel, groupe, activation, etab, CAS) from 'comptes_data_input'
 with (header true, delimiter ',', quote '"'); -- all the options are optional;
 
 -- Préparer l'analyse du nombre d'enregistrements importés
@@ -22,8 +22,8 @@ SET USER1 = (SELECT count(username) from user_info);
 SET USER2 = (SELECT count(username) from user_tmp);
 
 -- insert the data into the final table
-INSERT OR IGNORE INTO user_info (username, nom, prenom, tel, courriel, groupe, activation, etab, password_hash)
-select username, nom, prenom, tel, courriel, CAST(groupe AS integer), activation, etab, '$argon2id$v=19$m=19456,t=2,p=1$1sY4ksaDovz/IlaAwQHO/g$Wxf2S29maUh1kXZv5aNRLC71dpFkYNmHt7MOS9yMKeA'   from user_tmp;
+INSERT OR IGNORE INTO user_info (username, nom, prenom, tel, courriel, groupe, activation, etab, CAS)
+select username, nom, prenom, tel, courriel, CAST(groupe AS integer), activation, etab, CAS   from user_tmp;
 
 SET USER3 = (SELECT count(username) from user_info);
 SET USER4 = $USER3- $USER1

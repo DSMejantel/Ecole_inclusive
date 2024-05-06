@@ -11,16 +11,32 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
 
+-- Télécharger les données
+SELECT 
+    'csv' as component,
+    'Exporter le fichier des élèves ' as title,
+    'eleves' as filename,
+    'file-download' as icon,
+    'green' as color;
+SELECT 
+    id as id,
+    nom as nom,
+    prenom as prenom,
+    etab_id as etab_id,
+    classe as classe,
+    niveau as niveau
+  FROM eleve ORDER BY eleve.nom ASC;  
+
 select 
     'form'       as component,
     'CSV import' as title,
     'Envoyer'  as validate,
-    './comptes_upload.sql' as action;
+    './comptes_upload_MAJ_eleve.sql' as action;
 select 
     'comptes_data_input' as name,
     'file'               as type,
     'text/csv'           as accept,
-    'Fichier utilisateur'           as label,
-    'Envoyer un fichier CSV avec les colonnes séparées par des virgules : username, nom, prenom, tel, courriel, groupe, activation, etab, CAS' as description,
+    'Fichier de mise à jour des élèves'           as label,
+    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules : id, nom, prenom, etab_id, classe, niveau' as description,
     TRUE                 as required;
 

@@ -164,7 +164,7 @@ select
     etab.type||' '||etab.nom_etab as title,
     CASE WHEN classe<>''
     THEN 'Classe : ' || classe 
-    ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.id=eleve.niveau)
+    ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.niv=eleve.niveau)
     END as description,
     1 as active, 'green' as color,
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link

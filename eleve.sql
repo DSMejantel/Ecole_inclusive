@@ -19,7 +19,7 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
     SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, 4 as width, TRUE as required;
     SELECT 'Date de naissance' AS label, 'calendar-month' as prefix_icon, 'naissance' AS name, 'date' as type, 3 as width;
     SELECT 'Etablissement' AS name, 'select' as type, 4 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select * FROM etab ORDER BY nom_etab ASC);
-    SELECT 'Niveau' AS name, 'select' as type, 2 as width, json_group_array(json_object("label", niv, "value", id)) as options FROM (select * FROM niveaux ORDER BY niv ASC);
+    SELECT 'Niveau' AS name, 'select' as type, 2 as width, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select * FROM niveaux ORDER BY niv ASC);
     SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, 2 as width;
     SELECT 'Référent' AS name, 'select' as type, 4 as width,
     json_group_array(json_object("label" , nom_ens_ref, "value", id )) as options FROM (select * FROM referent ORDER BY nom_ens_ref ASC);

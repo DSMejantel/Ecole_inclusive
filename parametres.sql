@@ -119,7 +119,32 @@ select
     'upload' as icon,
     $group_id::int<4 as disabled,
     'red' as outline
+    where $tab='Comptes';
+    
+select 
+    'divider' as component,
+    'Gestion des élèves'   as contents
+    where $tab='Comptes';
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify
     where $tab='Comptes'; 
+select 
+    'Import des élèves' as title,
+    'comptes_import_eleve.sql' as link,
+    'upload' as icon,
+    $group_id::int<4 as disabled,
+    'green' as outline
+    where $tab='Comptes';
+select 
+    'Export des élèves' as title,
+    'comptes_export_eleve.sql' as link,
+    'download' as icon,
+    $group_id::int<4 as disabled,
+    'orange' as outline
+    where $tab='Comptes';
 select 
     'Mise à jour élève' as title,
     'comptes_import_MAJ_eleve.sql' as link,

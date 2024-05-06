@@ -87,11 +87,9 @@ select
     SELECT 'Établissement' AS name, 4 as width, 
           $etab_edit::integer as value,
     'select' as type, json_group_array(json_object("label", nom_etab, "value", etab.id)) as options FROM etab;
-    SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit::integer as value, json_group_array(json_object("label", niv, "value", id)) as options FROM (select * FROM niveaux ORDER BY niv ASC);
+    SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit as value, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select * FROM niveaux ORDER BY niv ASC);
     SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 2 as width;
-    SELECT 'Référent' AS name, 
-    'select' as type, 4 as width,
-      $referent_edit::integer as value,
+    SELECT 'Référent' AS name, 'select' as type, 4 as width, $referent_edit::integer as value,
     json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM referent;
     SELECT 'Commentaire' AS label, 'comm_eleve' AS name, $comm_edit as value,'textarea' as type, 12 as width;
     
