@@ -59,6 +59,7 @@ SELECT
   nom AS Nom,
   prenom AS Prénom,
   etab.nom_etab AS Établissement,
+  $etab_edit as ID,
   classe AS Classe,
   tel as Téléphone,
   courriel as courriel
@@ -72,7 +73,9 @@ SELECT
     'orange'           as validate_color;
     SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 4 as width;
     SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 4 as width;
-    SELECT 'Etablissement' AS name, 'select' as type, 2 as width, json_group_array(json_object('label', nom_etab, 'value', nom_etab)) as options FROM (select distinct etab.nom_etab as nom_etab, user_info.etab as value FROM etab LEFT JOIN user_info on etab.id=user_info.etab UNION ALL SELECT 'Aucun' as label, NULL as value  ORDER BY etab.nom_etab ASC);
+    SELECT 'Etablissement' AS name, 'select' as type, 2 as width, $etab_edit::int as value, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
+   select 'Aucun' as label, NULL as value
+ ORDER BY nom_etab ASC);
     
 
 
