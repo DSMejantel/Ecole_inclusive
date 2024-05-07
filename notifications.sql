@@ -57,9 +57,9 @@ SELECT
   etab.nom_etab as Établissement,
   nom_ens_ref as Référent,
   strftime('%d/%m/%Y',datefin) AS Fin,  
-  '[ ![](./icons/briefcase.svg) ](notification.sql?id=' || eleve.id || ')' ||
-  coalesce('[ ![](./icons/user-plus.svg) ](aesh_suivi.sql?id=' || suivi.aesh_id || '&tab=Profils)',
-                 '  ![](./icons/user-off.svg) ') as Suivis
+  '[ ![](./icons/briefcase.svg) ](notification.sql?id=' || eleve.id || ' "Fiche élève")' ||
+  coalesce('[ ![](./icons/user-plus.svg) ](aesh_suivi.sql?id=' || suivi.aesh_id || '&tab=Profils "Fiche AESH")',
+                 '  ![](./icons/user-off.svg)') as Suivis
 FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
 
 -- Télécharger les données
