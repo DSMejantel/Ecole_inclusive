@@ -20,6 +20,23 @@ SELECT
         'red' as color,
   'Ce compte va être supprimé. Toute suppression est définitive !' 
  as description;
+
+select 
+    'button' as component,
+    'sm'     as size,
+    'center' as justify,
+    'pill'   as shape;
+select 
+    'Retour sans supprimer' as title,
+    'comptes.sql' as link,
+    'arrow-back' as icon,
+    'green' as outline,
+    TRUE as space_after;
+select 
+    'Supprimer' as title,
+    'comptes_delete_confirm.sql?id='||$id as link,
+    'trash' as icon,
+    'red' as outline;
       
 -- Isolement du compte dans une liste
 SELECT 'table' as component,
@@ -31,10 +48,7 @@ nom AS Nom,
   groupe as Permissions,
       '[
     ![](./icons/trash.svg)
-](comptes_delete_confirm.sql?id='||$id||') ' as Actions
+](comptes_delete_confirm.sql?id='||$id||' "Valider la suppression") ' as Actions
 FROM user_info Where username=$id;
 
-SELECT 
-    'hero' as component,
-    '/comptes.sql' as link,
-    'Retour à la liste' as link_text;
+
