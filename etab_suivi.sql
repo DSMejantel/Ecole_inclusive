@@ -70,9 +70,9 @@ select
 
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
-SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id);
+SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id);
-SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and suivi.aesh_id<>1);
+SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
@@ -133,7 +133,7 @@ SELECT 'table' as component,
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)'
      END as Actions
-FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and suivi.aesh_id<>1 and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom;
+FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom;
  
 -- Télécharger les données
 SELECT 
@@ -155,7 +155,7 @@ SELECT
   etab.nom_etab as Établissement,
     group_concat(dispositif.dispo) as Dispositifs,
   datefin AS Fin  
-FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and suivi.aesh_id<>1 and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom; 
+FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom; 
   
   -- Liste des suivis sans accompagnement
 select 

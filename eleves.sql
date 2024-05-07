@@ -116,5 +116,5 @@ ELSE
     ![](./icons/pencil-off.svg)
 ]()'
 END as admin
-FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN suivi on eleve.id=suivi.eleve_id GROUP BY eleve.id ORDER BY eleve.nom ASC;
+FROM eleve LEFT JOIN etab on eleve.etab_id=etab.id LEFT JOIN suivi on eleve.id=suivi.eleve_id GROUP BY eleve.id ORDER BY eleve.nom ASC;
 

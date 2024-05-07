@@ -13,6 +13,7 @@
         {"title": "Élèves", "submenu": [
             {"link": "eleves.sql", "title": "Liste complète"},
             {"link": "eleves_attente.sql", "title": "Élèves en attente"},
+            {"link": "eleves_hors_etab.sql", "title": "Élèves sans établissement"},
             {"link": "eleves_historique.sql", "title": "Dernières modifications"},
             {"link": "eleve.sql", "title": "Ajouter un élève"}
         ]},

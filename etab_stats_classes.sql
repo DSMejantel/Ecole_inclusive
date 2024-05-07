@@ -18,39 +18,20 @@ ELSE sqlpage.read_file_as_text('menu.json')
 select 
     'button' as component,
     'sm'     as size,
-    'pill'   as shape,
+    --'pill'   as shape,
     'center' as justify;
-select 
-    'Carte' as title,
-    'etab_carte.sql?id=' || $id as link,
-    'map' as icon,
-    'orange' as outline;
-select 
-    'Stats' as title,
-    'etab_stats.sql?id=' || $id as link,
-    'chart-histogram' as icon,
-    'orange' as color;
-select 
-    'Photos' as title,
-    'etab_trombi.sql?id=' || $id as link,
-    'camera' as icon,
-    'orange' as outline;
-select 
-    'Notifications' as title,
-    'etab_notif.sql?id=' || $id as link,
-    'certificate' as icon,
-    'orange' as outline;
-select 
-    'Suivis' as title,
-    'etab_suivi.sql?id=' || $id  ||'&tab=Acc' as link,
-    'list-check' as icon,
-    'orange' as outline;
 select 
     'AESH' as title,
     'etab_aesh.sql?id=' || $id as link,
     'user-plus' as icon,
     'orange' as outline
     WHERE $group_id>1;
+select 
+    'Suivis' as title,
+    'etab_suivi.sql?id=' || $id  ||'&tab=Acc' as link,
+    'list-check' as icon,
+    'orange' as outline;
+
 select 
     'Classes' as title,
     'etab_classes.sql?id=' || $id as link,
@@ -61,6 +42,32 @@ select
     'etab_dispositifs.sql?id=' || $id as link,
     'lifebuoy' as icon,    
     'orange' as outline;
+select 
+    'Notifications' as title,
+    'etab_notif.sql?id=' || $id as link,
+    'certificate' as icon,
+    'orange' as outline;
+select 
+    'Examens' as title,
+    'etab_examen.sql?id=' || $id as link,
+    'school' as icon,
+    'orange' as outline;
+select 
+    'Carte' as title,
+    'etab_carte.sql?id=' || $id as link,
+    'map' as icon,
+    'teal' as outline;
+select 
+    'Stats' as title,
+    'etab_stats.sql?id=' || $id as link,
+    'chart-histogram' as icon,
+    'teal' as color;
+select 
+    'Photos' as title,
+    'etab_trombi.sql?id=' || $id as link,
+    'camera' as icon,
+    'teal' as outline;
+
 
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
@@ -127,7 +134,8 @@ SELECT
 SELECT 
 ' AESH ' as title,
     $NB_aesh as description,
-    'user-plus' as icon;    
+    'user-plus' as icon;   
+    
 -- Différents Dispositifs en place par Classe
 select 
     'chart'   as component,
@@ -139,10 +147,10 @@ select
     TRUE       as toolbar,
     TRUE      as labels;
 select 
-    Nom_dispositif as series,
-    Nom_dispositif as x,
-    Nombre   as value
-    FROM stats01 WHERE etab=$id and classe=$classe_select;
+    dispositif.dispo as series,
+    dispositif.dispo as x,
+    coalesce(count(dispositif.dispo),0)   as value
+    FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE etab_id=$id and classe=$classe_select group by dispositif.dispo;
 
 -- Différents Dispositifs en place par Classe
 select 
@@ -153,9 +161,9 @@ select
     TRUE       as toolbar,
     TRUE      as labels;
 select 
-    Nom_dispositif as label,
-    Nombre   as value
-    FROM stats01 WHERE etab=$id and classe=$classe_select;
+    dispositif.dispo as label,
+    coalesce(count(dispositif.dispo),0)   as value
+    FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE etab_id=$id and classe=$classe_select group by dispositif.dispo;
     
 -- Bouton vers statistiques
 select 

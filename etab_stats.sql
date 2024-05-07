@@ -159,22 +159,5 @@ select
     'etab_stats_classes.sql?id=' || $id as link,
     'chart-histogram' as icon,
     'orange' as color;
-/*    
--- Différents Dispositifs en place par Classe
 
-select 
-    'chart'               as component,
-    'Différents dispositifs par classe' as title,
-    'bar'             as type,
-        500 as height,
-    TRUE as labels,
-    TRUE as stacked,
-    'Classes' as xtitle,
-    'Nombre de dispositifs' as ytitle;
-select 
-    Nom_dispositif as series,
-    classe as x,
-    coalesce(Nombre,0) as value
-    FROM stats01 WHERE etab=$id ORDER BY classe;
-*/
 

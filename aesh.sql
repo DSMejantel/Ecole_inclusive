@@ -62,4 +62,4 @@ ELSE
     ![](./icons/trash-off.svg)
 ]()' 
 END as Admin
-FROM aesh WHERE id<>1 ORDER BY aesh_name ASC;   
+FROM aesh ORDER BY aesh_name ASC;   

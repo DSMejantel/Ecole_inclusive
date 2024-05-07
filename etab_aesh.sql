@@ -70,9 +70,9 @@ select
 
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
-SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id);
+SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id);
-SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and suivi.aesh_id<>1);
+SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
@@ -125,7 +125,7 @@ SELECT 'table' as component,
          '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)' as Actions
-  FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id and aesh.id<>1 GROUP BY aesh.aesh_name;  
+  FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY aesh.aesh_name;  
 /*
 -- Graphique
 select 
@@ -150,7 +150,7 @@ select
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
     SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as x,
     suivi.temps        as y
-        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1  ORDER BY eleve.nom ASC;
+        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id  ORDER BY eleve.nom ASC;
 */
 
 -- Graphique Bulle
@@ -173,7 +173,7 @@ select
     6                    as xticks,
     12                    as yticks,
     35                    as zticks
-    FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1 ;
+    FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id;
    
 select 
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
@@ -181,7 +181,7 @@ select
     coalesce(aesh.id,0) as y,    
     --SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as labels,
     coalesce(suivi.temps,0)        as z
-        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1 ;
+        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id ;
 /*     
 -- Graphique Barres Elèves
 select 
@@ -231,5 +231,5 @@ select
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as label,
     SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom||' ('||eleve.classe||')' as series,
     sum(suivi.temps/mut)        as value
-        FROM suivi JOIN etab on eleve.etab_id = etab.id JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id and aesh.id>1 GROUP BY suivi.id ORDER BY aesh.id ASC; 
+        FROM suivi JOIN etab on eleve.etab_id = etab.id JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id GROUP BY suivi.id ORDER BY aesh.id ASC; 
          

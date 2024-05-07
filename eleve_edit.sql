@@ -89,11 +89,15 @@ select
     SELECT 'Date de naissance' AS label, 'calendar-month' as prefix_icon, 'naissance' AS name, 'date' as type, $naissance_edit as value, 3 as width;
     SELECT 'Établissement' AS name, 4 as width, 
           $etab_edit::integer as value,
-    'select' as type, json_group_array(json_object("label", nom_etab, "value", etab.id)) as options FROM etab;
-    SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit as value, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select * FROM niveaux ORDER BY niv ASC);
+    'select' as type, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
+   select 'Aucun' as label, NULL as value
+ ORDER BY nom_etab ASC);
+    SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit as value, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select niv, niv FROM niveaux union all
+   select '-' as label, NULL as value ORDER BY niv ASC);
     SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 2 as width;
     SELECT 'Référent' AS name, 'select' as type, 4 as width, $referent_edit::integer as value,
-    json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM referent;
+    json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM (select nom_ens_ref, id FROM referent union all
+   select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC);
     SELECT 'Commentaire' AS label, 'comm_eleve' AS name, $comm_edit as value,'textarea' as type, 12 as width;
     
 
