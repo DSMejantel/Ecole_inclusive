@@ -1,0 +1,3 @@
+ALTER TABLE eleve
+ADD
+        INE TEXT
