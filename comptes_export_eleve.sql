@@ -22,6 +22,12 @@ SELECT
     id as id,
     nom as nom,
     prenom as prenom,
+    naissance as naissance,
+    sexe as sexe,
+    INE as INE,
+    adresse as adresse,
+    code_postal as code,
+    commune as commune,
     etab_id as etab_id,
     classe as classe,
     niveau as niveau
