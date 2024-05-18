@@ -152,6 +152,13 @@ select
     $group_id::int<4 as disabled,
     'red' as outline
     where $tab='Comptes';
+select 
+    'Générer le parcours de l''année' as title,
+    'tool_MAJ_parcours.sql' as link,
+    'calendar-month' as icon,
+    $group_id::int<4 as disabled,
+    'orange' as outline
+    where $tab='Comptes';
 
 select 
     'divider' as component,
@@ -427,6 +434,14 @@ select
     'orange' as outline
             where $tab='Paramètres';
 select 
+    'Années' as title,
+    'annees.sql' as link,
+    'calendar-month' as icon,
+    'orange' as outline
+            where $tab='Paramètres';
+            
+--Boutons ajouts            
+select 
     'button' as component,
     'sm'     as size,
     'pill'   as shape,
@@ -460,16 +475,22 @@ select
     'green' as outline,
         $group_id::int<3 as disabled
             where $tab='Paramètres';
-
+select 
+    'Années' as title,
+    'annees.sql' as link,
+    'calendar-plus' as icon,
+    'green' as outline,
+        $group_id::int<3 as disabled
+            where $tab='Paramètres';
 
 
 --    
 SELECT 
     'text' as component,
     '
-| Types de Notifications  | Mesures d''examen  |  Dispositifs  |  Niveaux  |
-| ---- | ---- | ---- | ---- |
-| Tous les dispositifs attribués par la MDPH, mais aussi des aménagements propres à chaque étéblissement. | Types d''aménagement d''examen pouvant être notifiés |Types de dispositifs d''aide pour l''accompagnement des élèves |Niveaux de classe des élèves suivis |
+| Types de Notifications  | Mesures d''examen  |  Dispositifs  |  Niveaux  | Années  |
+| ---- | ---- | ---- | ---- |---- |
+| Tous les dispositifs pouvant être attribués par la MDPH | Types d''aménagement d''examen pouvant être notifiés |Types de dispositifs d''aide pour l''accompagnement des élèves |Niveaux de classe des élèves suivis |Année scolaire en cours et archives |
 
 ' as contents_md
 where $tab='Paramètres';

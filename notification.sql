@@ -87,6 +87,22 @@ SELECT
 	WHERE $objectifs IS NOT NULL;
 UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $objectifs IS NOT NULL;
 
+-- Insère dans l'historique du parcours
+SET annee_en_cours=(SELECT annee FROM annee WHERE active=1)
+
+DELETE FROM parcours WHERE eleve_id=$id and annee_id=$annee_en_cours;
+
+INSERT INTO parcours (annee_id, eleve_id, etab_id, niveau, classe, dispositif_id, referent_id, aesh_id)
+SELECT 
+	$annee_en_cours as annee_id,
+	$id as eleve_id,
+	eleve.etab_id as etab_id,
+	eleve.niveau as niveau,
+	eleve.classe as classe,
+	group_concat(DISTINCT dispositif.dispo) as dispositif_id,
+	(SELECT SUBSTR(prenom_ens_ref, 1, 1) ||'. '||nom_ens_ref FROM referent JOIN eleve on referent.id=eleve.referent_id WHERE eleve.id=$id) as referent_id,
+	(SELECT SUBSTR(aesh_firstname, 1, 1) ||'. '||aesh_name FROM aesh LEFT JOIN suivi on aesh.id=suivi.aesh_id JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.id=$id) as aesh_id
+	FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id=$id;
 -- Menu spécifique élève : modifier, ajouter notif, ajouter suivi
 select 
     'button' as component,
@@ -147,11 +163,12 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom as title
+    UPPER(nom) || ' ' || prenom as title,
+    'Sexe : '||sexe||' - INE : '||INE as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    'né(e) le :' as title,
-    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+    adresse||' '||code_postal||' '||commune as title,
+    'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
@@ -197,6 +214,7 @@ select CASE WHEN EXISTS (SELECT $id FROM examen_eleve WHERE $id=eleve_id) THEN '
 select  'Aménagements' as title, 'list-check' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Profil' as link, CASE WHEN $tab='Profil' THEN 'orange' ELSE 'green' END as color;
 select  CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'Suivi' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'user-plus' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Suivi' as link, CASE WHEN $tab='Suivi' THEN 'orange' ELSE 'green' END as color;
 select CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'Graphique' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'chart-bar' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Graphique' as link, CASE WHEN $tab='Graphique' THEN 'orange' ELSE 'green' END as color;
+select  'Historique' as title, 'calendar-month' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Historique' as link, CASE WHEN $tab='Historique' THEN 'orange' ELSE 'green' END as color;
 
 
 
@@ -428,5 +446,20 @@ SELECT
     'tool' as icon,
     'orange' as outline
     WHERE $tab='Examen';
-
+    
+-- Historique
+SELECT 
+    'text' as component
+        where $tab='Historique';
+SELECT 'table' as component
+        where $tab='Historique';
+SELECT 
+	annee_id as Année,
+	etab.type||' '||etab.nom_etab as Établissement,
+	niveau as Niveau,
+	classe as Classe,
+	dispositif_id as Dispositif,
+	referent_id as Référent,
+	aesh_id as AESH
+	FROM parcours JOIN etab on parcours.etab_id=etab.id WHERE eleve_id=$id and $tab='Historique' ORDER by annee_id;
 

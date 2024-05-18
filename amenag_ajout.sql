@@ -32,11 +32,12 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom as title
+    UPPER(nom) || ' ' || prenom as title,
+    'Sexe : '||sexe||' - INE : '||INE as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    'né(e) le :' as title,
-    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+    adresse||' '||code_postal||' '||commune as title,
+    'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
@@ -61,7 +62,7 @@ SELECT 'form' as component,
     'Recommencer'           as reset;
 
      SELECT 'Commentaires' AS 'label', 'info' as name,'textarea' as type, 12 as width;
-     SELECT 'Aménagements' AS 'label', 'amenagements' as name,'textarea' as type, 6 as width;
+     SELECT 'Aménagements' AS 'label', 'amenagements' as name,'textarea' as type, 6 as width, TRUE as required;
      SELECT 'Objectifs' AS 'label', 'objectifs' as name,'textarea' as type, 6 as width;
     
 

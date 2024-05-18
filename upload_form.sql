@@ -32,11 +32,12 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom as title
+    UPPER(nom) || ' ' || prenom as title,
+    'Sexe : '||sexe||' - INE : '||INE as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    'né(e) le :' as title,
-    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+    adresse||' '||code_postal||' '||commune as title,
+    'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 

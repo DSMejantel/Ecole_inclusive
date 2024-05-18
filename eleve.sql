@@ -15,22 +15,27 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
     'green'           as validate_color,
     'Recommencer'           as reset;
     
-    SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, 5 as width, TRUE as required;
+    SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, 4 as width, TRUE as required;
     SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, 4 as width, TRUE as required;
     SELECT 'Date de naissance' AS label, 'calendar-month' as prefix_icon, 'naissance' AS name, 'date' as type, 3 as width;
-    SELECT 'Etablissement' AS name, 'select' as type, 4 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
+    SELECT 'Sexe' AS label, 'friends' as prefix_icon, 'sexe' AS name, 'select' as type, '[{"label": "F", "value": "F"}, {"label": "M", "value": "M"}]' as options, 1 as width;
+    SELECT 'Adresse' AS label, 'address-book' as prefix_icon, 'adresse' AS name, 'text' as type, 6 as width;
+    SELECT 'Code Postal' AS label, 'mail' as prefix_icon, 'zipcode' AS name, 'text' as type, 2 as width;
+    SELECT 'Commune' AS label, 'building-community' as prefix_icon, 'commune' AS name, 'text' as type, 4 as width;
+    SELECT 'INE' AS label, 'barcode' as prefix_icon, 'ine' AS name, 'text' as type, 2 as width;
+    SELECT 'Etablissement' AS name, 'select' as type, 3 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
    select 'Aucun' as label, NULL as value
  ORDER BY nom_etab ASC);
     SELECT 'Niveau' AS name, 'select' as type, 2 as width, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select niv, niv FROM niveaux union all
    select '-' as label, NULL as value ORDER BY niv ASC);
     SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, 2 as width;
-    SELECT 'Référent' AS name, 'select' as type, 4 as width,
+    SELECT 'Référent' AS name, 'select' as type, 3 as width,
     json_group_array(json_object("label" , nom_ens_ref, "value", id )) as options FROM (select nom_ens_ref, id FROM referent union all
    select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC);
     SELECT 'Commentaire' AS label,'textarea' as type, 'comm_eleve' AS name;
     
     -- Enregistrer l'élève créé dans la base
- INSERT INTO eleve(nom, prenom, naissance, etab_id, niveau, classe, referent_id, comm_eleve) SELECT $nom, $prenom, $naissance, :Etablissement, :Niveau, $classe, :Référent, $comm_eleve WHERE $classe IS NOT NULL;
+ INSERT INTO eleve(nom, prenom, naissance, sexe, adresse, code_postal, commune, INE, etab_id, niveau, classe, referent_id, comm_eleve) SELECT $nom, $prenom, $naissance, $sexe, $adresse ,$zipcode, $commune, $ine, :Etablissement, :Niveau, $classe, :Référent, $comm_eleve WHERE $classe IS NOT NULL;
 
 -- Liste des élèves
 -- (we put it after the insertion because we want to see new accounts right away when they are created)

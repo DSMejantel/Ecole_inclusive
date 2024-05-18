@@ -32,11 +32,12 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom as title
+    UPPER(nom) || ' ' || prenom as title,
+    'Sexe : '||sexe||' - INE : '||INE as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    'né(e) le :' as title,
-    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+    adresse||' '||code_postal||' '||commune as title,
+    'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
@@ -66,5 +67,5 @@ SELECT 'Département' AS 'label', 'world' as prefix_icon, 'text' as type, 'dpmt'
 SELECT 'Début' AS 'label', 'calendar-up' as prefix_icon, 'date' as type, 'datedeb' AS name, 3 as width;
 SELECT 'Fin' AS 'label', 'calendar-down' as prefix_icon, 'date' as type, 'datefin' AS name, 3 as width;
 SELECT 'Droits ouverts pour :' AS 'label', 'modalite[]' as name, 6 as width, 'select' as type, true as multiple, json_group_array(json_object("label", type, "value", id)) as options FROM (select * FROM modalite ORDER BY type ASC);
-SELECT 'Aide pour :' AS 'label', 'lifebuoy' as prefix_icon, 'text' as type, 'acces' AS name, 6 as width;    
+SELECT 'Aide pour :' AS 'label', 'lifebuoy' as prefix_icon, 'text' as type, 'acces' AS name, 6 as width, TRUE as required;    
 

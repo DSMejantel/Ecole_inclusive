@@ -164,7 +164,7 @@ select
     'N° AESH' as ytitle,
     'Heures' as ztitle,
     400 as height,
-    min(eleve.id)-2                     as xmin,
+    min(eleve.id)-10                     as xmin,
     max(eleve.id)+2                    as xmax,
     min(aesh.id)-2                    as ymin,
     max(aesh.id)+2                  as ymax,
@@ -177,7 +177,7 @@ select
    
 select 
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
-    coalesce(eleve.id,0) as x,
+    coalesce(eleve.id,0) as label,
     coalesce(aesh.id,0) as y,    
     --SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as labels,
     coalesce(suivi.temps,0)        as z
@@ -231,5 +231,5 @@ select
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as label,
     SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom||' ('||eleve.classe||')' as series,
     sum(suivi.temps/mut)        as value
-        FROM suivi JOIN etab on eleve.etab_id = etab.id JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id GROUP BY suivi.id ORDER BY aesh.id ASC; 
+        FROM suivi JOIN etab on eleve.etab_id = etab.id JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id GROUP BY aesh.id,eleve.id ORDER BY aesh_name ASC; 
          
