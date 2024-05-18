@@ -11,7 +11,7 @@ SELECT
     'Créer un nouveau dispostif' as title,
     'enregistrer' as validate;
     
-    SELECT 'Dispositif' AS label, 'dispo' AS name;
+    SELECT 'Dispositif' AS label, 'dispo' AS name, 'lifebuoy' as prefix_icon, TRUE as required;
         SELECT 'Droits réservés aux coordonnateurs' AS label, 'coordo' AS name, 'checkbox' as type, 1 as value, 6 as width;
     
 
