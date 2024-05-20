@@ -11,7 +11,7 @@ SELECT 'table' as component,
 SELECT 
   'lifebuoy' as icone,
   dispo AS Dispositif,
-  CASE WHEN coordo::int=1
+  CASE WHEN coordo=1
     THEN '[
     ![](./icons/select.svg)
 ](/dispositif/indisponible.sql?id='||dispositif.id||')' 
