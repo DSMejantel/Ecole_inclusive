@@ -102,7 +102,7 @@ select
   ELSE './icons/profil.png'
   END as top_image,
   CASE
-WHEN $group_id::int=4 THEN
+WHEN $group_id=4 THEN
     '[
   ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil) [

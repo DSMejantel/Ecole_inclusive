@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id::int<>'4';
+        WHERE $group_id<>'4';
         
  -- Supprime le mot de passe
 UPDATE user_info set password_hash = NULL WHERE username=$id and :code is not null        

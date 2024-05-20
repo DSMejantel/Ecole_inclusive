@@ -146,7 +146,7 @@ ELSE
     ![](./icons/alert-triangle-filled.svg)
 ](notification.sql?id='||eleve.id||')' 
 END as Actions,
-CASE WHEN $group_id::int>2 THEN
+CASE WHEN $group_id>2 THEN
 '[
     ![](./icons/pencil.svg)
 ](eleve_edit.sql?id='||eleve.id||')'

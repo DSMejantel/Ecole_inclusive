@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'etablissement.sql?restriction' AS link
-        WHERE $group_id::int<'2';
+        WHERE $group_id<'2';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -46,7 +46,7 @@ SELECT
     nom_ens_ref||' '||prenom_ens_ref as description, 'orange' as color, 1 as active
       FROM referent WHERE referent.id = $id;
 SELECT 
-    CASE WHEN $group_id::int>2 
+    CASE WHEN $group_id>2 
     THEN    tel_ens_ref
     ELSE 'numéro masqué'
     END as title,

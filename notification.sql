@@ -112,13 +112,13 @@ select
     'Fiche élève' as title,
     'pencil' as icon,
     'red' as outline,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'eleve_edit.sql?id='||$id as link FROM eleve where eleve.id=$id;
 select 
     '+ Photo' as title,
     'camera-plus' as icon,
     'red' as outline,
-        $group_bouton::int<4 as disabled,
+        $group_bouton<4 as disabled,
     'upload_form.sql?id='||$id as link FROM eleve where eleve.id=$id;
 /*    
 select 
@@ -128,31 +128,31 @@ select
 select 
     '+ Notification' as title,
     'notif_ajout.sql?id=' || $id as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'certificate' as icon,
     'orange' as outline;
 select 
     '+ Examen' as title,
     'suivi_examen_ajout.sql?id=' || $id as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'school' as icon,
     'orange' as outline;
 select 
     '+ Dispositif' as title,
     'dispo_ajout.sql?id=' || $id as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'lifebuoy' as icon,
     'orange' as outline;
 select 
     '+ Aménagement' as title,
     'amenag_ajout.sql?id=' || $id as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'list-check' as icon,
     'orange' as outline;
 select 
     '+ Suivi' as title,
     'suivi_ajout.sql?id=' || $id as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'user-plus' as icon,
     'orange' as outline;
 
@@ -239,30 +239,30 @@ SELECT 'table' as component,
     END  as Objectifs,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,
     CASE
-WHEN $group_id::int>2 THEN
+WHEN $group_id>2 THEN
     '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")'
      END as Dispositif,
     CASE
-WHEN $group_id::int>2 THEN
+WHEN $group_id>2 THEN
     '[
     ![](./icons/lifebuoy.svg)
 ](suivi_edit_dispo.sql?id='||$id||' "Modifier le dispositif")'
      END as Dispositif,
-CASE WHEN NOT EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id and $tab='Profil') and $group_id::int>1
+CASE WHEN NOT EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id=amenag.eleve_id and $tab='Profil') and $group_id>1
      THEN '[![](./icons/pencil-plus.svg)
 ](amenag_ajout.sql?id=' || $id||' "Éditer")'
      ELSE ''
     END  as Actions,
     CASE
-WHEN $group_id::int=3 THEN 
+WHEN $group_id=3 THEN 
          '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||amenag.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
 ](amenag_edit.sql?id='||amenag.id||'&eleve='||amenag.eleve_id||' "Éditer")' 
-WHEN $group_id::int=4 THEN   
+WHEN $group_id=4 THEN   
          '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||amenag.eleve_id||' "Supprimer")[
@@ -286,7 +286,7 @@ SELECT
   THEN comm_eleve 
   ELSE 'pas de remarque saisie dans la fiche élève'
   END AS commentaires,
-   CASE WHEN $group_id::int>2 THEN 
+   CASE WHEN $group_id>2 THEN 
   '[
     ![](./icons/pencil.svg)
 ](eleve_edit.sql?id='||$id||' "Éditer")'
@@ -319,31 +319,31 @@ SELECT
     END  AS Individuel,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,
         CASE
-WHEN $group_id::int>2 THEN
+WHEN $group_id>2 THEN
     '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")'
      END as Dispositif,
          CASE
-WHEN $group_id::int>2 THEN
+WHEN $group_id>2 THEN
     '[
     ![](./icons/lifebuoy.svg)
 ](suivi_edit_dispo.sql?id='||$id||' "Modifier le dispositif")'
      END as Dispositif,
        CASE
-WHEN $group_id::int=3 THEN 
+WHEN $group_id=3 THEN 
          '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||suivi.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
 ](suivi_edit.sql?id='||suivi.id||'&eleve='||suivi.eleve_id||' "Éditer")' 
-WHEN $group_id::int=4 THEN   
+WHEN $group_id=4 THEN   
          '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||suivi.eleve_id||' "Supprimer")[
     ![](./icons/pencil.svg)
 ](suivi_edit.sql?id='||suivi.id||'&eleve='||suivi.eleve_id||' "Éditer")' 
-WHEN $group_id::int=2 THEN 
+WHEN $group_id=2 THEN 
          '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")[
@@ -385,7 +385,7 @@ SELECT
   strftime('%d/%m/%Y',datefin) AS Fin,
   SUBSTR(referent.prenom_ens_ref, 1, 1) ||'. '||referent.nom_ens_ref as Référent,
 CASE
-WHEN $group_id::int=3 THEN 
+WHEN $group_id=3 THEN 
   '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||eleve.id||')' 
@@ -435,14 +435,14 @@ SELECT
  select 
     'Mettre à jour' as title,
     'suivi_edit_examen.sql?id=' || $id as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'school' as icon,
     'orange' as outline
     WHERE $tab='Examen';
  select 
     'Paramètres' as title,
     'examen.sql' as link,
-        $group_bouton::int<3 as disabled,
+        $group_bouton<3 as disabled,
     'tool' as icon,
     'orange' as outline
     WHERE $tab='Examen';

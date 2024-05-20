@@ -122,7 +122,7 @@ select
 select 
     eleve.classe as label,
     eleve.classe as x,
-    count(DISTINCT eleve.id)::int as y
+    count(DISTINCT eleve.id) as y
     FROM eleve JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY eleve.classe ORDER BY eleve.classe ASC;
 select 
     'moyenne' as label,

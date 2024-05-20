@@ -53,13 +53,13 @@ SELECT
 ](notification.sql?id='||eleve.id||'&tab=Profil)' 
 END as Suivis, 
 CASE
-WHEN $group_id::int=3 THEN
+WHEN $group_id=3 THEN
 '[
     ![](./icons/trash-off.svg)
 ]()[
     ![](./icons/pencil.svg)
 ](eleve_edit.sql?id='||eleve.id||')' 
-WHEN $group_id::int=4 THEN
+WHEN $group_id=4 THEN
 '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||eleve.id||')[

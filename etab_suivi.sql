@@ -123,7 +123,7 @@ SELECT 'table' as component,
       group_concat(DISTINCT modalite.type) as Droits,
     group_concat(DISTINCT SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name) as AESH,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,
-    CASE WHEN $group_id::int>1 THEN
+    CASE WHEN $group_id>1 THEN
          '[
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)[

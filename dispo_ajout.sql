@@ -21,7 +21,7 @@ select
     'green' as outline;      
 select 
     'Retour à la fiche élève' as title,
-    'notification.sql?id='|| $id || '&tab=Suivi' as link,
+    'notification.sql?id='|| $id || '&tab=Profil' as link,
     'briefcase' as icon,
     'green' as outline; 
 
@@ -64,7 +64,7 @@ SELECT 'form' as component,
     'Recommencer'           as reset;
 
 
-    SELECT 'dispositif[]' as name, 'dispositif(s)' as label, 6 as width, 'select' as type, true as multiple, json_group_array(json_object("label", dispo, "value", id)) as options FROM (select * FROM dispositif ORDER BY dispo ASC);
+    SELECT 'dispositif[]' as name, 'dispositif(s)' as label, 6 as width, 'select' as type, true as multiple, true as dropdown, json_group_array(json_object("label", dispo, "value", id)) as options FROM (select * FROM dispositif ORDER BY dispo ASC);
 
 
 

@@ -30,7 +30,7 @@ select  'Tableau de bord'  as title, 'tool' as icon, 1  as active, CASE WHEN $ta
 select  'Mon profil' as title, 'user-circle' as icon, 1 as active, CASE WHEN $tab='Mon profil' THEN 'orange' ELSE 'green' END as color;
 select  'Carte' as title, 'map' as icon, 0 as active, CASE WHEN $tab='Carte' THEN 'orange' ELSE 'green' END as color;
 select  'Paramètres' as title, 'tool' as icon, 1 as active, CASE WHEN $tab='Paramètres' THEN 'orange' ELSE 'green' END as color WHERE $group_id>2 ;
-select  CASE WHEN $group_id::int>3  THEN 'Comptes'  END as title, CASE WHEN $group_id::int>3  THEN  'user-circle' ELSE '' END as icon, CASE WHEN $tab='Comptes' THEN 'orange' ELSE 'green' END as color;
+select  CASE WHEN $group_id>3  THEN 'Comptes'  END as title, CASE WHEN $group_id>3  THEN  'user-circle' ELSE '' END as icon, CASE WHEN $tab='Comptes' THEN 'orange' ELSE 'green' END as color;
 
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
 SELECT 'text' AS component
@@ -103,21 +103,21 @@ select
     'Nouveau Compte' as title,
     'comptes_ajout.sql' as link,
     'square-rounded-plus' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'green' as outline
     where $tab='Comptes';
 select 
     'Comptes' as title,
     'comptes.sql' as link,
     'user-circle' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'green' as outline
     where $tab='Comptes';
 select 
     'Importation' as title,
     'comptes_import.sql' as link,
     'upload' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'red' as outline
     where $tab='Comptes';
     
@@ -135,28 +135,28 @@ select
     'Import des élèves' as title,
     'comptes_import_eleve.sql' as link,
     'upload' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'green' as outline
     where $tab='Comptes';
 select 
     'Export des élèves' as title,
     'comptes_export_eleve.sql' as link,
     'download' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
 select 
     'Mise à jour élève' as title,
     'comptes_import_MAJ_eleve.sql' as link,
     'upload' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'red' as outline
     where $tab='Comptes';
 select 
     'Générer le parcours de l''année' as title,
     'tool_MAJ_parcours.sql' as link,
     'calendar-month' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
 
@@ -174,14 +174,14 @@ select
     'Serveur CAS' as title,
     'cas_param.sql' as link,
     'network' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'red' as outline
     where $tab='Comptes';
 select 
     'Import CAS' as title,
     'comptes_import_CAS.sql' as link,
     'users' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'red' as outline
     where $tab='Comptes';
 
@@ -199,14 +199,14 @@ select
     'Outil Mot de passe' as title,
     'generate_password_hash.sql' as link,
     'key' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
 select 
     'Suppresion codes d''activation' as title,
     'tool_raz_activation.sql' as link,
     'recharging' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
 
@@ -214,7 +214,7 @@ select
     'Accentuation' as title,
     'tool_accent_01.sql' as link,
     'tool' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
         
@@ -361,14 +361,14 @@ select
     'etab_ajout.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
             where $tab='Paramètres';
 select 
     'Référent' as title,
     'referent_ajout.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
     where $tab='Paramètres';
    
 select 
@@ -376,14 +376,14 @@ select
     'aesh_ajout.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
         where $tab='Paramètres';
 select 
     'Élèves' as title,
     'eleve.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
             where $tab='Paramètres';
 --    
 SELECT 
@@ -452,35 +452,35 @@ select
     'modalite_ajout.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
         where $tab='Paramètres';
 select 
     'Mesures d''examen' as title,
     'examen.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
         where $tab='Paramètres';
 select 
     'Dispositifs' as title,
     'dispositif_ajout.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
         where $tab='Paramètres';
 select 
     'Niveaux' as title,
     'niveaux.sql' as link,
     'square-rounded-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
             where $tab='Paramètres';
 select 
     'Années' as title,
     'annees.sql' as link,
     'calendar-plus' as icon,
     'green' as outline,
-        $group_id::int<3 as disabled
+        $group_id<3 as disabled
             where $tab='Paramètres';
 
 
@@ -520,11 +520,11 @@ SELECT
     WHEN type='Collège' THEN 'building-community'
     ELSE 'building-cottage'      
     END as icon,
-  CASE WHEN $group_id::int=1 and user_info.etab<>etab.id 
+  CASE WHEN $group_id=1 and user_info.etab<>etab.id 
   THEN '' 
-  WHEN $group_id::int=1 and user_info.etab=etab.id 
+  WHEN $group_id=1 and user_info.etab=etab.id 
   THEN 'etab_carte.sql?id=' || id
-  WHEN $group_id::int>1 
+  WHEN $group_id>1 
   THEN 'etab_carte.sql?id=' || id
   END as link
 FROM etab LEFT JOIN user_info on user_info.etab=etab.id where $tab='Carte';  

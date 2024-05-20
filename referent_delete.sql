@@ -18,17 +18,17 @@ SELECT
     'alert' as component,
     'Alerte' as title,
  
-CASE WHEN $var_eleve::int>=1 
+CASE WHEN $var_eleve>=1 
 THEN 'Cet enseignant suit des élèves. Suppression impossible.'
 ELSE 'Ce référent va être supprimé. Toute suppression est définitive !' 
 END as description,
  
-CASE WHEN $var_eleve::int>=1 
+CASE WHEN $var_eleve>=1 
 THEN 'hand-stop'
 ELSE 'alert-triangle' 
 END   as icon,
  
-CASE WHEN $var_eleve::int>=1 
+CASE WHEN $var_eleve>=1 
 THEN 'yellow'
 ELSE 'red' 
 END     as color;
@@ -46,14 +46,14 @@ SELECT
   prenom_ens_ref AS Prénom,
   tel_ens_ref as Téléphone,
   email as courriel,
-  CASE WHEN $var_eleve::int>=1 
+  CASE WHEN $var_eleve>=1 
 THEN
 '[
-    ![](https://tabler-icons.io/static/tabler-icons/icons/trash-off.svg)
+    ![](./icons/trash-off.svg)
 ]() ' 
 ELSE
       '[
-    ![](https://tabler-icons.io/static/tabler-icons/icons/trash.svg)
+    ![](./icons/trash.svg)
 ](referent_delete_confirm.sql?id='||$id||') ' 
 END 
 as Actions

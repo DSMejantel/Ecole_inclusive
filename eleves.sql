@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'etablissement.sql?restriction' AS link
-        WHERE $group_id::int<'2';
+        WHERE $group_id<'2';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -24,13 +24,13 @@ SELECT 'alert' as component,
     'l''opération s''est déroulée correctement.' as description_md,
     'alert-circle' as icon,
     'green' as color
-WHERE $update::int=1;
+WHERE $update=1;
 SELECT 'alert' as component,
     'Importation dans la base :' as title,
     'l''opération s''est déroulée correctement.' as description_md,
     'alert-circle' as icon,
     'green' as color
-WHERE $upload::int=1;
+WHERE $upload=1;
 
 select 
     'button' as component,
@@ -44,7 +44,7 @@ select
     'Ajouter un élève' as title,
     'eleve.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
     
  select 
@@ -97,13 +97,13 @@ CASE
        ELSE 'red'
     END AS _sqlpage_color,
 CASE
-WHEN $group_id::int=3 THEN
+WHEN $group_id=3 THEN
 '[
     ![](./icons/trash-off.svg)
 ]()[
     ![](./icons/pencil.svg "Modifier")
 ](eleve_edit.sql?id='||eleve.id||')' 
-WHEN $group_id::int=4 THEN
+WHEN $group_id=4 THEN
 '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||eleve.id||' "Supprimer")[

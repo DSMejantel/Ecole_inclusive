@@ -54,13 +54,13 @@ select
     'Ajouter' as title,
     'modalite_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
 select 
     'Supprimer' as title,
     'modalite_delete.sql' as link,
     'trash' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'red' as outline;
 
 -- Liste des notifications possibles

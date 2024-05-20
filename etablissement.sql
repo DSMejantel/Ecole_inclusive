@@ -26,7 +26,7 @@ select
     'Ajouter un établissement' as title,
     'etab_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
     
 -- Message si droits insuffisants sur une page
@@ -54,16 +54,16 @@ SELECT
     END as icon,
   type || ' ' || nom_etab AS title,
   description as description,
-  CASE WHEN $group_id::int>3
+  CASE WHEN $group_id>3
   THEN  '[
   ![](./icons/pencil.svg)
 ](etab_edit.sql?id='||etab.id||')' 
 END as footer_md,
-  CASE WHEN $group_id::int=1 and user_info.etab<>etab.id 
+  CASE WHEN $group_id=1 and user_info.etab<>etab.id 
   THEN '' 
-  WHEN $group_id::int=1 and user_info.etab=etab.id 
+  WHEN $group_id=1 and user_info.etab=etab.id 
   THEN 'etab_carte.sql?id=' || id
-  WHEN $group_id::int>1 
+  WHEN $group_id>1 
   THEN 'etab_carte.sql?id=' || id
   END as link
 FROM etab LEFT JOIN user_info on user_info.etab=etab.id group by etab.id;
@@ -90,11 +90,11 @@ SELECT
     WHEN type='Collège' THEN 'building-community'
     ELSE 'building-cottage'      
     END as icon,
-  CASE WHEN $group_id::int=1 and user_info.etab<>etab.id 
+  CASE WHEN $group_id=1 and user_info.etab<>etab.id 
   THEN '' 
-  WHEN $group_id::int=1 and user_info.etab=etab.id 
+  WHEN $group_id=1 and user_info.etab=etab.id 
   THEN 'etab_carte.sql?id=' || id
-  WHEN $group_id::int>1 
+  WHEN $group_id>1 
   THEN 'etab_carte.sql?id=' || id
   END as link
 FROM etab LEFT JOIN user_info on user_info.etab=etab.id group by etab.id; 

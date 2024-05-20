@@ -27,7 +27,7 @@ select
     'Ajouter un élève' as title,
     'eleve.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
       
 -- Liste des élèves
@@ -64,13 +64,13 @@ CASE
        ELSE 'red'
     END AS _sqlpage_color,
 CASE
-WHEN $group_id::int=3 THEN
+WHEN $group_id=3 THEN
 '[
     ![](./icons/trash-off.svg)
 ]()[
     ![](./icons/pencil.svg)
 ](eleve_edit.sql?id='||eleve.id||')' 
-WHEN $group_id::int=4 THEN
+WHEN $group_id=4 THEN
 '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||eleve.id||')[

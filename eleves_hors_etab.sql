@@ -27,7 +27,7 @@ select
     'Ajouter un élève' as title,
     'eleve.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
       
 -- Liste des élèves
@@ -42,13 +42,13 @@ SELECT
       strftime('%d/%m/%Y',eleve.naissance) AS Naissance,
   coalesce(eleve.niveau,'-') as Niveau,
 CASE
-WHEN $group_id::int=3 THEN
+WHEN $group_id=3 THEN
 '[
     ![](./icons/trash-off.svg)
 ]()[
     ![](./icons/pencil.svg)
 ](eleve_edit.sql?id='||eleve.id||')' 
-WHEN $group_id::int=4 THEN
+WHEN $group_id=4 THEN
 '[
     ![](./icons/trash.svg)
 ](eleve_delete.sql?id='||eleve.id||')[
@@ -61,5 +61,5 @@ ELSE
     ![](./icons/pencil-off.svg)
 ]()'
 END as admin
-FROM eleve WHERE coalesce(etab_id,0)::int<1 GROUP BY eleve.id ORDER BY eleve.nom ASC;
+FROM eleve WHERE CAST(coalesce(etab_id,0) as integer)<1 GROUP BY eleve.id ORDER BY eleve.nom ASC;
 

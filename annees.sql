@@ -72,5 +72,5 @@ select
     'Générer l''historique de l''année' as title,
     'tool_MAJ_parcours.sql' as link,
     'calendar-month' as icon,
-    $group_id::int<4 as disabled,
+    $group_id<4 as disabled,
     'orange' as outline;

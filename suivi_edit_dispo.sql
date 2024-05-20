@@ -55,7 +55,7 @@ SELECT
     'suivi_edit_dispo_confirm.sql?id='||$id||'&eleve_edit='||$id as action,    
     'orange'           as validate_color;
     
-SELECT 'dispositif[]' as name, 'nouvelle situation' as label, 6 as width, 'select' as type, TRUE as multiple,
+SELECT 'dispositif[]' as name, 'nouvelle situation' as label, 6 as width, 'select' as type, TRUE as multiple, TRUE as dropdown,
      'Les dispositifs connus sont déjà sélectionnés. La touche ''CTRL'' permet une sélection multiple.' as description,
      json_group_array(json_object("label", dispo, 
      "value", dispositif.id,

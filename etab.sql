@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'etablissement.sql?restriction' AS link
-        WHERE $group_id::int<'2';
+        WHERE $group_id<'2';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -59,7 +59,7 @@ select
     'Ajouter un établissement' as title,
     'etab_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
  --Carte   
     SELECT 

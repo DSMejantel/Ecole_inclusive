@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
-        WHERE $group_id::int<>'4';
+        WHERE $group_id<>'4';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -73,17 +73,17 @@ SELECT
     'orange'           as validate_color;
     SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 4 as width;
     SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 4 as width;
-    SELECT 'Etablissement' AS name, 'select' as type, 2 as width, $etab_edit::int as value, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
+    SELECT 'Etablissement' AS name, 'select' as type, 2 as width, CAST($etab_edit as integer) as value, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
    select 'Aucun' as label, NULL as value
  ORDER BY nom_etab ASC);
     
 
 
-    SELECT 'Classe' AS name, 'select' as type, 2 as width, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN user_info on eleve.etab_id=user_info.etab UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY eleve.classe DESC);
+    SELECT 'Classe' AS name, 'select' as type, 2 as width, $classe_edit as value, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN user_info on eleve.etab_id=user_info.etab UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY eleve.classe DESC);
   
     SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 3 as width;
     SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 3 as width;
-    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit::integer as value, 3 as width;
+    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit as value, 3 as width;
     SELECT 'Identifiant ENT' AS label, 'cas' AS name, $cas_edit as value, 3 as width;
 
 

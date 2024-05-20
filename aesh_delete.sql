@@ -48,16 +48,16 @@ aesh_name AS Nom,
   tel_aesh as Téléphone,
   courriel_aesh as courriel,
   quotite as Quotité,
-  CASE WHEN $var_eleve::int>=1 
+  CASE WHEN $var_eleve>=1 
 THEN
       '[
-    ![](https://tabler-icons.io/static/tabler-icons/icons/user-plus.svg)
+    ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||')[
-    ![](https://tabler-icons.io/static/tabler-icons/icons/trash-off.svg)
+    ![](./icons/trash-off.svg)
 ]() ' 
 ELSE
       '[
-    ![](https://tabler-icons.io/static/tabler-icons/icons/trash.svg)
+    ![](./icons/trash.svg)
 ](aesh_delete_confirm.sql?id='||$id||') ' 
 END 
 as Actions

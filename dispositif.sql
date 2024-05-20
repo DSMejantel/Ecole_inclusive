@@ -3,6 +3,10 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'index.sql?restriction' AS link
+        WHERE $group_id<3;
+
 -- Enregistrer la notification dans la base
  INSERT INTO dispositif(dispo, coordo) 
  SELECT $dispo as dispo,
@@ -59,14 +63,14 @@ select
     'Ajouter' as title,
     'dispositif_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'green' as outline;
     
 select 
     'Supprimer' as title,
     'dispositif_delete.sql' as link,
     'trash' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
     'red' as outline;
 
 -- Liste des dispositifs
@@ -77,15 +81,15 @@ SELECT 'table' as component,
 SELECT 
   'lifebuoy' as icone,
   dispo AS Dispositif,
-  CASE WHEN coordo::int=1 and $group_id>2
+  CASE WHEN coordo=1 and $group_id>2
     THEN '[
     ![](./icons/select.svg)
 ](/dispositif/indisponible.sql?id='||dispositif.id||')' 
-WHEN coordo::int=0 and $group_id>2
+WHEN coordo=0 and $group_id>2
     THEN '[
     ![](./icons/square.svg)
 ](/dispositif/disponible.sql?id='||dispositif.id||')' 
-WHEN coordo::int=1 and $group_id<3
+WHEN coordo=1 and $group_id<3
     THEN '[
     ![](./icons/select.svg)
 ]()'

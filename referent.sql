@@ -5,7 +5,7 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 
 SELECT 'redirect' AS component,
         'etablissement.sql?restriction' AS link
-        WHERE $group_id::int<'2';
+        WHERE $group_id<'2';
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -64,7 +64,7 @@ select
     'Ajouter un référent' as title,
     'referent_ajout.sql' as link,
     'square-rounded-plus' as icon,
-        $group_id::int<3 as disabled,
+        $group_id<3 as disabled,
         'green' as outline;
 
 select 
@@ -80,12 +80,12 @@ SELECT 'table' as component,
 SELECT 
   nom_ens_ref AS Nom,
   prenom_ens_ref AS Prénom,
-  CASE WHEN $group_id::int>2 
+  CASE WHEN $group_id>2 
     THEN    tel_ens_ref
     ELSE 'numéro masqué'
     END as Téléphone,
   email as courriel,
-CASE WHEN $group_id::int=3 THEN
+CASE WHEN $group_id=3 THEN
   '[
     ![](./icons/pencil.svg)
 ](referent_edit.sql?id='||referent.id||') [
@@ -94,7 +94,7 @@ CASE WHEN $group_id::int=3 THEN
 [
     ![](./icons/trash-off.svg)
 ]()' 
-WHEN  $group_id::int=4 THEN
+WHEN  $group_id=4 THEN
   '[
     ![](./icons/pencil.svg)
 ](referent_edit.sql?id='||referent.id||'&username='||referent.username||') [

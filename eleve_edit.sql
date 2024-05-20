@@ -100,14 +100,14 @@ select
     SELECT 'Commune' AS label, 'building-community' as prefix_icon, 'commune' AS name, 'text' as type, $commune_edit as value, 4 as width;
     SELECT 'INE' AS label, 'barcode' as prefix_icon, 'ine' AS name, 'text' as type, $ine_edit as value, 2 as width;
     SELECT 'Établissement' AS name, 3 as width, 
-          $etab_edit::integer as value,
+          CAST($etab_edit as integer) as value,
     'select' as type, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
    select 'Aucun' as label, NULL as value
  ORDER BY nom_etab ASC);
     SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit as value, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select niv, niv FROM niveaux union all
    select '-' as label, NULL as value ORDER BY niv ASC);
     SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 2 as width;
-    SELECT 'Référent' AS name, 'select' as type, 3 as width, $referent_edit::integer as value,
+    SELECT 'Référent' AS name, 'select' as type, 3 as width, CAST($referent_edit as integer) as value,
     json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM (select nom_ens_ref, id FROM referent union all
    select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC);
     SELECT 'Commentaire' AS label, 'comm_eleve' AS name, $comm_edit as value,'textarea' as type, 12 as width;

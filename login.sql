@@ -24,7 +24,7 @@ UPDATE user_info SET connexion=$connect WHERE username = :username;
 
 -- Redirect the user to the protected page.
 SELECT 'redirect' AS component, 
-CASE WHEN $visite::int=0
+CASE WHEN $visite=0
 THEN 'comptes_user_password_first.sql'
 ELSE 'index.sql' 
 END AS link

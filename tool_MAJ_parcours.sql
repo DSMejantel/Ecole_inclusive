@@ -13,7 +13,7 @@ DELETE FROM parcours WHERE annee_id=$annee_en_cours;
 INSERT INTO parcours (annee_id, eleve_id, etab_id, niveau, classe, referent_id, aesh_id, dispositif_id)
 SELECT $annee_en_cours, eleve.id, eleve.etab_id, eleve.niveau, eleve.classe, SUBSTR(prenom_ens_ref, 1, 1) ||'. '||nom_ens_ref , SUBSTR(aesh_firstname, 1, 1) ||'. '||aesh_name,
 group_concat(DISTINCT dispositif.dispo)
-FROM eleve LEFT JOIN referent on referent.id=eleve.referent_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on aesh.id=suivi.aesh_id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id::int>0 GROUP BY eleve.id
+FROM eleve LEFT JOIN referent on referent.id=eleve.referent_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on aesh.id=suivi.aesh_id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id>0 GROUP BY eleve.id
 returning 
 'redirect' AS component,
 'parametres.sql?tab=Comptes' as link;
