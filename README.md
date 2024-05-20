@@ -23,3 +23,6 @@ Cet utilisateur n'apparaît pas dans la liste des comptes afin de ne pas l'effac
 ## Schéma de la base de données
 
 ![Schéma de la base de données d'École Inclusive](https://github.com/DSMejantel/Ecole_inclusive/assets/552629/1a41bd57-f904-4e5e-a0f1-7df648e37b98)
+![parametres](https://github.com/DSMejantel/Ecole_inclusive/assets/149260856/84fc57dc-b96e-49b0-9998-17e5ba6b9dfa)
+![parametres_comptes](https://github.com/DSMejantel/Ecole_inclusive/assets/149260856/a0b18aff-72d4-4d61-8afa-f1017779b419)
+
