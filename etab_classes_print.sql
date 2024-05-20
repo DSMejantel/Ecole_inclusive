@@ -72,7 +72,7 @@ WHERE $classe_select='-';
     amenag.info AS commentaires,
     amenag.amenagements AS Aménagements,
     amenag.objectifs AS Objectifs
-  FROM eleve LEFT JOIN etab on eleve.etab_id = etab.id LEFT JOIN amenag on amenag.eleve_id=eleve.id LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and eleve.classe=$classe_select GROUP BY amenag.id ORDER BY eleve.nom ASC;  
+  FROM eleve LEFT JOIN etab on eleve.etab_id = etab.id LEFT JOIN amenag on amenag.eleve_id=eleve.id LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and eleve.classe=$classe_select GROUP BY eleve.id ORDER BY eleve.nom ASC;  
   
 /*  -- Sous-menu / bascule
 select 

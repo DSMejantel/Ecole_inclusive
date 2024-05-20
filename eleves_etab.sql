@@ -63,5 +63,5 @@ THEN
 ](notification.sql?id='||eleve.id||'&tab=Examen  "Aménagements d''examen")' 
 ELSE ''
 END as Suivis
-FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT JOIN user_info WHERE user_info.etab=etab.id  GROUP BY eleve.id ORDER BY eleve.nom ASC;
+FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN suivi on eleve.id=suivi.eleve_id LEFT JOIN user_info join login_session on user_info.username=login_session.username WHERE user_info.etab=etab.id and login_session.id = sqlpage.cookie('session')  GROUP BY eleve.id ORDER BY eleve.nom ASC;
 

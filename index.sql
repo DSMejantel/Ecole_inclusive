@@ -125,13 +125,13 @@ select
     'building-community' as icon,
     'green' as color,
     'etab_carte.sql?id=' || user_info.etab as link
-     FROM etab JOIN user_info on user_info.etab=etab.id WHERE $group_id=1 GROUP BY etab.id;
+     FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
 select 
     'Fiches des classes' as title,
     'users-group' as icon,
     'green' as color,
     'etab_classes_print.sql?id=' || user_info.etab ||'&classe_select=-' as link
-     FROM etab JOIN user_info on user_info.etab=etab.id WHERE $group_id=1 GROUP BY etab.id;   
+    FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id; 
 select 
     'Élèves' as title,
     'users-group' as icon,
