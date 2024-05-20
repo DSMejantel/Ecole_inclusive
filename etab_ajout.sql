@@ -74,8 +74,8 @@ SELECT
     ''     as validate,
     'Recommencer' as reset;
     
-    SELECT 'Catégorie' AS label, 'type' AS name, 6 as width, 'select' as type, 1 as value, '[{"label": "---", "value": "---"}, {"label": "École", "value": "école"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options;
-    SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 6 as width, $search as value;
+    SELECT 'Catégorie' AS label, 'type' AS name, 6 as width, 'select' as type, 1 as value, TRUE as searchable, '[{"label": "---", "value": "---"}, {"label": "École", "value": "école"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options;
+    SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 6 as width, $search as value, TRUE as required;
     SELECT 'Adresse' AS label, 'description' AS name;
     SELECT 'Latitude' AS label, 'Lat' AS name, 6 as width, $lat as value;
     SELECT 'Longitude' AS label, 'Lon' AS name, 6 as width, $lon as value;

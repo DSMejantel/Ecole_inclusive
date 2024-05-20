@@ -29,10 +29,9 @@ select
 -- Rappel info user
 SELECT 'text' AS component,
 COALESCE((SELECT
-    format('Connecté en tant que %s %s (Rappel de l''identifiant : %s)',
+    format('Connecté en tant que %s %s ',
             user_info.prenom,
-            user_info.nom,
-            user_info.username)
+            user_info.nom)
     FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session')
 ), 'Non connecté') AS contents;    
 
@@ -43,9 +42,10 @@ SELECT
     'comptes_user_confirm.sql?user_edit='||$user_edit as action,
     'Recommencer' as reset,
     'Mettre à jour' as validate;
-    
-    SELECT 'Nom' AS label, 'nom' AS name, 6 as width, $nom_edit as value;
-    SELECT 'Prénom' AS label, 'prenom' AS name, 6 as width, $prenom_edit as value;
+
+    SELECT 'Identifiant (non modifiable)' AS label, 'nom' AS name, 4 as width, $user_edit as value, TRUE as readonly;    
+    SELECT 'Nom' AS label, 'nom' AS name, 4 as width, $nom_edit as value;
+    SELECT 'Prénom' AS label, 'prenom' AS name, 4 as width, $prenom_edit as value;
     SELECT 'Téléphone' AS label, 'tel' AS name, 6 as width, $tel_edit as value;
     SELECT 'Courriel' AS label, 'courriel' AS name, 6 as width, $courriel_edit as value;
   
