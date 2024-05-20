@@ -3,6 +3,10 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
+SELECT 'redirect' AS component,
+        'etablissement.sql?restriction' AS link
+FROM eleve WHERE (SELECT user_info.etab FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') and user_info.etab<>$id);
+
 --Menu
 SELECT 'dynamic' AS component, 
 CASE WHEN $group_id=1

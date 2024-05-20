@@ -66,7 +66,7 @@ END as footer_md,
   WHEN $group_id>1 
   THEN 'etab_carte.sql?id=' || etab.id
   END as link
-    FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
+FROM etab LEFT JOIN user_info on user_info.etab=etab.id group by etab.id; 
 
     
  --Carte   
@@ -97,6 +97,6 @@ SELECT
   WHEN $group_id>1 
   THEN 'etab_carte.sql?id=' || etab.id
   END as link
-    FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
+FROM etab LEFT JOIN user_info on user_info.etab=etab.id group by etab.id; 
 
 
