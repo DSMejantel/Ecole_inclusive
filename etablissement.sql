@@ -21,7 +21,7 @@ select
     'building-community' as icon,
     'green' as color,
     'etab_carte.sql?id=' || user_info.etab as link
-     FROM etab JOIN user_info on user_info.etab=etab.id WHERE $group_id=1 GROUP BY etab.id;
+    FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
 select 
     'Ajouter un établissement' as title,
     'etab_ajout.sql' as link,
@@ -62,11 +62,11 @@ END as footer_md,
   CASE WHEN $group_id=1 and user_info.etab<>etab.id 
   THEN '' 
   WHEN $group_id=1 and user_info.etab=etab.id 
-  THEN 'etab_carte.sql?id=' || id
+  THEN 'etab_carte.sql?id=' || etab.id
   WHEN $group_id>1 
-  THEN 'etab_carte.sql?id=' || id
+  THEN 'etab_carte.sql?id=' || etab.id
   END as link
-FROM etab LEFT JOIN user_info on user_info.etab=etab.id group by etab.id;
+    FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
 
     
  --Carte   
@@ -93,10 +93,10 @@ SELECT
   CASE WHEN $group_id=1 and user_info.etab<>etab.id 
   THEN '' 
   WHEN $group_id=1 and user_info.etab=etab.id 
-  THEN 'etab_carte.sql?id=' || id
+  THEN 'etab_carte.sql?id=' || etab.id
   WHEN $group_id>1 
-  THEN 'etab_carte.sql?id=' || id
+  THEN 'etab_carte.sql?id=' || etab.id
   END as link
-FROM etab LEFT JOIN user_info on user_info.etab=etab.id group by etab.id; 
+    FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
 
 
