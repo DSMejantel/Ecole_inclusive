@@ -11,7 +11,7 @@ SELECT 'table' as component,
 SELECT 
   'lifebuoy' as icone,
   serveur AS Serveur,
-  CASE WHEN etat::int=1
+  CASE WHEN etat=1
     THEN '[
     ![](./icons/select.svg)
 ](/cas/indisponible.sql?id='||cas_service.id||')' 
