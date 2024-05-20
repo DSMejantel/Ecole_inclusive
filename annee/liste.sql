@@ -11,7 +11,7 @@ SELECT 'table' as component,
 SELECT 
   'calendar-month' as icone,
   annee AS Année,
-CASE WHEN active::int=1
+CASE WHEN active=1
     THEN '[
     ![](./icons/select.svg)
 ]()' 
