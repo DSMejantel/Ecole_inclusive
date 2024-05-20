@@ -79,7 +79,7 @@ SELECT
     
 
 
-    SELECT 'Classe' AS name, 'select' as type, 2 as width, $classe_edit as value, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN user_info on eleve.etab_id=user_info.etab UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY eleve.classe DESC);
+    SELECT 'Classe' AS name, 'select' as type, 2 as width, $classe_edit as value, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN user_info on eleve.etab_id=user_info.etab JOIN login_session  on user_info.username=login_session.username WHERE user_info.etab=$etab_edit UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY eleve.classe DESC);
   
     SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 3 as width;
     SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 3 as width;
