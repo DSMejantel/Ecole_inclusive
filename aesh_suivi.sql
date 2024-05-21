@@ -127,9 +127,9 @@ SELECT 'table' as component,
   SELECT 
     'chart' as component,
     'bar' as type,
+    TRUE as stacked,
     1 as labels,
-    1 as stacked,
-    0 as horizontal,
+    1 as horizontal,
     'Répartition du suivi' as title,
     'green' as color,
     'orange' as color,
@@ -137,36 +137,36 @@ SELECT 'table' as component,
     'indigo' as color,
     'yellow' as color,
     'purple' as color,
-    35                    as ymax,
-    7                    as yticks,
+    35                    as xmax,
+    7                    as xticks,
     1 as toolbar
     WHERE $tab='Graphique';
 
 SELECT 
     eleve.nom ||' '||eleve.prenom ||' ('||eleve.classe||')' as series,
-    'Suivis' as x,
-    sum(suivi.temps/mut) as value
+    'Missions' as x,
+    coalesce(sum(suivi.temps/mut),0) as value
     FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE aesh_id = $id and $tab='Graphique' GROUP BY eleve.nom;
 SELECT 
     'ULIS' as series,
-    'ULIS' as x,
-    tps_ULIS as value
-    FROM aesh WHERE aesh.id=$id and $tab='Graphique';
+    'Missions' as x,
+    coalesce(tps_ULIS,0) as value
+    FROM aesh WHERE aesh.id=$id and tps_ULIS>0 and $tab='Graphique';
 SELECT 
     'Activités' as series,
-    'Activités' as x,
-    tps_mission as value
-    FROM aesh WHERE aesh.id=$id and $tab='Graphique';
+    'Missions' as x,
+    coalesce(tps_mission,0) as value
+    FROM aesh WHERE aesh.id=$id and tps_mission>0 and $tab='Graphique';
 SELECT 
     'Synthèse(s)' as series,
-    'Synthèse(s)' as label,
-    tps_synthese as value
-    FROM aesh WHERE aesh.id=$id and $tab='Graphique';
+    'Missions' as label,
+    coalesce(tps_synthese,0) as value
+    FROM aesh WHERE aesh.id=$id and tps_synthese>0 and $tab='Graphique';
     
 SELECT 
     'Quotité' as series,
     'Quotité' as x,
-    quotite as value
+    coalesce(quotite,0) as value
     FROM aesh WHERE aesh.id=$id and $tab='Graphique';
 
 --Carte   
