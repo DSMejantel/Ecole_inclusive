@@ -10,33 +10,8 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
---Sous-menu
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape,
-    'center' as justify;
-select 
-    'Enseignant-Référent' as title,
-    'referent.sql' as link,
-    'writing' as icon,
-    'orange' as outline;
-select 
-    'type de Notification' as title,
-    'modalite.sql' as link,
-    'certificate-2' as icon,
-    CASE WHEN $group_id<3
-    THEN TRUE 
-    END as disabled,
-    'orange' as outline;
-select 
-    'Établissements' as title,
-    'etab.sql' as link,
-    'building-community' as icon,
-    CASE WHEN $group_id<3
-    THEN TRUE       
-    END as disabled,
-    'orange' as outline;
+-- Sous Menu   
+select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
 
 -- écrire le nom du référent dans le titre de la page
 SELECT 

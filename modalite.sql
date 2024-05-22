@@ -10,44 +10,8 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
---Sous-menu
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape,
-    'center' as justify;
-select 
-    'Enseignant-Référent' as title,
-    'referent.sql' as link,
-    'writing' as icon,
-    'Orange' as color,
-    'orange' as outline;
-select 
-    'type de Notification' as title,
-    'certificate-2' as icon,
-    'orange' as color;
-select 
-    'Aménagement d''examen' as title,
-    'examen.sql' as link,
-    'school' as icon,
-    'orange' as outline;
-select 
-    'Dispositifs' as title,
-    'dispositif.sql' as link,
-    'lifebuoy' as icon,
-    'Orange' as color,
-    'orange' as outline;
-select 
-    'Établissements' as title,
-    'etab.sql' as link,
-    'building-community' as icon,
-    'orange' as outline;
-select 
-    'Niveaux' as title,
-    'niveaux.sql' as link,
-    'stairs' as icon,
-    'Orange' as color,
-    'orange' as outline;    
+-- Sous Menu   
+select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
 
 -- Sous Menu Ajout/suppression modalité
 select 
