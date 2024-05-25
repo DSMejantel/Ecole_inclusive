@@ -6,7 +6,7 @@ SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
         WHERE $group_id<'3';
 
-SET etab_uai= (SELECT UAI FROM etab WHERE etab.id = $id);
+SET etab_uai= (SELECT coalesce(UAI,'-') FROM etab WHERE etab.id = $id);
 
 DELETE FROM etab
 WHERE etab.id = $id
