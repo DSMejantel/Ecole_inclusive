@@ -13,6 +13,7 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 -- Set a variable 
 SET cat_edit = (SELECT type FROM etab WHERE id = $id);
 SET etab_edit = (SELECT nom_etab FROM etab WHERE id = $id);
+SET UAI_edit = (SELECT UAI FROM etab WHERE id = $id);
 SET adr_edit = (SELECT description FROM etab WHERE id = $id);
 SET lat_edit = (SELECT Lat FROM etab WHERE id = $id);
 SET lon_edit = (SELECT Lon FROM etab WHERE id = $id);
@@ -25,11 +26,12 @@ SELECT
     'Mettre à jour' as validate,
     'orange'           as validate_color;
     
-    SELECT 'Catégorie' AS label, 'type' AS name, 6 as width, 'select' as type, $cat_edit as value, '[{"label": "---", "value": "---"}, {"label": "École", "value": "école"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options, TRUE as required;
+    SELECT 'Catégorie' AS label, 'type' AS name, 3 as width, 'select' as type, $cat_edit as value, '[{"label": "---", "value": "---"}, {"label": "École", "value": "École"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options, TRUE as required;
     SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, $etab_edit as value, 6 as width, TRUE as required;
-    SELECT 'Adresse' AS label, 'description' AS name, $adr_edit as value, TRUE as required;
-    SELECT 'Latitude' AS label, 'Lat' AS name, 6 as width, $lat_edit as value;
-    SELECT 'Longitude' AS label, 'Lon' AS name, 6 as width, $lon_edit as value;
+    SELECT 'UAI' AS label, 'UAI' AS name, $UAI_edit as value, 3 as width, TRUE as required;
+    SELECT 'Adresse' AS label, 'description' AS name, $adr_edit as value, 6 as width, TRUE as required;
+    SELECT 'Latitude' AS label, 'Lat' AS name, 3 as width, $lat_edit as value;
+    SELECT 'Longitude' AS label, 'Lon' AS name, 3 as width, $lon_edit as value;
 
    
 

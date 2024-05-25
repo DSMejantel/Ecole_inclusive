@@ -30,7 +30,7 @@ select
     'orange' as outline;
 select 
     'Établissements' as title,
-    'etab.sql' as link,
+    'etab_ajout.sql' as link,
     'building-community' as icon,
     'orange' as outline;
 select 

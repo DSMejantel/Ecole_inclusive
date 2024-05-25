@@ -57,7 +57,9 @@ SELECT
   CASE WHEN $group_id>3
   THEN  '[
   ![](./icons/pencil.svg)
-](etab_edit.sql?id='||etab.id||')' 
+](etab_edit.sql?id='||etab.id||')[
+  ![](./icons/trash.svg)
+](etab_delete.sql?id='||etab.id||')'
 END as footer_md,
   CASE WHEN $group_id=1 and user_info.etab<>etab.id 
   THEN '' 

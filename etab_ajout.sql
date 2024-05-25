@@ -9,17 +9,90 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
--- Sous Menu   
-select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
+--Sous-menu
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'center' as justify;
+select 
+    'Enseignant-Référent' as title,
+    'referent.sql' as link,
+    'writing' as icon,
+    'Orange' as color,
+    'orange' as outline;
+select 
+    'type de Notification' as title,
+    'modalite.sql' as link,
+    'certificate-2' as icon,
+    'Orange' as color,
+    'orange' as outline;
+select 
+    'Aménagement d''examen' as title,
+    'examen.sql' as link,
+    'school' as icon,
+    'Orange' as color,
+    'orange' as outline;
+select 
+    'Dispositifs' as title,
+    'dispositif.sql' as link,
+    'lifebuoy' as icon,
+    'Orange' as color,
+    'orange' as outline;
+select 
+    'Établissements' as title,
+    'building-community' as icon,
+    'orange' as color;
+select 
+    'Niveaux' as title,
+    'niveaux.sql' as link,
+    'stairs' as icon,
+    'Orange' as color,
+    'orange' as outline;
     
     -- Enregistrer la notification dans la base
- INSERT INTO etab(type, nom_etab, description, Lat, Lon) SELECT $type, $nom_etab, $description, $Lat, $Lon WHERE $description IS NOT NULL;
+ INSERT INTO etab(type, nom_etab, UAI, description, Lat, Lon) SELECT $type, $nom_etab, $UAI, $description, $Lat, $Lon WHERE $description IS NOT NULL;
 
 -- Onglets
-SET tab=coalesce($tab,1);
+SET tab=coalesce($tab,0);
 select 'tab' as component;
+select  'Liste'  as title, 'list-check' as icon, 1  as active, CASE WHEN $tab=0 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=0' as link;
 select  'Ajouter depuis une carte'  as title, 'world' as icon, 1  as active, CASE WHEN $tab=1 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=1' as link;
 select  'Ajouter depuis un formulaire' as title, 'forms' as icon, 1 as active, CASE WHEN $tab=2 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=2' as link; 
+
+--Message
+SELECT 'alert' as component,
+    'Confirmation' as title,
+    'établissement '||$UAI||' supprimé.' as description_md,
+    'alert-circle' as icon,
+    TRUE as dismissible,
+    'orange' as color
+    WHERE $suppression=1;
+
+-- Liste
+SELECT 'table' as component,
+    'actions' AS markdown,
+    1 as sort,
+    1 as search
+        WHERE $tab=0;
+    
+SELECT 
+  etab.nom_etab as Établissement,
+  etab.UAI as UAI,
+  CASE
+WHEN $group_id>3 THEN
+'[
+  ![](./icons/pencil.svg)
+](etab_edit.sql?id='||etab.id||' "Éditer")[
+  ![](./icons/trash.svg)
+](etab_delete.sql?id='||etab.id||' "Supprimer")'
+ 
+ELSE 
+'[
+    ![](./icons/trash-off.svg)
+]()' 
+END as actions
+FROM etab Where $tab=0;
 
 -- Nouvel établissement   
 select 
@@ -60,17 +133,19 @@ SELECT
     'Recommencer' as reset
     WHERE $tab=2;
     
-    SELECT 'Catégorie' AS label, 'type' AS name, 6 as width, 'select' as type, 1 as value, TRUE as searchable, '[{"label": "---", "value": "---"}, {"label": "École", "value": "école"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options WHERE $tab=2;
+    SELECT 'Catégorie' AS label, 'type' AS name, 3 as width, 'select' as type, 1 as value, TRUE as searchable, '[{"label": "---", "value": "---"}, {"label": "École", "value": "École"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options WHERE $tab=2;
     SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 6 as width, $search as value, TRUE as required WHERE $tab=2;
-    SELECT 'Adresse' AS label, 'description' AS name WHERE $tab=2;
-    SELECT 'Latitude' AS label, 'Lat' AS name, 6 as width, $lat as value WHERE $tab=2;
-    SELECT 'Longitude' AS label, 'Lon' AS name, 6 as width, $lon as value WHERE $tab=2;
+    SELECT 'UAI' AS label, 'UAI' AS name, 3 as width WHERE $tab=2;
+    SELECT 'Adresse' AS label, 'description' AS name, 6 as width WHERE $tab=2;
+    SELECT 'Latitude' AS label, 'Lat' AS name, 3 as width, $lat as value WHERE $tab=2;
+    SELECT 'Longitude' AS label, 'Lon' AS name, 3 as width, $lon as value WHERE $tab=2;
 
 select 
     'button' as component
     WHERE $tab=2;   
 select 
     'etab_ajout'         as form,
+    '?tab=0' as link,
     'green'      as color,
     'square-plus' as icon,
     'Ajouter'         as title

@@ -6,13 +6,13 @@ SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
         WHERE $group_id<'3';
 
-   -- Mettre à jour l'établissement modifié dans la base
- UPDATE etab SET type=$type, nom_etab=$nom_etab, UAI=$UAI, description=$description, Lat=$Lat, Lon=$Lon WHERE id=$id and $nom_etab is not null
+SET etab_uai= (SELECT UAI FROM etab WHERE etab.id = $id);
 
- 
- RETURNING 
- 'redirect' as component,
- 'etablissement.sql' as link;
- 
+DELETE FROM etab
+WHERE etab.id = $id
+RETURNING
+   'redirect' AS component,
+   'etab_ajout.sql?suppression=1&UAI='||$etab_uai as link
+   FROM etab WHERE etab.id = $id;
 
 
