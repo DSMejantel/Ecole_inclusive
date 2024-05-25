@@ -1,0 +1,3 @@
+ALTER TABLE eleve
+ADD
+        UAI TEXT
