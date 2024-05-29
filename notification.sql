@@ -163,8 +163,8 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom as title,
-    'Sexe : '||sexe||' - INE : '||INE as description
+    UPPER(nom) || ' ' || prenom||' ('||sexe||')' as title,
+    'INE : '||INE as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
     adresse||' '||code_postal||' '||commune as title,
@@ -178,7 +178,7 @@ SELECT
     'etab_dispositifs.sql?id='||etab.id as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id = $id;
 select 
-    etab.type||' '||etab.nom_etab as title,
+    etab.type||' '||etab.nom_etab||' ( UAI : '||etab.UAI||' )' as title,
     CASE WHEN classe<>''
     THEN 'Classe : ' || classe 
     ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.niv=eleve.niveau)

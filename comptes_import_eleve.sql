@@ -16,13 +16,18 @@ select
     'Importer des élèves' as title,
     'Envoyer'  as validate,
     './comptes_upload_eleve.sql' as action;
+select
+    'etablissement_id' AS name, 'Établissement de l''extraction ONDE ou SIÈCLE' as label, 'select' as type, 6 as width, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
+   select 'Aucun' as label, NULL as value
+ ORDER BY nom_etab ASC);
 select 
     'comptes_data_input' as name,
     'file'               as type,
     'text/csv'           as accept,
     'Fichier de mise à jour des élèves'           as label,
-    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules : nom, prenom, naissance, sexe, INE, adresse, code, commune, etab_id, classe, niveau' as description,
+    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules et encodé en UTF-8 : nom, prenom, naissance, sexe, INE, adresse, code_postal, commune, classe, niveau' as description,
     TRUE                 as required;
+
 
 -- Télécharger les données
 select 
@@ -41,9 +46,8 @@ SELECT
     sexe as sexe,
     INE as INE,
     adresse as adresse,
-    code_postal as code,
+    code_postal as code_postal,
     commune as commune,
-    etab_id as etab_id,
     classe as classe,
     niveau as niveau
   FROM eleve ORDER BY eleve.nom ASC; 
@@ -66,5 +70,7 @@ SELECT
     'green' as color;
 SELECT 
     id as etab_id,
+    UAI as UAI,
+    type as type,
     nom_etab as établissement
   FROM etab ORDER BY id ASC; 

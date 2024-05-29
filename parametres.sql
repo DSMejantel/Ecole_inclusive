@@ -209,11 +209,17 @@ select
     $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
-
 select 
     'Accentuation' as title,
     'tool_accent_01.sql' as link,
-    'tool' as icon,
+    'typography' as icon,
+    $group_id<4 as disabled,
+    'orange' as outline
+    where $tab='Comptes';
+select 
+    'Mise à jour des UAI' as title,
+    'tool_UAI.sql' as link,
+    'barcode' as icon,
     $group_id<4 as disabled,
     'orange' as outline
     where $tab='Comptes';
@@ -434,6 +440,12 @@ select
     'orange' as outline
             where $tab='Paramètres';
 select 
+    'Classes' as title,
+    'structure.sql' as link,
+    'users-group' as icon,
+    'orange' as outline
+            where $tab='Paramètres';
+select 
     'Années' as title,
     'annees.sql' as link,
     'calendar-month' as icon,
@@ -476,6 +488,13 @@ select
         $group_id<3 as disabled
             where $tab='Paramètres';
 select 
+    'Classes' as title,
+    'structure.sql' as link,
+    'users-group' as icon,
+    'green' as outline,
+        $group_id<3 as disabled
+            where $tab='Paramètres';
+select 
     'Années' as title,
     'annees.sql' as link,
     'calendar-plus' as icon,
@@ -488,9 +507,9 @@ select
 SELECT 
     'text' as component,
     '
-| Types de Notifications  | Mesures d''examen  |  Dispositifs  |  Niveaux  | Années  |
+| Types de Notifications  | Mesures d''examen  |  Dispositifs  |  Niveaux et classes  | Années  |
 | ---- | ---- | ---- | ---- |---- |
-| Tous les dispositifs pouvant être attribués par la MDPH | Types d''aménagement d''examen pouvant être notifiés |Types de dispositifs d''aide pour l''accompagnement des élèves |Niveaux de classe des élèves suivis |Année scolaire en cours et archives |
+| Tous les dispositifs pouvant être attribués par la MDPH | Types d''aménagement d''examen pouvant être notifiés |Types de dispositifs d''aide pour l''accompagnement des élèves |Niveaux et classes des élèves suivis |Année scolaire en cours et archives |
 
 ' as contents_md
 where $tab='Paramètres';

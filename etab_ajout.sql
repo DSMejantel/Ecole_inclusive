@@ -59,6 +59,7 @@ select 'tab' as component;
 select  'Liste'  as title, 'list-check' as icon, 1  as active, CASE WHEN $tab=0 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=0' as link;
 select  'Ajouter depuis une carte'  as title, 'world' as icon, 1  as active, CASE WHEN $tab=1 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=1' as link;
 select  'Ajouter depuis un formulaire' as title, 'forms' as icon, 1 as active, CASE WHEN $tab=2 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=2' as link; 
+select  'Importer une liste' as title, 'upload' as icon, 1 as active, CASE WHEN $tab=3 THEN 'orange' ELSE 'green' END as color, 'etab_ajout.sql?tab=3' as link; 
 
 --Message
 SELECT 'alert' as component,
@@ -134,11 +135,11 @@ SELECT
     WHERE $tab=2;
     
     SELECT 'Catégorie' AS label, 'type' AS name, 3 as width, 'select' as type, 1 as value, TRUE as searchable, '[{"label": "---", "value": "---"}, {"label": "École", "value": "École"}, {"label": "Collège", "value": "Collège"}, {"label": "Lycée", "value": "Lycée"}]' as options WHERE $tab=2;
-    SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 6 as width, $search as value, TRUE as required WHERE $tab=2;
-    SELECT 'UAI' AS label, 'UAI' AS name, 3 as width WHERE $tab=2;
-    SELECT 'Adresse' AS label, 'description' AS name, 6 as width WHERE $tab=2;
-    SELECT 'Latitude' AS label, 'Lat' AS name, 3 as width, $lat as value WHERE $tab=2;
-    SELECT 'Longitude' AS label, 'Lon' AS name, 3 as width, $lon as value WHERE $tab=2;
+    SELECT 'Établissement scolaire' AS label, 'nom_etab' AS name, 'building-community' as prefix_icon, 6 as width, $search as value, TRUE as required WHERE $tab=2;
+    SELECT 'UAI' AS label, 'UAI' AS name, 'barcode' as prefix_icon, 3 as width WHERE $tab=2;
+    SELECT 'Adresse' AS label, 'description' AS name, 'mail' as prefix_icon, 6 as width WHERE $tab=2;
+    SELECT 'Latitude' AS label, 'Lat' AS name, 'world-latitude' as prefix_icon, 3 as width, $lat as value WHERE $tab=2;
+    SELECT 'Longitude' AS label, 'Lon' AS name, 'world-longitude' as prefix_icon, 3 as width, $lon as value WHERE $tab=2;
 
 select 
     'button' as component
@@ -150,6 +151,44 @@ select
     'square-plus' as icon,
     'Ajouter'         as title
     WHERE $tab=2;
+    
+--- Importation
+select 
+    'form'       as component,
+    'Importer des établissement' as title,
+    'Envoyer'  as validate,
+    './etab_csv_upload.sql' as action
+    WHERE $tab=3;
+select 
+    'comptes_data_input' as name,
+    'file'               as type,
+    'text/csv'           as accept,
+    'Fichier .csv pour importer des établissements'           as label,
+    'Envoyer un fichier CSV avec ces colonnes séparées par des points virgules et encodé en UTF-8 : type, UAI, nom_etab, Lon, Lat, description' as description,
+    TRUE  as required
+        WHERE $tab=3;
+
+-- Télécharger les données
+select 
+    'divider' as component,
+    'Outils d''importations'   as contents
+        WHERE $tab=3;
+SELECT 
+    'csv' as component,
+    'Exporter le fichier des établissements ' as title,
+    'etablissement' as filename,
+    'file-download' as icon,
+    'green' as color
+        WHERE $tab=3;
+SELECT 
+    type as type,
+    UAI as UAI,
+    nom_etab as nom_etab,
+    Lon as Lon,
+    Lat as Lat,
+    description as description
+  FROM etab 
+      WHERE $tab=3 ORDER BY etab.nom_etab ASC; 
  
     
 

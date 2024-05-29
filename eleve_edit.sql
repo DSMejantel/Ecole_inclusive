@@ -12,7 +12,7 @@ SELECT 'redirect' AS component,
    -- Mettre à jour l'élève modifié dans la base
    SET edition = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') )
 SET modif = (SELECT current_timestamp)
- UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, sexe=$sexe, adresse=$adresse ,code_postal=$zipcode, commune=$commune, INE=$ine, classe=$classe, etab_id=:Établissement, niveau=:Niveau, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null
+ UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, sexe=$sexe, adresse=$adresse ,code_postal=$zipcode, commune=$commune, INE=$ine, classe=$classe, etab_id=:Établissement, UAI=(SELECT UAI from etab where etab.id=:Établissement), niveau=:Niveau, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null
  returning 
 'redirect' AS component,
 'notification.sql?id='||$id||'&tab=Profil' as link;
@@ -106,7 +106,7 @@ select
  ORDER BY nom_etab ASC);
     SELECT 'Niveau' AS name, 'select' as type, 2 as width, $niv_edit as value, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select niv, niv FROM niveaux union all
    select '-' as label, NULL as value ORDER BY niv ASC);
-    SELECT 'Classe' AS label, 'users-group' as prefix_icon, 'classe' AS name, $classe_edit as value, 2 as width;
+  SELECT 'Classe' AS label, 'select' as type, 'classe' AS name, 2 as width, $classe_edit as value, json_group_array(json_object('value', classe, 'label', classe)) as options from structure where etab_id=CAST($etab_edit as integer);
     SELECT 'Référent' AS name, 'select' as type, 3 as width, CAST($referent_edit as integer) as value,
     json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM (select nom_ens_ref, id FROM referent union all
    select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC);

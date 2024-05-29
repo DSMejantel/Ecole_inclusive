@@ -3,7 +3,6 @@
 select 
     'button' as component,
     'sm'     as size,
-    'pill'   as shape,
     'center' as justify;
 select 
     'Enseignant-Référent' as title,
@@ -37,7 +36,12 @@ select
     'Niveaux' as title,
     'niveaux.sql' as link,
     'stairs' as icon,
-    'orange' as outline;    
+    'orange' as outline;  
+select 
+    'Classes' as title,
+    'structure.sql' as link,
+    'users-group' as icon,
+    'orange' as outline;  
 select 
     'Années' as title,
     'annees.sql' as link,

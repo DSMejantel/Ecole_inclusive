@@ -10,16 +10,19 @@ SELECT 'redirect' AS component,
 
 
 -- temporarily store the data in a table with text columns
-create temporary table if not exists eleve_tmp(nom text, prenom text, naissance date, sexe text, INE text, adresse text, code text, commune text, etab_id integer, classe text, niveau text);
+create temporary table if not exists eleve_tmp(nom text, prenom text, naissance date, sexe text, INE text, adresse text, code_postal text, commune text, classe text, niveau text);
 delete from eleve_tmp;
 
 -- copy the data from the CSV file into the temporary table
-copy eleve_tmp (nom, prenom, naissance, sexe, INE, adresse, code, commune, etab_id, classe, niveau) from 'comptes_data_input'
-with (header true, delimiter ',', quote '"'); -- all the options are optional;
+copy eleve_tmp (nom, prenom, naissance, sexe, INE, adresse, code_postal, commune, classe, niveau) from 'comptes_data_input'
+with (header true, delimiter ';', quote '"'); -- all the options are optional;
+
+-- récupération identité de l'établissement
+SET etablissement_UAI = (SELECT UAI FROM etab WHERE id = $etablissement_id);
 
 -- insert the data into the final table
-INSERT OR IGNORE INTO eleve (nom, prenom, naissance, sexe, INE, adresse, code_postal, commune, etab_id, classe, niveau)
-select nom, prenom, naissance, sexe, INE, adresse, code, commune, CAST(etab_id AS integer), classe, niveau  from eleve_tmp;
+INSERT OR IGNORE INTO eleve (nom, prenom, naissance, sexe, INE, adresse, code_postal, commune, etab_id, UAI, classe, niveau)
+select nom, prenom, naissance, sexe, INE, adresse, code_postal, commune, CAST($etablissement_id as Integer) as value, CAST($etablissement_UAI as text) as value, classe, niveau  from eleve_tmp;
 
 SELECT
     'redirect' AS component,

@@ -62,7 +62,7 @@ SELECT
     etab.nom_etab as Établissement,
     classe as Classe,
   activation as Code,
-  strftime('%d/%m/%Y %H:%M',connexion) as Connexion,
+  connexion as Connexion,
       '[
     ![](./icons/pencil.svg)
 ](comptes_edit.sql?id='||username||')[
