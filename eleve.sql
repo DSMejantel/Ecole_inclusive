@@ -11,6 +11,9 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
     
     SELECT 
     'form' as component,
+    'eleve' as id,
+    '' as validate;
+/*   
     case when :Etablissement is null 
         then 'Suivant'
         else 'Créer un élève'
@@ -19,7 +22,7 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
         then ''
         else 'eleve.sql'
     end as action,
-    'green'           as validate_color;
+    'green'           as validate_color;*/
 -- 1ère étape:    
     SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, CAST(:nom AS text) as value, 4 as width, TRUE as required;
     SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, CAST(:prenom AS text) as value, 4 as width, TRUE as required;
@@ -36,22 +39,32 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
  -- 2nde étape:
     SELECT 'Niveau' AS name, 'select' as type, 2 as width, json_group_array(json_object("label", niv, "value", niv)) as options FROM (select niv, niv FROM niveaux union all
    select '-' as label, NULL as value ORDER BY niv ASC) having :Etablissement is not null;
-    SELECT 'Classe' AS label, 'select' as type, 'classe' AS name, 2 as width, json_group_array(json_object('value', classe, 'label', classe)) as options from structure where etab_id= CAST(:Etablissement AS INTEGER) having :Etablissement is not null;
+    SELECT 'Classe' AS label, 'select' as type, 'classe' AS name, 2 as width, json_group_array(json_object('value', classe, 'label', classe)) as options from(select classe, classe from structure where etab_id=CAST(:Etablissement as integer) UNION ALL SELECT 'Aucune' as label, NULL as value   ORDER BY structure.classe ASC) having :Etablissement is not null;
     SELECT 'Référent' AS name, 'select' as type, 2 as width,
     json_group_array(json_object("label" , nom_ens_ref, "value", id )) as options FROM (select nom_ens_ref, id FROM referent union all
    select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC) having :Etablissement is not null;
     SELECT 'Commentaire' AS label,'textarea' as type, 'comm_eleve' AS name where :Etablissement is not null;
 
---Bouton retour sans valider
+--Bouton du formulaire
 select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape;
+    'button' as component;
 select 
-    'Recommencer' as title,
-    'eleve.sql' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;  
+    'eleve' as form,
+    case when :Etablissement is null 
+        then 'Suivant'
+        else 'Créer un élève'
+    end as title,
+    case when :Etablissement is null
+        then ''
+        else 'eleve.sql'
+    end as link,
+    'green' as color; 
+select 
+    'Mettre à jour les classes' as title,
+    'eleve' as form,
+    '' as link,
+    'orange' as color
+    where :Etablissement is not null;  
     
     -- Enregistrer l'élève créé dans la base
  INSERT INTO eleve(nom, prenom, naissance, sexe, adresse, code_postal, commune, INE, etab_id, UAI, niveau, classe, referent_id, comm_eleve) SELECT $nom, $prenom, $naissance, $sexe, $adresse ,$zipcode, $commune, $ine, :Etablissement, (SELECT UAI from etab where etab.id=:Etablissement), :Niveau, $classe, :Référent, $comm_eleve WHERE $classe IS NOT NULL;

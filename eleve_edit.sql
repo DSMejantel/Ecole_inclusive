@@ -12,7 +12,7 @@ SELECT 'redirect' AS component,
    -- Mettre à jour l'élève modifié dans la base
    SET edition = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') )
 SET modif = (SELECT current_timestamp)
- UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, sexe=$sexe, adresse=$adresse ,code_postal=$zipcode, commune=$commune, INE=$ine, classe=$classe, etab_id=:Établissement, UAI=(SELECT UAI from etab where etab.id=:Établissement), niveau=:Niveau, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null
+ UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, sexe=$sexe, adresse=$adresse ,code_postal=$zipcode, commune=$commune, INE=$ine, classe=$classe, etab_id=:Établissement, UAI=(SELECT UAI from etab where etab.id=:Établissement), niveau=:Niveau, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null and $etab_update=0
  returning 
 'redirect' AS component,
 'notification.sql?id='||$id||'&tab=Profil' as link;
@@ -32,7 +32,8 @@ SET adresse_edit = (SELECT adresse FROM eleve WHERE id = $id);
 SET zip_edit = (SELECT code_postal FROM eleve WHERE id = $id);
 SET commune_edit = (SELECT commune FROM eleve WHERE id = $id);
 
-SET etab_edit = (SELECT etab_id FROM eleve WHERE id = $id);
+SET etab_edit = coalesce((SELECT :Établissement where $etab_update=1),(SELECT etab_id FROM eleve WHERE id = $id));
+
 SET niv_edit = (SELECT niveau FROM eleve WHERE id = $id);
 SET classe_edit = (SELECT classe FROM eleve WHERE id = $id);
 SET referent_edit = (SELECT referent_id FROM eleve WHERE id = $id);
@@ -62,10 +63,10 @@ SELECT
   ELSE './icons/profil.png'
   END as image_url,
     UPPER(nom) || ' ' || prenom as title,
-    'INE : '||INE as description
+    'INE : '||INE||' '||coalesce($etab_edit,0) as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    adresse||' '||code_postal||' '||commune as title,
+    adresse||' '||code_postal||' '||commune  as title,
     'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
@@ -88,8 +89,8 @@ select
 
     SELECT 
     'form' as component,
-    'Mettre à jour' as validate,
-    'orange'           as validate_color;
+    '' as validate,
+    'eleve' as id;
        
     SELECT 'Nom' AS label, 'user' as prefix_icon, 'nom' AS name, $nom_edit as value, 4 as width, TRUE as required;
     SELECT 'Prénom' AS label, 'user' as prefix_icon, 'prenom' AS name, $prenom_edit as value, 4 as width, TRUE as required;
@@ -99,8 +100,7 @@ select
     SELECT 'Code Postal' AS label, 'mail' as prefix_icon, 'zipcode' AS name, 'text' as type, $zip_edit as value, 2 as width;
     SELECT 'Commune' AS label, 'building-community' as prefix_icon, 'commune' AS name, 'text' as type, $commune_edit as value, 4 as width;
     SELECT 'INE' AS label, 'barcode' as prefix_icon, 'ine' AS name, 'text' as type, $ine_edit as value, 2 as width;
-    SELECT 'Établissement' AS name, 3 as width, 
-          CAST($etab_edit as integer) as value,
+    SELECT 'Établissement' AS name, 3 as width, CAST($etab_edit as integer) as value,
     'select' as type, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
    select 'Aucun' as label, NULL as value
  ORDER BY nom_etab ASC);
@@ -111,6 +111,20 @@ select
     json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM (select nom_ens_ref, id FROM referent union all
    select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC);
     SELECT 'Commentaire' AS label, 'comm_eleve' AS name, $comm_edit as value,'textarea' as type, 12 as width;
+    
+--Bouton du formulaire
+select 
+    'button' as component;
+select 
+    'eleve' as form,
+    'Modifier' as title,
+    '?etab_update=0&id='||$id as link,
+    'green' as color; 
+select 
+    'Mettre à jour les classes' as title,
+    'eleve' as form,
+    '?etab_update=1&id='||$id as link,
+    'orange' as color;  
     
 
  
