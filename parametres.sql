@@ -441,7 +441,7 @@ select
             where $tab='Paramètres';
 select 
     'Classes' as title,
-    'structure.sql' as link,
+    'structure_liste.sql' as link,
     'users-group' as icon,
     'orange' as outline
             where $tab='Paramètres';
@@ -490,7 +490,7 @@ select
 select 
     'Classes' as title,
     'structure.sql' as link,
-    'users-group' as icon,
+    'square-rounded-plus' as icon,
     'green' as outline,
         $group_id<3 as disabled
             where $tab='Paramètres';
