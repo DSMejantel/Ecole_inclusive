@@ -60,6 +60,9 @@ delete from login_session where id = sqlpage.cookie('session')  and $cas_user='i
 SET connect = (SELECT datetime(current_timestamp, 'localtime'));
 UPDATE user_info SET connexion=$connect WHERE username = $cas_user;
 
+
+SELECT 'dynamic' AS component, 
+sqlpage.read_file_as_text('connexion.json')    AS properties; 
 -- Redirect the user to the home page
 select 
     'steps'  as component,
