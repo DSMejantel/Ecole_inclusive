@@ -15,8 +15,8 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 SELECT 'hero' AS component,
      'Validé !' AS title,
    'Pour information,  le nouveau compte '|| $username ||' a bien été créé.' AS description_md,
-   'parametres.sql' AS link,
-    'Retour au tableau de bord' AS link_text
+   'comptes.sql' AS link,
+    'Retour à la liste des comptes' AS link_text
 WHERE $error IS NULL;
 
 SELECT 'hero' AS component,

@@ -14,7 +14,8 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 SET nom_edit = (SELECT nom FROM user_info WHERE username = $id);
 SET prenom_edit = (SELECT prenom FROM user_info WHERE username = $id);
 SET group_edit = (SELECT groupe FROM user_info WHERE username = $id);
-SET etab_edit = (SELECT etab FROM user_info WHERE username = $id);
+SET etab_edit = coalesce((SELECT :Etablissement where $etab_update=1),(SELECT etab FROM user_info WHERE username = $id));
+
 SET classe_edit = (SELECT classe FROM user_info WHERE username = $id);
 SET tel_edit = (SELECT tel FROM user_info WHERE username = $id);
 SET courriel_edit = (SELECT courriel FROM user_info WHERE username = $id);
@@ -59,7 +60,6 @@ SELECT
   nom AS Nom,
   prenom AS Prénom,
   etab.nom_etab AS Établissement,
-  $etab_edit as ID,
   classe AS Classe,
   tel as Téléphone,
   courriel as courriel
@@ -68,24 +68,37 @@ FROM user_info JOIN etab on user_info.etab=etab.id WHERE username=$id;
 --- Formulaire de Mise à jour
 SELECT 
     'form' as component,
-    'comptes_edit_confirm.sql?id='||$id as action,
-    'Mettre à jour' as validate,
-    'orange'           as validate_color;
+    '' as validate,
+    'compte' as id;
+    
     SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 4 as width;
     SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 4 as width;
+    SELECT 'Identifiant ENT' AS label, 'cas' AS name, $cas_edit as value, 4 as width;
+    SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 3 as width;
+    SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 3 as width;
     SELECT 'Etablissement' AS name, 'select' as type, 2 as width, CAST($etab_edit as integer) as value, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
    select 'Aucun' as label, NULL as value
  ORDER BY nom_etab ASC);
 
     SELECT 'Classe' AS name, 'select' as type, 2 as width, $classe_edit as value, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct classe as classe, classe as value FROM structure WHERE structure.etab_id=$etab_edit UNION ALL SELECT 'Aucune' as label, NULL as value  ORDER BY structure.classe ASC);
   
-    SELECT 'Téléphone' AS label, 'tel' AS name, $tel_edit as value, 3 as width;
-    SELECT 'Courriel' AS label, 'courriel' AS name, $courriel_edit as value, 3 as width;
-    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit as value, 3 as width;
-    SELECT 'Identifiant ENT' AS label, 'cas' AS name, $cas_edit as value, 3 as width;
 
+    SELECT 'Droits :' AS label, 'groupe' AS name, 'select' as type, '[{"label": "Consultant prof", "value": 1}, {"label": "Consultant AESH", "value": 2}, {"label": "Éditeur", "value": 3}, {"label": "administrateur", "value": 4}]' as options, $group_edit as value, 2 as width;
 
- 
+--Bouton du formulaire
+select 
+    'button' as component;
+select 
+    'compte' as form,
+    'Modifier' as title,
+    'comptes_edit_confirm.sql?id='||$id as link,
+    'green' as color; 
+select 
+    'Mettre à jour les classes' as title,
+    'compte' as form,
+    '?etab_update=1&id='||$id as link,
+    'orange' as color;  
+
    
  
 

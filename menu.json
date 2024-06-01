@@ -29,7 +29,8 @@
         {"title": "Paramétrage", "submenu": [
             {"link": "parametres.sql?tab=Tableau de bord", "title": "Tableau de bord"},
             {"link": "parametres.sql?tab=Carte", "title": "Carte"},
-            {"link": "parametres.sql?tab=Paramètres", "title": "Paramètres"}
+            {"link": "parametres.sql?tab=Paramètres", "title": "Paramètres"},
+            {"link": "parametres.sql?tab=Comptes", "title": "Comptes"}
         ]},
         {"title": "Mon compte", "submenu": [
             {"link": "parametres.sql?tab=Mon profil", "title": "Mon profil"},

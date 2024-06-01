@@ -8,8 +8,8 @@ SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
         WHERE $group_id<>'4';
         
-    INSERT INTO user_info (username, activation, nom, prenom, etab, groupe, tel, courriel, CAS)
-    VALUES (:username, :code, :nom, :prenom, :Etablissement, :groupe, :tel, :courriel, :cas)
+    INSERT INTO user_info (username, activation, nom, prenom, etab, groupe, classe, tel, courriel, CAS)
+    VALUES (:username, :code, :nom, :prenom, :Etablissement, :groupe, :classe, :tel, :courriel, :cas)
     ON CONFLICT (username) DO NOTHING
     RETURNING 
      'redirect' AS component,
