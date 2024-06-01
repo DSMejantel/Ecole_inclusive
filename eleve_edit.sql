@@ -63,7 +63,7 @@ SELECT
   ELSE './icons/profil.png'
   END as image_url,
     UPPER(nom) || ' ' || prenom as title,
-    'INE : '||INE||' '||coalesce($etab_edit,0) as description
+    'INE : '||INE as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
     adresse||' '||code_postal||' '||commune  as title,
@@ -99,7 +99,7 @@ select
     SELECT 'Adresse' AS label, 'address-book' as prefix_icon, 'adresse' AS name, 'text' as type, $adresse_edit as value, 6 as width;
     SELECT 'Code Postal' AS label, 'mail' as prefix_icon, 'zipcode' AS name, 'text' as type, $zip_edit as value, 2 as width;
     SELECT 'Commune' AS label, 'building-community' as prefix_icon, 'commune' AS name, 'text' as type, $commune_edit as value, 4 as width;
-    SELECT 'INE' AS label, 'barcode' as prefix_icon, 'ine' AS name, 'text' as type, $ine_edit as value, 2 as width;
+    SELECT 'INE' AS label, 'barcode' as prefix_icon, 'ine' AS name, 'text' as type, CAST($ine_edit as text) as value, 2 as width;
     SELECT 'Établissement' AS name, 3 as width, CAST($etab_edit as integer) as value,
     'select' as type, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
    select 'Aucun' as label, NULL as value

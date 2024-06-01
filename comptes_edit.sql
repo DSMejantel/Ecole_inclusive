@@ -47,13 +47,7 @@ select
     'red' as outline; 
 
 -- Rappel du Compte concerné par la modification
-SELECT 
-    'alert' as component,
-    'Alerte' as title,
-    'Visualiser les changements opérés' as description,
-    'alert-triangle' as icon,
-    'green' as color;
-    
+
 SELECT 'table' as component;
 SELECT 
   username as Identifiant,
