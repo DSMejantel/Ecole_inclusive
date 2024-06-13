@@ -176,12 +176,14 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom||' ('||coalesce(sexe,'-')||')' as title,
+    UPPER(nom) || ' ' || prenom as title,
     'INE : '||coalesce(INE,'-') as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    adresse||' '||code_postal||' '||commune as title,
-    'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+     CASE WHEN sexe="M" THEN 'gender-male' WHEN sexe="F" THEN 'gender-female' ELSE '' END as icon,
+     adresse||' '||code_postal||' '||commune as title,
+    CASE WHEN sexe="F" THEN 'née le : '||strftime('%d/%m/%Y',eleve.naissance) ELSE 'né le : '||strftime('%d/%m/%Y',eleve.naissance) END  as description, 
+    'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
@@ -495,13 +497,15 @@ SELECT
 	strftime('%d/%m/%Y',horodatage) as Date,
 	nature as Nature,
 	notes as Notes,
+	CASE WHEN tracing=1
+        THEN 'red' END as _sqlpage_color,
         CASE WHEN tracing=1
         THEN '[
     ![](./icons/select.svg)
-]()' 
+](intervention_signale.sql?id='||intervention.id||'&imp=1&eleve='||eleve_id||' "Décocher")' 
        ELSE '[
     ![](./icons/square.svg)
-]()' 
+](intervention_signale.sql?id='||intervention.id||'&imp=0&eleve='||eleve_id||' "Cocher")' 
        END as Important,
        CASE WHEN $group_id>2 THEN 
          '[
