@@ -10,7 +10,6 @@ SELECT 'redirect' AS component,
 --- Saisir une nouvelle modalité de notification  
 SELECT 
     'form' as component,
-    'Structure des classes' as title,
     'Créer' as validate;
     
     SELECT 'select' as type, 'Établissement scolaire' AS label, 'etab' AS name, json_group_array(json_object("label", nom_etab, "value", UAI)) as options FROM etab ORDER BY nom_etab ASC;
