@@ -176,8 +176,8 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom||' ('||sexe||')' as title,
-    'INE : '||INE as description
+    UPPER(nom) || ' ' || prenom||' ('||coalesce(sexe,'-')||')' as title,
+    'INE : '||coalesce(INE,'-') as description
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
     adresse||' '||code_postal||' '||commune as title,
