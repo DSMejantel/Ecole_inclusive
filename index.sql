@@ -138,6 +138,13 @@ select
     'green' as color,
     'eleves_etab.sql' as link
     WHERE $group_id=1; 
+select 
+    'Calendrier ESS' as title,
+    'calendar' as icon,
+    'green' as color,
+    'calendrier_etab.sql' as link
+    WHERE $group_id=1;    
+
     
 SELECT 'hero' as component,
 'École Inclusive' as title,

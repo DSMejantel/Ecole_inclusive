@@ -10,13 +10,16 @@
      {"title": "Fiches-Outils",
             "link": "fiches.sql" }
         ,
+     {"title": "Calendrier", "submenu": [
+            {"link": "calendrier_etab.sql", "title": "Liste des ESS"}
+        ]},
      {"title": "Élèves",
             "link": "eleves_etab.sql" }
         ,
-                {"title": "Établissement",
+     {"title": "Établissement",
             "link": "etablissement.sql" }
         ,
-                {"title": "Mon compte", "submenu": [
+     {"title": "Mon compte", "submenu": [
             {"link": "parametres.sql?tab=Mon profil", "title": "Mon profil"},
             {"link": "logout.sql", "title": "Se déconnecter"}
         ]}

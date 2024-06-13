@@ -103,6 +103,19 @@ SELECT
 	(SELECT SUBSTR(prenom_ens_ref, 1, 1) ||'. '||nom_ens_ref FROM referent JOIN eleve on referent.id=eleve.referent_id WHERE eleve.id=$id) as referent_id,
 	(SELECT SUBSTR(aesh_firstname, 1, 1) ||'. '||aesh_name FROM aesh LEFT JOIN suivi on aesh.id=suivi.aesh_id JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.id=$id) as aesh_id
 	FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id=$id;
+	
+-- Insère note et info de l'historique dans la base
+INSERT INTO intervention(eleve_id, horodatage,nature,notes, tracing)
+SELECT 
+	$id as eleve_id, 
+	$horodatage as horodatage, 
+	$nature as nature, 
+	$notes as notes,
+        coalesce($important,0) as tracing
+	WHERE $intervention=1;
+
+UPDATE intervention SET horodatage=$horodatage,	nature=$nature, notes=$notes, tracing=coalesce($important,0) WHERE eleve_id=$id and $intervention=2;
+	
 -- Menu spécifique élève : modifier, ajouter notif, ajouter suivi
 select 
     'button' as component,
@@ -448,9 +461,19 @@ SELECT
     WHERE $tab='Examen';
     
 -- Historique
-SELECT 
-    'text' as component
-        where $tab='Historique';
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'end' as justify
+    where $tab='Historique';
+select 
+    'intervention_ajout.sql?id=' || $id as link,
+    'plus' as icon,
+    'Ajouter'    as tooltip,
+    ''            as title
+    where $tab='Historique';
+    
 SELECT 'table' as component
         where $tab='Historique';
 SELECT 
@@ -462,4 +485,36 @@ SELECT
 	referent_id as Référent,
 	aesh_id as AESH
 	FROM parcours JOIN etab on parcours.etab_id=etab.id WHERE eleve_id=$id and $tab='Historique' ORDER by annee_id;
+
+SELECT 'table' as component,
+	'Important' as markdown,
+	'Actions' as markdown,
+	TRUE as sort
+        where $tab='Historique';
+SELECT 
+	strftime('%d/%m/%Y',horodatage) as Date,
+	nature as Nature,
+	notes as Notes,
+        CASE WHEN tracing=1
+        THEN '[
+    ![](./icons/select.svg)
+]()' 
+       ELSE '[
+    ![](./icons/square.svg)
+]()' 
+       END as Important,
+       CASE WHEN $group_id>2 THEN 
+         '[
+    ![](./icons/trash.svg)
+](intervention_delete.sql?id='||intervention.id||'&eleve='||eleve_id||' "Supprimer")[
+    ![](./icons/pencil.svg)
+](intervention_edit.sql?id='||intervention.id||'&eleve='||eleve_id||' "Éditer")' 
+       ELSE   
+         '[
+    ![](./icons/trash-off.svg)
+]()[
+    ![](./icons/pencil-off.svg)
+]()' 
+END as Actions
+	FROM intervention WHERE eleve_id=$id and $tab='Historique' ORDER by horodatage;
 

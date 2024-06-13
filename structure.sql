@@ -28,3 +28,12 @@ select
 select 
     '/structure/liste.sql?_sqlpage_embed' as embed;
 
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'Supprimer une classe' as title,
+    'structure_edit.sql' as link,
+    'trash' as icon,
+    'red' as outline;  

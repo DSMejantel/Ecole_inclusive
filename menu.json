@@ -10,6 +10,9 @@
          {"title": "Fiches-Outils",
             "link": "fiches.sql" }
         ,
+        {"title": "Calendrier", "submenu": [
+            {"link": "calendrier_etab.sql", "title": "Liste des ESS"}
+        ]},
         {"title": "Élèves", "submenu": [
             {"link": "eleves.sql", "title": "Liste complète"},
             {"link": "eleves_attente.sql", "title": "Élèves en attente"},
