@@ -10,7 +10,7 @@ THEN sqlpage.read_file_as_text('index.json')
 ELSE sqlpage.read_file_as_text('menu.json')
             END    AS properties; 
 -- Sous Menu   
-select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties; 
+select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties WHERE $group_id>1; 
         
 -- Sous Menu établissement
 select 

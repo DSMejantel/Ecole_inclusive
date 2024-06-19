@@ -70,29 +70,69 @@ select
 
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
+SET NB_accomp_notif = (SELECT count(distinct notif.eleve_id) FROM notif JOIN eleve on notif.eleve_id=eleve.id JOIN modalite on modalite.id=notif.modalite_id WHERE eleve.etab_id=$id AND modalite.type LIKE '%AESH%');
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id);
-SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
+SET NB_aesh = coalesce((SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id),(SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id));
+SET NB_accomp_ind = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and suivi.ind=1);
+SET NB_accomp_mut = $NB_accomp-$NB_accomp_ind;
+SET TPS_suivi_ind=(SELECT sum(distinct(suivi.temps*ind)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
+SET TPS_suivi_ext=(SELECT sum((suivi.temps)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on aesh.id=suivi.aesh_id JOIN user_info on user_info.username=aesh.username WHERE eleve.etab_id<>$id and user_info.etab=$id);
+SET TPS_suivi_rec=(SELECT sum((suivi.temps)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on aesh.id=suivi.aesh_id JOIN user_info on user_info.username=aesh.username WHERE eleve.etab_id=$id and user_info.etab<>$id);
+SET AESH_quot=coalesce((SELECT sum(aesh.quotite) FROM aesh join user_info on user_info.username=aesh.username where user_info.etab=$id),0)-coalesce($TPS_suivi_ext,0) + coalesce($TPS_suivi_rec,0);
+SET AESH_synt=(SELECT sum(aesh.tps_synthese) FROM aesh join user_info on user_info.username=aesh.username where user_info.etab=$id);
+SET AESH_mission=(SELECT sum(aesh.tps_mission) FROM aesh join user_info on user_info.username=aesh.username where user_info.etab=$id);
+SET AESH_ULIS=(SELECT sum(aesh.tps_ULIS) FROM aesh join user_info on user_info.username=aesh.username where user_info.etab=$id);
+SET Ratio_mut = ($AESH_quot -coalesce($AESH_synt,0) -coalesce($TPS_suivi_ind,0) -coalesce($AESH_mission,0) - coalesce($AESH_ULIS,0))/$NB_accomp_mut;
+SET Ratio_brut = ($AESH_quot -coalesce($TPS_suivi_ind,0))/($NB_accomp_notif-$NB_accomp_ind);
+
 
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
     'datagrid' as component,
     type || ' ' || nom_etab as title FROM etab WHERE id = $id;
 SELECT 
+    ' Élèves avec suivi notifié : ' as title,
+    $NB_accomp_notif as description,
+    'certificate' as icon;
+SELECT 
     ' Élèves accompagnés : ' as title,
     $NB_accomp as description,
-    'briefcase' as icon;
+    'user-plus' as icon;
 SELECT 
-    ' Élèves à suivre : ' as title,
-    $NB_eleve as description,
-    'briefcase' as icon;
+    ' Suivis individuels : ' as title,
+    $NB_accomp_ind as description,
+    'box-multiple-1' as icon;
+SELECT 
+    ' Suivis mutualisés : ' as title,
+    $NB_accomp_mut as description,
+    'box-multiple-2' as icon;
+    
 SELECT 
 ' AESH ' as title,
     $NB_aesh as description,
     TRUE           as active,
     'user-plus' as icon;
-
-
+SELECT 
+' Quotité totale disponible' as title,
+    $AESH_quot||' (et '||coalesce($TPS_suivi_ext,0)||' hors établissement)' as description,
+    --TRUE           as active,
+    'clock' as icon;
+SELECT 
+' Temps de suivi individuel ' as title,
+    $TPS_suivi_ind as description,
+    TRUE           as active,
+    'clock' as icon;
+SELECT 
+' Heures brutes mutualisables par élève notifié (hors accompagnement individuel) ' as title,
+    printf("%.2f",$Ratio_brut) as description,
+    TRUE           as active,
+    'clock-question' as icon;
+SELECT 
+' Heures nettes par élève sur accompagnements mutualisés ' as title,
+    printf("%.2f",$Ratio_mut) as description,
+    TRUE           as active,
+    'clock-question' as icon;
 
 -- Liste des AESH
 select 
