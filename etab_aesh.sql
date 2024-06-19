@@ -70,9 +70,12 @@ select
 
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
-SET NB_accomp_notif = (SELECT count(distinct notif.eleve_id) FROM notif JOIN eleve on notif.eleve_id=eleve.id JOIN modalite on modalite.id=notif.modalite_id WHERE eleve.etab_id=$id AND modalite.type LIKE '%AESH%');
+
+SET NB_accomp_notif = (SELECT count(distinct notif.eleve_id) FROM notif JOIN eleve on notif.eleve_id=eleve.id JOIN modalite on modalite.id=notif.modalite_id  JOIN notification on notification.eleve_id = eleve.id WHERE eleve.etab_id=$id AND modalite.type LIKE '%AESH%'  and datefin > date('now'));
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
-SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id);
+
+SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id=$id);
+
 SET NB_aesh = coalesce((SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id),(SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id));
 SET NB_accomp_ind = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and suivi.ind=1);
 SET NB_accomp_mut = $NB_accomp-$NB_accomp_ind;
