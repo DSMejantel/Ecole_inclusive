@@ -167,7 +167,7 @@ SELECT 'table' as component,
    END as _sqlpage_color,
          '[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||aesh.id||'&tab=Profils)' as Actions
+](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")' as Actions
   FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY aesh.aesh_name;  
 /*
 -- Graphique
@@ -195,36 +195,45 @@ select
     suivi.temps        as y
         FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id  ORDER BY eleve.nom ASC;
 */
+--
+-- create a temporary table to preprocess the data
+
+create temporary table if not exists TAB_suivi(etab_id,aesh_id,aesh_firstname,aesh_name,eleve_id,prenom,nom,classe,temps decimal,mut decimal,numero INTEGER PRIMARY KEY);
+delete  from TAB_suivi; 
+insert into TAB_suivi(etab_id,aesh_id,aesh_firstname,aesh_name,eleve_id,prenom,nom,classe,temps,mut)
+SELECT $id, aesh.id, aesh.aesh_firstname, aesh_name,eleve.id, eleve.prenom, eleve.nom,eleve.classe, suivi.temps, suivi.mut FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id ORDER BY aesh.id,eleve.id;;
+
+--select 'table' as component;
+--select * from TAB_suivi;
 
 -- Graphique Bulle
 select 
     'chart'               as component,
     'Répartitions des suivis' as title,
     'bubble'             as type,
-        500 as height,
+    500 as height,
     1 as toolbar,
-    'N° Élève'as xtitle,
-    'N° AESH' as ytitle,
+    --'N° Élève'as xtitle,
+    --'N° AESH' as ytitle,
     'Heures' as ztitle,
     400 as height,
-    min(eleve.id)-10                     as xmin,
-    max(eleve.id)+2                    as xmax,
-    min(aesh.id)-2                    as ymin,
-    max(aesh.id)+2                  as ymax,
+    min(numero)-1                     as xmin,
+    max(numero)+1                    as xmax,
+    min(aesh_id)-1                    as ymin,
+    max(aesh_id)+1                  as ymax,
     0                     as zmin,
     1000                   as zmax,
-    6                    as xticks,
-    12                    as yticks,
+    0                    as xticks,
+    0                    as yticks,
     35                    as zticks
-    FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id;
+    FROM TAB_suivi WHERE etab_id=$id;
    
 select 
-    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as series,
-    coalesce(eleve.id,0) as label,
-    coalesce(aesh.id,0) as y,    
-    --SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as labels,
-    coalesce(suivi.temps,0)        as z
-        FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id ;
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name||' --> '||SUBSTR(prenom, 1, 1) ||'. '||nom as series,
+    coalesce(numero,0) as label,
+    coalesce(aesh_id,0) as y,    
+    coalesce(temps,0)        as z
+    FROM TAB_suivi WHERE etab_id=$id ORDER BY aesh_id,eleve_id;
 /*     
 -- Graphique Barres Elèves
 select 
@@ -271,8 +280,8 @@ select
 
    
 select 
-    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '|| aesh_name as label,
-    SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom||' ('||eleve.classe||')' as series,
-    sum(suivi.temps/mut)        as value
-        FROM suivi JOIN etab on eleve.etab_id = etab.id JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id GROUP BY aesh.id,eleve.id ORDER BY aesh_name ASC; 
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as label,
+    SUBSTR(prenom, 1, 1) ||'. '||nom||' ('||classe||')' as series,
+    sum((temps*1.00)/mut) as value
+        FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id,eleve_id ORDER BY aesh_name DESC; 
          

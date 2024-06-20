@@ -71,7 +71,7 @@ SELECT
   END  as description,
   group_concat(DISTINCT dispositif.dispo) as footer,
   '[
-  ![](./icons/list-check.svg)
+  ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil) [
     ![](./icons/user-plus.svg)
 ](notification.sql?id='||eleve.id||'&tab=Suivi)' as footer_md,
@@ -120,7 +120,7 @@ SELECT 'table' as component,
     etab.nom_etab AS Établissement,
          '[
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)' as Élève
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier élève")' as Élève
   FROM eleve INNER JOIN suivi on suivi.eleve_id=eleve.id FULL JOIN etab on eleve.etab_id = etab.id LEFT JOIN aesh on suivi.aesh_id=aesh.id   WHERE aesh_id = $id and $tab='Liste';      
   
   --Graphique
@@ -145,23 +145,23 @@ SELECT 'table' as component,
 SELECT 
     eleve.nom ||' '||eleve.prenom ||' ('||eleve.classe||')' as series,
     'Missions' as x,
-    coalesce(sum(suivi.temps/mut),0) as value
+    coalesce(sum((suivi.temps*1.00)/mut),0) as value
     FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE aesh_id = $id and $tab='Graphique' GROUP BY eleve.nom;
 SELECT 
     'ULIS' as series,
     'Missions' as x,
     coalesce(tps_ULIS,0) as value
-    FROM aesh WHERE aesh.id=$id and tps_ULIS>0 and $tab='Graphique';
+    FROM aesh WHERE aesh.id=$id and tps_ULIS<>0 and $tab='Graphique';
 SELECT 
     'Activités' as series,
     'Missions' as x,
     coalesce(tps_mission,0) as value
-    FROM aesh WHERE aesh.id=$id and tps_mission>0 and $tab='Graphique';
+    FROM aesh WHERE aesh.id=$id and tps_mission<>0 and $tab='Graphique';
 SELECT 
     'Synthèse(s)' as series,
     'Missions' as label,
     coalesce(tps_synthese,0) as value
-    FROM aesh WHERE aesh.id=$id and tps_synthese>0 and $tab='Graphique';
+    FROM aesh WHERE aesh.id=$id and tps_synthese<>0 and $tab='Graphique';
     
 SELECT 
     'Quotité' as series,
