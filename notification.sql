@@ -194,9 +194,9 @@ SELECT
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id = $id;
 select 
     etab.type||' '||etab.nom_etab||' ( UAI : '||etab.UAI||' )' as title,
-    CASE WHEN classe<>''
+    CASE WHEN classe<>coalesce('Aucune','')
     THEN 'Classe : ' || classe 
-    ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.niv=eleve.niveau)
+    ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.niv=eleve.niveau WHERE eleve.id = $id)
     END as description,
     1 as active, 'green' as color,
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
