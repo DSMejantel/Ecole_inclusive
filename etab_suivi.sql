@@ -133,7 +133,7 @@ SELECT 'table' as component,
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)'
      END as Actions
-FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom;
+FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom;
  
 -- Télécharger les données
 SELECT 
@@ -207,7 +207,7 @@ SELECT 'table' as component,
          '[
     ![](./icons/alert-triangle-filled.svg)
 ](notification.sql?id='||eleve.id||')' as Actions
-FROM suivi RIGHT JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id  WHERE not EXISTS (SELECT eleve.id FROM affectation WHERE eleve.id = affectation.eleve_id) and etab.id = $id and $tab='Att' ORDER BY eleve.nom; 
+FROM suivi RIGHT JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id  WHERE not EXISTS (SELECT eleve.id FROM affectation WHERE eleve.id = affectation.eleve_id) and etab.id = $id and $tab='Att' GROUP BY eleve.id ORDER BY eleve.nom; 
 
 -- Liste des derniers changements
 select 
