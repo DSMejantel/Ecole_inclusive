@@ -9,11 +9,11 @@ SELECT 'redirect' AS component,
 
 
 -- Mettre à jour le référent modifié dans la base AESH
- UPDATE referent SET nom_ens_ref=$nom, prenom_ens_ref=$prenom, tel_ens_ref=$tel, email=$courriel WHERE username=$id and $nom is not null;
+ UPDATE referent SET nom_ens_ref=:nom, prenom_ens_ref=:prenom, tel_ens_ref=:tel, email=:courriel WHERE username=$id and :nom is not null;
 -- Mettre à jour l'AESH modifié dans la base AESH
- UPDATE aesh SET aesh_name=$nom, aesh_firstname=$prenom, tel_aesh=$tel, courriel_aesh=$courriel WHERE username=$id and $nom is not null;
+ UPDATE aesh SET aesh_name=:nom, aesh_firstname=:prenom, tel_aesh=:tel, courriel_aesh=:courriel WHERE username=$id and :nom is not null;
     -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET nom=$nom, prenom=$prenom, etab=$Etablissement, classe=$Classe, tel=$tel, courriel=$courriel, groupe=$groupe, CAS=$cas WHERE username=$id and $nom is not null
+ UPDATE user_info SET nom=:nom, prenom=:prenom, etab=:Etablissement, classe=:Classe, tel=:tel, courriel=:courriel, groupe=:groupe, CAS=:cas WHERE username=$id and :nom is not null
  RETURNING
    'redirect' AS component,
    'parametres.sql?tab=Profil' as link;

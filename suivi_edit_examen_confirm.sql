@@ -17,7 +17,7 @@ DELETE FROM examen_eleve WHERE eleve_id=$eleve_edit;
 INSERT INTO examen_eleve(eleve_id, code_id)
 SELECT
 $eleve_edit as eleve_id,
-CAST(value AS integer) as code_id from json_each($mesure) WHERE :mesure IS NOT NULL
+CAST(value AS integer) as code_id from json_each(:mesure) WHERE :mesure IS NOT NULL
 
 RETURNING
    'redirect' AS component,

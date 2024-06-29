@@ -20,10 +20,10 @@ select
     'form' as component,
     'GET' as method,
     'Chercher sur la carte'  as validate;
-select 'user_search' as name, 'Ville ou adresse' as label, $user_search as value;
+select 'user_search' as name, 'Ville ou adresse' as label, :user_search as value;
  
 set url = '{
-    "url": "https://nominatim.openstreetmap.org/search?format=json&q=' || sqlpage.url_encode($user_search) ||'",
+    "url": "https://nominatim.openstreetmap.org/search?format=json&q=' || sqlpage.url_encode(:user_search) ||'",
     "headers": {"user-agent": "ecole-inclusive/1.0"} 
 }'
 set api_results = sqlpage.fetch($url);
@@ -34,25 +34,25 @@ select 'map' as component,
   15 as zoom,
   $lat as latitude,
   $lon as longitude
-  WHERE $user_search is not Null;
+  WHERE :user_search is not Null;
   
-select $user_search as title,
+select :user_search as title,
   $lat as latitude,
   $lon as longitude
-    WHERE $user_search is not Null;
+    WHERE :user_search is not Null;
   
 select 
     'button' as component,
     'sm'     as size,
     'pill'   as shape,
     'center' as justify
-        WHERE $user_search is not Null;
+        WHERE :user_search is not Null;
 select 
     'Ajouter dans le formulaire' as title,
-    'etab_ajout.sql?search='||$user_search||'&lat='||$lat||'&lon='||$lon||'&tab=2' as link,
+    'etab_ajout.sql?search='||:user_search||'&lat='||$lat||'&lon='||$lon||'&tab=2' as link,
     'square-plus' as icon,
     'green' as color
-        WHERE $user_search is not Null;
+        WHERE :user_search is not Null;
 
    
 

@@ -66,6 +66,6 @@ SELECT 'Origine' AS 'label', 'select' as type, '[{"label": "MDPH", "value": 0}, 
 SELECT 'Département' AS 'label', 'world' as prefix_icon, 'text' as type, 'dpmt' AS name, 3 as width; 
 SELECT 'Début' AS 'label', 'calendar-up' as prefix_icon, 'date' as type, 'datedeb' AS name, 3 as width;
 SELECT 'Fin' AS 'label', 'calendar-down' as prefix_icon, 'date' as type, 'datefin' AS name, 3 as width;
-SELECT 'Droits ouverts pour :' AS 'label', 'modalite[]' as name, 6 as width, 'select' as type, true as multiple, json_group_array(json_object("label", type, "value", id)) as options FROM (select * FROM modalite ORDER BY type ASC);
+SELECT 'Droits ouverts pour :' AS 'label', 'modalite[]' as name, 6 as width, 'select' as type, true as multiple, true as dropdown, json_group_array(json_object("label", type, "value", id)) as options FROM (select * FROM modalite ORDER BY type ASC);
 SELECT 'Aide pour :' AS 'label', 'lifebuoy' as prefix_icon, 'text' as type, 'acces' AS name, 6 as width, TRUE as required;    
 

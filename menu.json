@@ -3,13 +3,18 @@
     "title": "P.A.S.",
     "link": "/",
     "icon": "home",
+    "favicon":"/favicon.ico",
     "language":"fr-FR",
     "layout": "fluid",
+    "fixed_top_menu":"TRUE",
     "norobot": "TRUE",
     "menu_item": [
-         {"title": "Fiches-Outils",
-            "link": "fiches.sql" }
-        ,
+         {"title": "Ressources", "submenu": [
+            {"link": "fiches.sql", "title": "Fiches-outils" },
+            {"link": "site.sql", "title": "Ressources en ligne" },
+            {"link": "biblio.sql", "title": "Ressources bibliographiques" },
+            {"link": "jeux.sql", "title": "Matériel de jeu" }
+        ]},
         {"title": "Calendrier", "submenu": [
             {"link": "calendrier_etab.sql", "title": "Liste des ESS"}
         ]},

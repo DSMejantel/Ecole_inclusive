@@ -7,7 +7,7 @@ SELECT 'redirect' AS component,
         WHERE $group_id<'3';
 
    -- Mettre à jour l'établissement modifié dans la base
- UPDATE etab SET type=$type, nom_etab=$nom_etab, UAI=$UAI, description=$description, Lat=$Lat, Lon=$Lon WHERE id=$id and $nom_etab is not null
+ UPDATE etab SET type=:type, nom_etab=:nom_etab, UAI=:UAI, description=:description, Lat=:Lat, Lon=:Lon WHERE id=$id and :nom_etab is not null
 
  
  RETURNING 

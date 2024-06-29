@@ -7,9 +7,9 @@ SELECT 'redirect' AS component,
         WHERE $group_id<'3';
 
    -- Mettre à jour l'AESH modifié dans la base ASEH
- UPDATE aesh SET aesh_name=$nom, aesh_firstname=$prenom, tel_aesh=$tel, courriel_aesh=$email, quotite=$quotite, tps_mission=$tps_mission, tps_ULIS=$tps_ULIS, tps_synthese=$tps_synthese WHERE id=$id and $nom is not null;
+ UPDATE aesh SET aesh_name=:nom, aesh_firstname=:prenom, tel_aesh=:tel, courriel_aesh=:email, quotite=:quotite, tps_mission=:tps_mission, tps_ULIS=:tps_ULIS, tps_synthese=:tps_synthese WHERE id=$id and :nom is not null;
     -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET nom=$nom, prenom=$prenom, tel=$tel, courriel=$email WHERE username=$username and $nom is not null
+ UPDATE user_info SET nom=:nom, prenom=:prenom, etab=:Etablissement, tel=:tel, courriel=:email WHERE username=$username and :nom is not null
  RETURNING 
  'redirect' as component,
  'aesh_suivi.sql?id='||$id as link;

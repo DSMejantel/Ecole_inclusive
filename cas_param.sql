@@ -7,8 +7,8 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 DELETE FROM cas_service where $cas_config=1;
 -- Enregistrer la notification dans la base
  INSERT INTO cas_service(serveur, etat) 
- SELECT $cas_url as serveur,
- $open as etat
+ SELECT :cas_url as serveur,
+ :open as etat
  where $cas_config=1;
 
 --Menu

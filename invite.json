@@ -3,6 +3,7 @@
     "title": "P.A.S.",
     "link": "/",
     "icon": "home",
+    "favicon":"/favicon.ico",
     "language":"fr-FR",
     "layout": "fluid",
     "norobot": "TRUE",

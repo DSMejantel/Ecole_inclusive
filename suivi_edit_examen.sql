@@ -55,7 +55,7 @@ SELECT
     'suivi_edit_examen_confirm.sql?id='||$id||'&eleve_edit='||$id as action,    
     'orange'           as validate_color;
     
-SELECT 'mesure[]' as name, 'Mesure(s)' as label, 6 as width, 'select' as type, TRUE as multiple,
+SELECT 'mesure[]' as name, 'Mesure(s)' as label, 6 as width, 'select' as type, TRUE as multiple, TRUE as dropdown,
      'Les aménagements connus sont déjà sélectionnés. La touche ''CTRL'' permet une sélection multiple.' as description,
      json_group_array(json_object("label", code, 
      "value", examen.id,

@@ -12,8 +12,8 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 -- Sous Menu   
 select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
     
-    -- Enregistrer la notification dans la base
- INSERT INTO etab(type, nom_etab, UAI, description, Lat, Lon) SELECT $type, $nom_etab, $UAI, $description, $Lat, $Lon WHERE $description IS NOT NULL;
+    -- Enregistrer l''établissement dans la base
+ INSERT INTO etab(type, nom_etab, UAI, description, Lat, Lon) SELECT :type, :nom_etab, :UAI, :description, :Lat, :Lon WHERE :description IS NOT NULL;
 
 -- Onglets
 SET tab=coalesce($tab,0);
@@ -26,7 +26,7 @@ select  'Importer une liste' as title, 'upload' as icon, 1 as active, CASE WHEN 
 --Message
 SELECT 'alert' as component,
     'Confirmation' as title,
-    'établissement '||$UAI||' supprimé.' as description_md,
+    'établissement '||:UAI||' supprimé.' as description_md,
     'alert-circle' as icon,
     TRUE as dismissible,
     'orange' as color

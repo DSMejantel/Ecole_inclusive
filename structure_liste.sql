@@ -10,7 +10,7 @@ SELECT 'redirect' AS component,
 --Insertion dans la base
 SET etablissement_id = (SELECT id FROM etab WHERE etab.UAI = :etab);
  INSERT INTO structure(etab_UAI, etab_id,classe) 
-    SELECT :etab,CAST($etablissement_id as integer), :classe WHERE :classe IS NOT NULL;
+    SELECT :etab,CAST(:etablissement_id as integer), :classe WHERE :classe IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;

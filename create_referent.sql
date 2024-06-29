@@ -10,12 +10,12 @@ SELECT 'redirect' AS component,
 
 -- Enregistrer le référent créé dans la base
  INSERT INTO referent(username, nom_ens_ref, prenom_ens_ref, tel_ens_ref, email) 
-    SELECT $username, $nom, $prenom, $tel_ens_ref, $email WHERE $nom IS NOT NULL
+    SELECT :username, :nom, :prenom, :tel_ens_ref, :email WHERE :nom IS NOT NULL
     ON CONFLICT (username) DO NOTHING;
       -- Enregistrer le référent créé dans les comptes utilisateurs
 INSERT INTO user_info (username, activation, nom, prenom, groupe, tel, courriel)
-    SELECT $username, $code, $nom, $prenom, $groupe, $tel_ens_ref, $email
-    WHERE $nom IS NOT NULL
+    SELECT :username, :code, :nom, :prenom, :groupe, :tel_ens_ref, :email
+    WHERE :nom IS NOT NULL
     ON CONFLICT (username) DO NOTHING
     RETURNING 
      'redirect' AS component,

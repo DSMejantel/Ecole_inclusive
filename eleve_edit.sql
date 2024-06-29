@@ -12,7 +12,7 @@ SELECT 'redirect' AS component,
    -- Mettre à jour l'élève modifié dans la base
    SET edition = (SELECT user_info.username FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') )
 SET modif = (SELECT current_timestamp)
- UPDATE eleve SET nom=$nom, prenom=$prenom, naissance=$naissance, sexe=$sexe, adresse=$adresse ,code_postal=$zipcode, commune=$commune, INE=$ine, classe=$classe, etab_id=:Établissement, UAI=(SELECT UAI from etab where etab.id=:Établissement), niveau=:Niveau, referent_id=:Référent, comm_eleve=$comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and $prenom is not null and $etab_update=0
+ UPDATE eleve SET nom=:nom, prenom=:prenom, naissance=:naissance, sexe=:sexe, adresse=:adresse ,code_postal=:zipcode, commune=:commune, INE=:ine, classe=:classe, etab_id=:Établissement, UAI=(SELECT UAI from etab where etab.id=:Établissement), niveau=:Niveau, referent_id=:Référent, comm_eleve=:comm_eleve, modification=$modif, editeur=$edition WHERE id=$id and :prenom is not null and $etab_update=0
  returning 
 'redirect' AS component,
 'notification.sql?id='||$id||'&tab=Profil' as link;

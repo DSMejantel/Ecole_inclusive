@@ -17,7 +17,7 @@ DELETE FROM affectation WHERE eleve_id=$eleve_edit;
 INSERT INTO affectation(eleve_id, dispositif_id)
 SELECT
 $eleve_edit as eleve_id,
-CAST(value AS integer) as dispositif_id from json_each($dispositif) WHERE :dispositif IS NOT NULL
+CAST(value AS integer) as dispositif_id from json_each(:dispositif) WHERE :dispositif IS NOT NULL
 
 RETURNING
    'redirect' AS component,

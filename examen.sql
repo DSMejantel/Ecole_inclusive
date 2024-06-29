@@ -9,7 +9,7 @@ SELECT 'redirect' AS component,
 
 --Insertion dans la base
  INSERT INTO examen(code, mesure) 
-    SELECT $code, $mesure WHERE $code IS NOT NULL;
+    SELECT :code, :mesure WHERE :code IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;

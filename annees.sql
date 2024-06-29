@@ -9,7 +9,7 @@ SELECT 'redirect' AS component,
 
 --Insertion dans la base
  INSERT INTO annee(annee) 
- SELECT $an WHERE $an IS NOT NULL;
+ SELECT :an WHERE :an IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;

@@ -11,9 +11,9 @@ set user_id = (SELECT user_info.username FROM login_session join user_info on us
 -- ajouter une fiche
 insert into fiche (titre, contenu, tag, auteur, fiche_url)
 values (
-    $titre,
-    $contenu,
-    $tag,
+    :titre,
+    :contenu,
+    :tag,
     $user_id,
     sqlpage.persist_uploaded_file('fiche', 'fiches', 'pdf,jpg,jpeg,png,gif,webp')
 )

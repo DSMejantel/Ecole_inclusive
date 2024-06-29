@@ -4,10 +4,11 @@ SELECT 'redirect' AS component,
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
 -- Enregistrer le dispositif dans la base
- INSERT INTO dispositif(dispo, coordo) 
- SELECT $dispo as dispo,
- coalesce($coordo,0) as coordo
- WHERE $dispo IS NOT NULL;
+ INSERT INTO dispositif(dispo, coordo, accomp) 
+ SELECT :dispo as dispo,
+ coalesce(:coordo,0) as coordo,
+ coalesce(:accomp,0) as accomp
+ WHERE :dispo IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;

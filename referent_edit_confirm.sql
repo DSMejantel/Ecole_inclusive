@@ -7,9 +7,9 @@ SELECT 'redirect' AS component,
         WHERE $group_id<'3';
 
    -- Mettre à jour le référent modifié dans la base
- UPDATE referent SET nom_ens_ref=$nom, prenom_ens_ref=$prenom, tel_ens_ref=$tel, email=$email WHERE id=$id and $nom is not null;
+ UPDATE referent SET nom_ens_ref=:nom, prenom_ens_ref=:prenom, tel_ens_ref=:tel, email=:email WHERE id=$id and :nom is not null;
      -- Mettre à jour le compte modifié dans la base
- UPDATE user_info SET nom=$nom, prenom=$prenom, tel=$tel, courriel=$email WHERE username=$username and $nom is not null
+ UPDATE user_info SET nom=:nom, prenom=:prenom, tel=:tel, courriel=:email WHERE username=$username and :nom is not null
  RETURNING
  'redirect' as component,
  'referent.sql' as link;

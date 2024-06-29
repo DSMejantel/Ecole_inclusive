@@ -9,7 +9,7 @@ SELECT 'redirect' AS component,
 
 --Insertion dans la base
  INSERT INTO niveaux(niv) 
-    SELECT $niv WHERE $niv IS NOT NULL;
+    SELECT :niv WHERE :niv IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;

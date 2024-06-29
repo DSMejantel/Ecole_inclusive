@@ -9,12 +9,12 @@ SELECT 'redirect' AS component,
         WHERE $group_id<>'4';
         
 -- Enregistrer l'aesh créé dans la base
- INSERT INTO aesh(username, aesh_name, aesh_firstname, tel_aesh, courriel_aesh, quotite, tps_ULIS, tps_mission, tps_synthese) SELECT $username, $aesh_name, $aesh_firstname, $tel_aesh, $courriel_aesh, $quotite, $tps_ULIS, $tps_mission, $tps_synthese WHERE $aesh_name IS NOT NULL
+ INSERT INTO aesh(username, aesh_name, aesh_firstname, tel_aesh, courriel_aesh, quotite, tps_ULIS, tps_mission, tps_synthese) SELECT :username, :aesh_name, :aesh_firstname, :tel_aesh, :courriel_aesh, :quotite, :tps_ULIS, :tps_mission, :tps_synthese WHERE :aesh_name IS NOT NULL
      ON CONFLICT (username) DO NOTHING;
      -- Enregistrer l'aesh créé dans les comptes utilisateurs
 INSERT INTO user_info (username, activation, nom, prenom, groupe, tel, courriel)
-    SELECT $username, $code, $aesh_name, $aesh_firstname, $groupe, $tel_aesh, $courriel_aesh
-    WHERE $aesh_name IS NOT NULL
+    SELECT :username, :code, :aesh_name, :aesh_firstname, :groupe, :tel_aesh, :courriel_aesh
+    WHERE :aesh_name IS NOT NULL
     ON CONFLICT (username) DO NOTHING
     RETURNING 
      'redirect' AS component,

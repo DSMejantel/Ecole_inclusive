@@ -64,7 +64,7 @@ SELECT 'form' as component,
     'Recommencer'           as reset;
 
 
-    SELECT 'mesure[]' as name, 'Mesure(s)' as label, 6 as width, 'select' as type, true as multiple, json_group_array(json_object("label", code, "value", id)) as options FROM (select * FROM examen ORDER BY code ASC);
+    SELECT 'mesure[]' as name, 'Mesure(s)' as label, 6 as width, 'select' as type, true as multiple, TRUE as dropdown, json_group_array(json_object("label", code, "value", id)) as options FROM (select * FROM examen ORDER BY code ASC);
 
 
 

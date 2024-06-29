@@ -39,8 +39,8 @@ SET modif = (SELECT datetime(current_timestamp, 'localtime'))
 
 -- ajouter une notification à l'élève 
 INSERT INTO notification(eleve_id, origine, Departement, datedeb, datefin, acces)
-SELECT $id, $origine, $dpmt, $datedeb, $datefin, $acces WHERE $datefin IS NOT NULL;
-UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $datefin IS NOT NULL;
+SELECT $id, :origine, :dpmt, :datedeb, :datefin, :acces WHERE :datefin IS NOT NULL;
+UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and :datefin IS NOT NULL;
 
 -- attribuer différents droits et aménagements sur la notification
 SET notif = (SELECT last_insert_rowid() FROM notification);
@@ -48,21 +48,21 @@ INSERT INTO notif(notification_id, eleve_id, modalite_id)
     SELECT 
     $notif as notification_id,
     $id as eleve_id,
-    CAST(value AS integer) as modalite_id from json_each($modalite) WHERE :modalite IS NOT NULL;
+    CAST(value AS integer) as modalite_id from json_each(:modalite) WHERE :modalite IS NOT NULL;
 UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and :modalite IS NOT NULL;
 
 -- Insère l'affectation à un dispositif
 INSERT INTO affectation(eleve_id, dispositif_id)
 SELECT
 $id as eleve_id,
-CAST(value AS integer) as dispositif_id from json_each($dispositif) WHERE :dispositif IS NOT NULL;
+CAST(value AS integer) as dispositif_id from json_each(:dispositif) WHERE :dispositif IS NOT NULL;
 UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and :dispositif IS NOT NULL; 
 
 -- Insère l'aménagement d'examen dans la base
 INSERT INTO examen_eleve(eleve_id, code_id)
 SELECT
 $id as eleve_id,
-CAST(value AS integer) as code_id from json_each($mesure) WHERE :mesure IS NOT NULL;
+CAST(value AS integer) as code_id from json_each(:mesure) WHERE :mesure IS NOT NULL;
 UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and :mesure IS NOT NULL; 
 
 -- Insère le suivi dans la base
@@ -70,22 +70,22 @@ INSERT INTO suivi(eleve_id, aesh_id, temps, mut, ind, mission)
 SELECT 
 	$id as eleve_id, 
 	:AESH as aesh_id, 
-	$temps as temps, 
+	:temps as temps, 
 	:mutualisation as mut, 
 	:individuel as ind,
-	$mission as mission	
-	WHERE $temps IS NOT NULL;
-UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $temps IS NOT NULL; 	
+	:mission as mission	
+	WHERE :temps IS NOT NULL;
+UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and :temps IS NOT NULL; 	
 	
 -- Insère aménagement dans la base
 INSERT INTO amenag(eleve_id, amenagements, objectifs, info)
 SELECT 
 	$id as eleve_id, 
-	$amenagements as amenagements, 
-	$objectifs as objectifs, 
-	$info as info	
-	WHERE $objectifs IS NOT NULL;
-UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $objectifs IS NOT NULL;
+	:amenagements as amenagements, 
+	:objectifs as objectifs, 
+	:info as info	
+	WHERE :objectifs IS NOT NULL;
+UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and :objectifs IS NOT NULL;
 
 -- Insère dans l'historique du parcours
 SET annee_en_cours=(SELECT annee FROM annee WHERE active=1)
@@ -108,13 +108,13 @@ SELECT
 INSERT INTO intervention(eleve_id, horodatage,nature,notes, tracing)
 SELECT 
 	$id as eleve_id, 
-	$horodatage as horodatage, 
-	$nature as nature, 
-	$notes as notes,
-        coalesce($important,0) as tracing
+	:horodatage as horodatage, 
+	:nature as nature, 
+	:notes as notes,
+        coalesce(:important,0) as tracing
 	WHERE $intervention=1;
 
-UPDATE intervention SET horodatage=$horodatage,	nature=$nature, notes=$notes, tracing=coalesce($important,0) WHERE eleve_id=$id and $intervention=2;
+UPDATE intervention SET horodatage=:horodatage,	nature=:nature, notes=:notes, tracing=coalesce(:important,0) WHERE eleve_id=$id and $intervention=2;
 	
 -- Menu spécifique élève : modifier, ajouter notif, ajouter suivi
 select 

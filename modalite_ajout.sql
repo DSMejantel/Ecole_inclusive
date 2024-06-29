@@ -7,7 +7,7 @@ SELECT 'redirect' AS component,
         WHERE $group_id<'3';
 
     -- Enregistrer la notification dans la base
- INSERT INTO modalite(type) SELECT $type WHERE $type IS NOT NULL;
+ INSERT INTO modalite(type) SELECT :type WHERE :type IS NOT NULL;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
