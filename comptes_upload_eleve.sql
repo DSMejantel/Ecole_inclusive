@@ -15,7 +15,7 @@ delete from eleve_tmp;
 
 -- copy the data from the CSV file into the temporary table
 copy eleve_tmp (nom, prenom, naissance, sexe, INE, adresse, code_postal, commune, classe, niveau) from 'comptes_data_input'
-with (header true, delimiter ';', quote '"'); -- all the options are optional;
+with (header true, delimiter ',', quote '"'); -- all the options are optional;
 
 -- récupération identité de l'établissement
 SET etablissement_UAI = (SELECT UAI FROM etab WHERE id = $etablissement_id);
