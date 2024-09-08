@@ -5,18 +5,19 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 SELECT 'redirect' AS component,
         '../parametres.sql?restriction' AS link
         WHERE $group_id<'3';
+        
 
 -- Liste des dispositifs
 SELECT 'table' as component,
   'Structures' AS title,
   TRUE as small,
-  'icone' as icon;
+  'Établissement' as icon;
 SELECT 
   CASE WHEN type='Lycée'
     THEN'building-community' 
     WHEN type='Collège' THEN 'building-community'
     ELSE 'building-cottage'      
-    END as icone,
+    END as Établissement,
   type || ' ' || nom_etab AS Nom,
   etab_UAI AS UAI,
   group_concat(DISTINCT classe order by classe) as Classes
