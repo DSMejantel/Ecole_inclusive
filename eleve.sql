@@ -56,7 +56,7 @@ select
     end as title,
     case when :Etablissement is null
         then ''
-        else 'eleve.sql'
+        else 'eleve_insert.sql'
     end as link,
     'green' as color; 
 select 
@@ -67,7 +67,7 @@ select
     where :Etablissement is not null;  
     
     -- Enregistrer l'élève créé dans la base
- INSERT INTO eleve(nom, prenom, naissance, sexe, adresse, code_postal, commune, INE, etab_id, UAI, niveau, classe, referent_id, comm_eleve) SELECT :nom, :prenom, :naissance, :sexe, :adresse ,:zipcode, :commune, :ine, :Etablissement, (SELECT UAI from etab where etab.id=:Etablissement), :Niveau, :classe, :Référent, :comm_eleve WHERE :classe IS NOT NULL;
+-- INSERT INTO eleve(nom, prenom, naissance, sexe, adresse, code_postal, commune, INE, etab_id, UAI, niveau, classe, referent_id, comm_eleve) SELECT :nom, :prenom, :naissance, :sexe, :adresse ,:zipcode, :commune, :ine, :Etablissement, (SELECT UAI from etab where etab.id=:Etablissement), :Niveau, :classe, :Référent, :comm_eleve WHERE :classe IS NOT NULL;
 
 -- Liste des élèves
 select 

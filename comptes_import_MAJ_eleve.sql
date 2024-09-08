@@ -23,7 +23,7 @@ select
     'file'               as type,
     'text/csv'           as accept,
     'Fichier de mise à jour des élèves'           as label,
-    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules : id, nom, prenom, etab_id, classe, niveau' as description,
+    'Envoyer un fichier CSV avec ces colonnes séparées par des virgules : id, nom, prenom, naissance, sexe, INE, adresse, code, commune, etab_id, classe, niveau' as description,
     TRUE                 as required;
 
 -- Télécharger les données

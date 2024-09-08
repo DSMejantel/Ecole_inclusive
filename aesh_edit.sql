@@ -12,6 +12,7 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
 -- Set a variable 
 SET nom_edit = (SELECT aesh_name FROM aesh WHERE id = $id);
 SET prenom_edit = (SELECT aesh_firstname FROM aesh WHERE id = $id);
+SET etab_edit = (SELECT etab FROM user_info join aesh on aesh.username=user_info.username WHERE aesh.id = $id);
 SET tel_edit = (SELECT tel_aesh FROM aesh WHERE id = $id);
 SET email_edit = (SELECT courriel_aesh FROM aesh WHERE id = $id);
 SET quotite_edit = (SELECT quotite FROM aesh WHERE id = $id);
@@ -57,8 +58,11 @@ SELECT
     
     SELECT 'Nom' AS label, 'nom' AS name, $nom_edit as value, 'user' as prefix_icon, 6 as width;
     SELECT 'Prénom' AS label, 'prenom' AS name, $prenom_edit as value, 'user' as prefix_icon, 6 as width;
-    SELECT 'Téléphone' AS label, 'tel' AS name, CHAR(10), $tel_edit as value, 'phone' as prefix_icon, 6 as width;
-    SELECT 'Courriel' AS label, 'email' AS name, $email_edit as value, 'mail' as prefix_icon, 6 as width;
+    SELECT 'Etablissement' AS name, 'select' as type, 4 as width, CAST($etab_edit as integer) as value, json_group_array(json_object("label", nom_etab, "value", id)) as options FROM (select nom_etab, id FROM etab union all
+   select 'Aucun' as label, NULL as value
+ ORDER BY nom_etab ASC);
+    SELECT 'Téléphone' AS label, 'tel' AS name, CHAR(10), $tel_edit as value, 'phone' as prefix_icon, 4 as width;
+    SELECT 'Courriel' AS label, 'email' AS name, $email_edit as value, 'mail' as prefix_icon, 4 as width;
     SELECT 'Quotité' AS label, 'quotite' AS name, 'number' AS type, $quotite_edit as value, 'calendar-time' as prefix_icon, 3 as width;
         SELECT 'Temps en ULIS' AS label, 'tps_ULIS' AS name, 'number' AS type, 0.5 as step, $tps_ULIS_edit as value, 'clock' as prefix_icon, 3 as width;
         SELECT 'Temps d''activités' AS label, 'tps_mission' AS name, 'number' AS type, 0.5 as step, $tps_mission_edit as value, 'clock-play' as prefix_icon, 3 as width;

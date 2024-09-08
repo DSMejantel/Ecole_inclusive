@@ -159,7 +159,7 @@ SELECT
     FROM aesh WHERE aesh.id=$id and tps_mission<>0 and $tab='Graphique';
 SELECT 
     'Synthèse(s)' as series,
-    'Missions' as label,
+    'Missions' as x,
     coalesce(tps_synthese,0) as value
     FROM aesh WHERE aesh.id=$id and tps_synthese<>0 and $tab='Graphique';
     

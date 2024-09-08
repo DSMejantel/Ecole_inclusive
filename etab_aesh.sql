@@ -6,6 +6,9 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 SELECT 'redirect' AS component,
         'etablissement.sql?restriction' AS link
 FROM eleve WHERE (SELECT user_info.etab FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session') and user_info.etab<>$id);
+SELECT 'redirect' AS component,
+        'eleves.sql?restriction' AS link
+        WHERE $group_id<'2';
 
 --Menu
 SELECT 'dynamic' AS component, 
@@ -168,7 +171,7 @@ SELECT 'table' as component,
          '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")' as Actions
-  FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY aesh.aesh_name;  
+  FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY aesh.id;  
 /*
 -- Graphique
 select 
@@ -198,10 +201,10 @@ select
 --
 -- create a temporary table to preprocess the data
 
-create temporary table if not exists TAB_suivi(etab_id,aesh_id,aesh_firstname,aesh_name,eleve_id,prenom,nom,classe,temps decimal,mut decimal,numero INTEGER PRIMARY KEY);
+create temporary table if not exists TAB_suivi(etab_id,aesh_id,aesh_firstname,aesh_name, quotite, tps_ULIS, tps_mission, tps_synthese, eleve_id,prenom,nom,classe,temps decimal,mut decimal,numero INTEGER PRIMARY KEY);
 delete  from TAB_suivi; 
-insert into TAB_suivi(etab_id,aesh_id,aesh_firstname,aesh_name,eleve_id,prenom,nom,classe,temps,mut)
-SELECT $id, aesh.id, aesh.aesh_firstname, aesh_name,eleve.id, eleve.prenom, eleve.nom,eleve.classe, suivi.temps, suivi.mut FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id ORDER BY aesh.id,eleve.id;;
+insert into TAB_suivi(etab_id,aesh_id,aesh_firstname,aesh_name, quotite, tps_ULIS, tps_mission, tps_synthese, eleve_id,prenom,nom,classe,temps,mut)
+SELECT $id, aesh.id, aesh.aesh_firstname, aesh_name, quotite, tps_ULIS, tps_mission, tps_synthese, eleve.id, eleve.prenom, eleve.nom,eleve.classe, suivi.temps, suivi.mut FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id WHERE eleve.etab_id=$id ORDER BY aesh.id,eleve.id;
 
 --select 'table' as component;
 --select * from TAB_suivi;
@@ -278,10 +281,55 @@ select
     15                    as xticks,
     7                    as yticks;
 
-   
+  
 select 
-    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as label,
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as x,
     SUBSTR(prenom, 1, 1) ||'. '||nom||' ('||classe||')' as series,
     sum((temps*1.00)/mut) as value
         FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id,eleve_id ORDER BY aesh_name DESC; 
-         
+
+-- Détails AESH
+--Graphique
+  SELECT 
+    'chart' as component,
+    'bar' as type,
+    500 as height,
+    TRUE as stacked,
+    1 as labels,
+    1 as horizontal,
+    'Répartition du suivi' as title,
+    'green' as color,
+    'orange' as color,
+    'red' as color,
+    'indigo' as color,
+    'yellow' as color,
+    'purple' as color,
+    35                    as xmax,
+    7                    as xticks,
+    1 as toolbar;
+
+SELECT 
+    group_concat(nom ||' '||prenom ||' ('||classe||')') as series,
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as x,
+    coalesce(sum((temps*1.00)/mut),0) as value
+    FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id ORDER BY quotite DESC; 
+SELECT 
+    'ULIS' as series,
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as x,
+    coalesce(tps_ULIS,0) as value
+    FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id ORDER BY quotite DESC; 
+SELECT 
+    'Activités' as series,
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as x,
+    coalesce(tps_mission,0) as value
+    FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id ORDER BY quotite DESC; 
+SELECT 
+    'Synthèse(s)' as series,
+    SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as x,
+    coalesce(tps_synthese,0) as value
+    FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id ORDER BY quotite DESC; 
+SELECT 
+    'Quotité' as series,
+    'Quotité '||SUBSTR(aesh_firstname, 1, 1) ||'. '|| aesh_name as x,
+    coalesce(quotite,0) as value
+    FROM TAB_suivi WHERE etab_id=$id GROUP BY aesh_id ORDER BY quotite DESC; 

@@ -93,6 +93,19 @@ SELECT
 
 
 -- Liste des notifications
+-- create a temporary table to preprocess the data
+create temporary table if not exists Etab_notif(notif_id, eleve_id, droits_ouverts, droits_fermes, ens_ref, datefin);
+delete  from Etab_notif; 
+insert into Etab_notif
+SELECT 
+notification.id notif_id,
+notification.eleve_id as eleve_id,
+CASE WHEN datefin>datetime(date('now')) THEN group_concat(DISTINCT modalite.type) ELSE '-' END as droits_ouverts,
+CASE WHEN datefin<datetime(date('now')) THEN group_concat(DISTINCT modalite.type) ELSE '-' END as droits_fermes,
+SUBSTR(referent.prenom_ens_ref, 1, 1) ||'. '||referent.nom_ens_ref as ens_ref,
+datefin as datefin
+FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where eleve.etab_id=$id group by notification.id;
+
 select 
     'divider' as component,
     'Liste des Notifications' as contents,
@@ -101,19 +114,25 @@ select
 
 SELECT 'table' as component,
     'Actions' as markdown,
+    'Fin_de_droit' as markdown,
     1 as sort,
     1 as search;
 SELECT 
   CASE
-       WHEN notification.datefin < datetime(date('now', '+1 day')) THEN 'red'
-       WHEN notification.datefin < datetime(date('now', '+350 day')) THEN 'orange'
-        ELSE 'green'
+       WHEN (SELECT max(datefin) FROM notification WHERE notification.eleve_id=eleve.id) < datetime(date('now', '+1 day')) THEN 'red'
+       WHEN (SELECT max(datefin) FROM notification WHERE notification.eleve_id=eleve.id) < datetime(date('now', '+350 day')) THEN 'orange'
+       ELSE 'green'
     END AS _sqlpage_color,
       eleve.nom as Nom,
       eleve.prenom as Prénom,
-  group_concat(DISTINCT modalite.type) as Droits,
-  SUBSTR(referent.prenom_ens_ref, 1, 1) ||'. '||nom_ens_ref as Référent,
-    strftime('%d/%m/%Y',datefin) AS Fin, 
+    group_concat(distinct Etab_notif.droits_ouverts) as Droits,
+    CASE
+       WHEN group_concat(distinct Etab_notif.droits_fermes) <> '-' THEN   '[
+    ![](./icons/alert-octagon.svg)
+](/ "Fin de droit pour : '||group_concat(distinct Etab_notif.droits_fermes)||'")' 
+    ELSE '' END as Fin_de_droit,
+  Etab_notif.ens_ref as Référent,
+  strftime('%d/%m/%Y',(SELECT max(datefin) FROM notification WHERE notification.eleve_id=eleve.id)) AS Fin,
 CASE
        WHEN EXISTS (SELECT eleve.id FROM affectation 
     WHERE eleve.id = affectation.eleve_id) 
@@ -126,8 +145,8 @@ ELSE
     ![](./icons/alert-triangle-filled.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)' 
 END as Actions 
-FROM etab INNER JOIN eleve on eleve.etab_id=etab.id JOIN notification on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on eleve.id=affectation.eleve_id JOIN referent on eleve.referent_id=referent.id WHERE etab.id = $id
-GROUP BY notif.eleve_id ORDER BY eleve.nom ASC;  
+FROM etab INNER JOIN eleve on eleve.etab_id=etab.id JOIN Etab_notif on eleve.id=Etab_notif.eleve_id WHERE etab.id = $id
+GROUP BY eleve.id ORDER BY eleve.nom ASC;  
 
 -- Télécharger les données
 SELECT 

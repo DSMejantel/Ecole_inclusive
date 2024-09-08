@@ -34,6 +34,7 @@ SELECT 'table' as component,
 SELECT 
   aesh_name AS Nom,
   aesh_firstname AS Prénom,
+  etab.nom_etab AS Établissement,
   CASE WHEN $group_id>2 
     THEN    tel_aesh 
     ELSE 'numéro masqué'
@@ -62,4 +63,4 @@ ELSE
     ![](./icons/trash-off.svg)
 ]()' 
 END as Admin
-FROM aesh ORDER BY aesh_name ASC;   
+FROM aesh join user_info on aesh.username=user_info.username join etab on etab.id=user_info.etab ORDER BY aesh_name ASC;   

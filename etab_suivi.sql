@@ -74,6 +74,15 @@ SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on 
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id);
 SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 
+-- create a temporary table to preprocess the data
+create temporary table if not exists AESH_suivi(aesh_id,temps_calcul);
+delete  from AESH_suivi; 
+insert into AESH_suivi(aesh_id,temps_calcul)
+SELECT aesh.id, (sum((suivi.temps)*2/mut)/2+sum(distinct(aesh.tps_ULIS))+sum(distinct(aesh.tps_mission))+sum(distinct(aesh.tps_synthese))) FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id GROUP BY aesh.id;
+
+--select 'table' as component;
+--select * from AESH_suivi;
+
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
     'datagrid' as component,
@@ -101,40 +110,94 @@ select  'Élèves en attente' as title, 'alert-triangle-filled' as icon, 1 as ac
 select  'Derniers changements' as title, 'clock' as icon, 1 as active, 'etab_suivi.sql?id='||$id||'&tab=Last' as link, CASE WHEN $tab='Last' THEN 'orange' ELSE 'green' END as color;
 
 -- Liste des suivis avec accompagnement
+-- create a temporary table to preprocess the data
+create temporary table if not exists Etab_notif(notif_id, eleve_id, droits_ouverts, droits_fermes, ens_ref, datefin);
+delete  from Etab_notif; 
+insert into Etab_notif
+SELECT 
+notification.id notif_id,
+notification.eleve_id as eleve_id,
+CASE WHEN datefin>datetime(date('now')) THEN group_concat(DISTINCT modalite.type) ELSE '-' END as droits_ouverts,
+CASE WHEN datefin<datetime(date('now')) THEN group_concat(DISTINCT modalite.type) ELSE '-' END as droits_fermes,
+SUBSTR(referent.prenom_ens_ref, 1, 1) ||'. '||referent.nom_ens_ref as ens_ref,
+datefin as datefin
+FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where eleve.etab_id=$id group by notification.id;
+
 select 
     'divider' as component,
     'Liste des élèves avec accompagnement' as contents,
     'orange' as color
         WHERE $tab='Acc';
     
-SELECT 'table' as component,   
+SELECT 'table' as component,
     'Actions' as markdown,
+    'Temps' as markdown,
+    'AESH' as markdown,
+    'Suivi' as markdown,
+    'Fin_de_droit' as markdown,
+    1 as small,
     1 as sort,
     1 as search
         WHERE $tab='Acc';
     SELECT 
-    SUBSTR(eleve.prenom, 1, 1) ||'. '||eleve.nom as Élève,
-    suivi.temps as Temps,
+    eleve.id as _sqlpage_id,
+    eleve.nom ||' '||eleve.prenom as Élève,
+    CASE WHEN $group_id>2 THEN     suivi.temps||' h[
+    ![](./icons/triangle-inverted.svg)
+](/suivi/diminuer.sql?suivi='||suivi.id||'&ligne='||eleve.id||'&etab='||$id||' "diminuer")
+     [
+    ![](./icons/triangle.svg)
+](/suivi/augmenter.sql?suivi='||suivi.id||'&ligne='||eleve.id||'&etab='||$id||' "augmenter")' 
+    ELSE suivi.temps||' h' END as Temps,
     eleve.classe AS Classe,
-           CASE
+    eleve.niveau AS Niveau,
+    group_concat(DISTINCT dispositif.dispo) as Dispositif,
+    group_concat(distinct Etab_notif.droits_ouverts) as Droits,
+    CASE
+       WHEN group_concat(distinct Etab_notif.droits_fermes) <> '-' THEN   '[
+    ![](./icons/alert-octagon.svg)
+](/ "Fin de droit pour : '||group_concat(distinct Etab_notif.droits_fermes)||'")' 
+    ELSE '' END as Fin_de_droit,
+    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name||' ('||AESH_suivi.temps_calcul||'/'||aesh.quotite||')' as AESH,
+       CASE
        WHEN ind=1 THEN 'ind'
        WHEN mut=2 THEN 'mut'
        END  AS Suivi,
-      group_concat(DISTINCT modalite.type) as Droits,
-    group_concat(DISTINCT SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name) as AESH,
-    group_concat(DISTINCT dispositif.dispo) as Dispositif,
-    CASE WHEN $group_id>1 THEN
-         '[
+    CASE WHEN $group_id>1 THEN          '[
     ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)[
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")[
+    ![](./icons/pencil.svg)
+](/suivi/suivi_edit.sql?suivi='||suivi.id||'&etab='||$id||' "Éditer le suivi")[
+    ![](./icons/trash.svg)
+](/suivi/suivi_delete_confirm.sql?suivi='||suivi.id||'&etab='||$id||' "Supprimer définitivement le suivi")'
+    END as Suivi, 
+    CASE WHEN $group_id>1 THEN     '[
+    ![](./icons/square-rounded-plus.svg "ajouter un suivi")
+](/suivi/suivi_ajout.sql?id='||eleve.id||'&etab='||$id||')[
+    ![](./icons/briefcase.svg)
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")'
+    ELSE
+    '[
+    ![](./icons/briefcase.svg)
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")'
+    END as Actions,
+    CASE WHEN $group_id>1 THEN '[
     ![](./icons/user-plus.svg)
-](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)' 
-     ELSE '[
-    ![](./icons/briefcase.svg)
-](notification.sql?id='||eleve.id||'&tab=Profil)'
-     END as Actions
-FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom;
- 
+](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)'
+ELSE ''
+    END as AESH,
+    CASE WHEN AESH_suivi.temps_calcul>aesh.quotite THEN '[
+    ![](./icons/alert-triangle-red.svg)
+](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils)'
+ELSE ''
+    END as AESH,
+CASE
+       WHEN (SELECT max(datefin) FROM notification WHERE notification.eleve_id=eleve.id) < datetime(date('now', '+1 day')) THEN 'red'
+       WHEN (SELECT max(datefin) FROM notification WHERE notification.eleve_id=eleve.id) < datetime(date('now', '+350 day')) THEN 'orange'
+       ELSE 'green'
+    END AS _sqlpage_color
+    FROM eleve JOIN etab on eleve.etab_id = etab.id LEFT JOIN Etab_notif on Etab_notif.eleve_id=eleve.id JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN AESH_suivi on AESH_suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id WHERE eleve.etab_id=$id and dispositif.accomp=1 and $tab='Acc' GROUP BY eleve.id, suivi.id ORDER BY eleve.classe; 
+
 -- Télécharger les données
 SELECT 
     'csv' as component,
@@ -143,20 +206,21 @@ SELECT
     'file-download' as icon,
     'green' as color
     WHERE $tab='Acc';
-SELECT 
-     eleve.nom as Nom,
-      eleve.prenom as Prénom,
-       suivi.temps as Temps,
-                 CASE
+    SELECT 
+    eleve.nom ||' '||eleve.prenom as Élève,
+    suivi.temps||' h' as Temps,
+    eleve.classe AS Classe,
+    eleve.niveau AS Niveau,
+    group_concat(DISTINCT dispositif.dispo) as Dispositif,
+    group_concat(DISTINCT modalite.type) as Droits,
+    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name||' ('||AESH_suivi.temps_calcul||'/'||aesh.quotite||')' as AESH,
+       CASE
        WHEN ind=1 THEN 'ind'
        WHEN mut=2 THEN 'mut'
        END  AS Suivi,
-      group_concat(DISTINCT modalite.type) as Droits,
-  etab.nom_etab as Établissement,
-    group_concat(dispositif.dispo) as Dispositifs,
-  datefin AS Fin  
-FROM eleve INNER JOIN etab on eleve.etab_id = etab.id JOIN suivi on suivi.eleve_id=eleve.id JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN affectation on suivi.eleve_id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id and $tab='Acc' GROUP BY suivi.id ORDER BY eleve.nom; 
-  
+    datefin AS Fin 
+    FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN AESH_suivi on AESH_suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id WHERE eleve.etab_id=$id and dispositif.accomp=1 and $tab='Acc' GROUP BY eleve.id, suivi.id ORDER BY eleve.nom;
+
   -- Liste des suivis sans accompagnement
 select 
     'divider' as component,
@@ -171,9 +235,9 @@ SELECT 'table' as component,
     1 as search
         WHERE $tab='SansAcc';
  SELECT 
-    eleve.nom as Nom,
-    eleve.prenom as Prénom,
+    eleve.nom ||' '||eleve.prenom as Élève,
     eleve.classe AS Classe,
+    eleve.niveau AS Niveau,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,    
 CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id = amenag.eleve_id)
 THEN
@@ -201,12 +265,12 @@ SELECT 'table' as component,
     1 as search
             WHERE $tab='Att';
  SELECT 
-    eleve.nom as Nom,
-    eleve.prenom as Prénom,
+    eleve.nom ||' '||eleve.prenom as Élève,
     eleve.classe AS Classe,
+    eleve.niveau AS Niveau,
          '[
     ![](./icons/alert-triangle-filled.svg)
-](notification.sql?id='||eleve.id||')' as Actions
+](notification.sql?id='||eleve.id||'  "Dossier de l''élève")' as Actions
 FROM suivi RIGHT JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id  WHERE not EXISTS (SELECT eleve.id FROM affectation WHERE eleve.id = affectation.eleve_id) and etab.id = $id and $tab='Att' GROUP BY eleve.id ORDER BY eleve.nom; 
 
 -- Liste des derniers changements

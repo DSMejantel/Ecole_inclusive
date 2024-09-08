@@ -139,6 +139,12 @@ select
     'sm'     as size,
     'pill'   as shape;*/
 select 
+    '+ Document' as title,
+    'upload_documents_form.sql?id=' || $id as link,
+        $group_bouton<3 as disabled,
+    'book' as icon,
+    'orange' as outline;
+select 
     '+ Notification' as title,
     'notif_ajout.sql?id=' || $id as link,
         $group_bouton<3 as disabled,
@@ -222,6 +228,8 @@ COALESCE((SELECT
 SET tab=coalesce($tab,'Profil');
 select 'tab' as component;
 
+select CASE WHEN EXISTS (SELECT $id FROM documents WHERE $id=documents.eleve_id) THEN 'Document(s)' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM documents WHERE $id=documents.eleve_id) THEN 'book' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Documents' as link, CASE WHEN $tab='Documents' THEN 'orange' ELSE 'green' END as color;
+
 select CASE WHEN EXISTS (SELECT $id FROM notification WHERE $id=notification.eleve_id) THEN 'Notification' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM notification WHERE $id=notification.eleve_id) THEN 'certificate' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Notification' as link, CASE WHEN $tab='Notification' THEN 'orange' ELSE 'green' END as color;
 
 select CASE WHEN EXISTS (SELECT $id FROM examen_eleve WHERE $id=eleve_id) THEN 'Examen' ELSE '' END as title, CASE WHEN EXISTS (SELECT $id FROM examen_eleve WHERE $id=eleve_id) THEN 'school' ELSE '' END as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Examen' as link, CASE WHEN $tab='Examen' THEN 'orange' ELSE 'green' END as color;
@@ -232,6 +240,36 @@ select CASE WHEN EXISTS (SELECT $id FROM suivi WHERE $id=suivi.eleve_id) THEN 'G
 select  'Historique' as title, 'calendar-month' as icon, 1 as active, 'notification.sql?id='||$id||'&tab=Historique' as link, CASE WHEN $tab='Historique' THEN 'orange' ELSE 'green' END as color;
 
 
+--Documents liés à l'élève
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape
+    WHERE $tab='Documents';
+select 
+    '+ Ajouter' as title,
+    'upload_documents_form.sql?id=' || $id as link,
+        $group_bouton<3 as disabled,
+    '' as icon,
+    'orange' as outline
+    WHERE $tab='Documents';    
+SELECT 'list' as component,
+'Pas de documents disponibles'      as empty_title WHERE $tab='Documents'
+SELECT 
+doc_type as title, 
+' en date du '|| strftime('%d/%m/%Y',datation) as description_md,
+'notification.sql?id='||$id||'&tab=Documents&doc='||documents.id as view_link
+FROM documents join eleve on documents.eleve_id=eleve.id WHERE eleve.id = $id and $tab='Documents' order by datation;
+
+select 
+    'card' as component,
+     1      as columns
+     where $doc is not Null and $tab='Documents';
+select 
+    doc_url as embed,
+    'iframe'         as embed_mode,
+    '800'            as height
+    FROM documents WHERE id=$doc and $tab='Documents';
 
 -- Fiche des Aménagements 
 -- fiche détaillée de l'élève

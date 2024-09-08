@@ -6,7 +6,6 @@
     "favicon":"/favicon.ico",
     "language":"fr-FR",
     "layout": "fluid",
-    "fixed_top_menu":"TRUE",
     "norobot": "TRUE",
     "menu_item": [
          {"title": "Ressources", "submenu": [
