@@ -9,4 +9,4 @@ SELECT 'redirect' AS component,
  UPDATE suivi SET temps=temps+0.5 WHERE id=$suivi
  RETURNING 
  'redirect' as component,
- '../etab_suivi.sql?id='||$etab||'&tab=Acc' as link;
+ '../etab_suivi.sql?id='||$etab||'&tab=Acc#'||$ligne as link;
