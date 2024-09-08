@@ -10,7 +10,8 @@ SELECT 'redirect' AS component,
 SELECT 'table' as component,
   'Liste des dispositifs' AS title,
   'icone' as icon,
-  'Coordonnateur' as markdown;
+  'Coordonnateur' as markdown,
+  'Accompagnement' as markdown;
 SELECT 
   'lifebuoy' as icone,
   dispo AS Dispositif,
@@ -21,7 +22,23 @@ SELECT
 ELSE '[
     ![](./icons/square.svg)
 ](/dispositif/disponible.sql?id='||dispositif.id||')' 
-END as Coordonnateur
+END as Coordonnateur,
+  CASE WHEN accomp=1 and $group_id>2
+    THEN '[
+    ![](./icons/select.svg)
+](/dispositif/accomp_moins.sql?id='||dispositif.id||')' 
+WHEN coalesce(accomp,0)=0 and $group_id>2
+    THEN '[
+    ![](./icons/square.svg)
+](/dispositif/accomp_plus.sql?id='||dispositif.id||')' 
+WHEN accomp=1 and $group_id<3
+    THEN '[
+    ![](./icons/select.svg)
+]()'
+ELSE '[
+    ![](./icons/square.svg)
+]()'
+END as Accompagnement
 FROM dispositif order by dispo;
  
 

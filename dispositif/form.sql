@@ -15,7 +15,8 @@ SELECT
     'enregistrer' as validate;
     
     SELECT 'Dispositif' AS label, 'dispo' AS name, 'lifebuoy' as prefix_icon, TRUE as required;
-        SELECT 'Droits réservés aux coordonnateurs' AS label, 'coordo' AS name, 'checkbox' as type, 1 as value, 6 as width;
+        SELECT 'Droits de modification réservés aux coordonnateurs' AS label, 'coordo' AS name, 'checkbox' as type, 1 as value, 6 as width;
+        SELECT 'Besoin d''accompagnement ou d''aide humaine' AS label, 'accomp' AS name, 'checkbox' as type, 1 as value, 6 as width;
     
 
 
