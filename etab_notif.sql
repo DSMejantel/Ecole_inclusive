@@ -104,7 +104,7 @@ CASE WHEN datefin>datetime(date('now')) THEN group_concat(DISTINCT modalite.type
 CASE WHEN datefin<datetime(date('now')) THEN group_concat(DISTINCT modalite.type) ELSE '-' END as droits_fermes,
 SUBSTR(referent.prenom_ens_ref, 1, 1) ||'. '||referent.nom_ens_ref as ens_ref,
 datefin as datefin
-FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where eleve.etab_id=$id group by notification.id;
+FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where eleve.etab_id=$id group by notification.id;
 
 select 
     'divider' as component,
@@ -145,7 +145,7 @@ ELSE
     ![](./icons/alert-triangle-filled.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil)' 
 END as Actions 
-FROM etab INNER JOIN eleve on eleve.etab_id=etab.id JOIN Etab_notif on eleve.id=Etab_notif.eleve_id WHERE etab.id = $id
+FROM etab JOIN eleve on eleve.etab_id=etab.id JOIN Etab_notif on eleve.id=Etab_notif.eleve_id WHERE etab.id = $id
 GROUP BY eleve.id ORDER BY eleve.nom ASC;  
 
 -- Télécharger les données
