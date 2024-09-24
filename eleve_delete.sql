@@ -61,6 +61,27 @@ END
 as actions
 FROM eleve LEFT JOIN etab on eleve.etab_id=etab.id Where eleve.id=$id;
 
+-- Gestion de la photo
+
+SELECT 'list' as component,
+    'Photo : ' as title,
+    'Photo : ' as empty_title,
+    'Aucune donnée correspondante pour cet élève' as empty_description;
+SELECT 
+      image_url as image_url,
+     'photo_delete_confirm.sql?id='||image.id||'&eleve_id='||$id as delete_link
+      FROM image join eleve on image.eleve_id=eleve.id Where image.eleve_id=$id;
+
+SELECT 'list' as component,
+    'Parcours : ' as title,
+    'Parcours : ' as empty_title,
+    'Aucune donnée correspondante pour cet élève' as empty_description;
+SELECT 
+      parcours.annee_id as title,
+      parcours.niveau as description,
+     'parcours_delete_confirm.sql?id='||parcours.id||'&eleve_id='||$id as delete_link
+      FROM parcours join eleve on parcours.eleve_id=eleve.id Where parcours.eleve_id=$id;
+
 -- Isolement de ses notifications dans une liste
 SELECT 
     'alert' as component,
@@ -80,6 +101,7 @@ SELECT
     END as color;
     --
 SELECT 'table' as component,
+    'Aucune donnée correspondante pour cet élève' as empty_description,
     'actions' AS markdown;
 SELECT 
       eleve.nom as Nom,
@@ -110,6 +132,7 @@ SELECT
     END as color;
     --
 SELECT 'table' as component,
+    'Aucune donnée correspondante pour cet élève' as empty_description,
     'actions' AS markdown;
 SELECT 
       eleve.nom as Nom,
@@ -140,6 +163,7 @@ SELECT
     END as color;
     --
 SELECT 'table' as component,
+    'Aucune donnée correspondante pour cet élève' as empty_description,
     'actions' AS markdown;
 SELECT 
       eleve.nom as Nom,

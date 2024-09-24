@@ -41,8 +41,8 @@ SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS propert
    select '-' as label, NULL as value ORDER BY niv ASC) having :Etablissement is not null;
     SELECT 'Classe' AS label, 'select' as type, 'classe' AS name, 2 as width, json_group_array(json_object('value', classe, 'label', classe)) as options from(select classe, classe from structure where etab_id=CAST(:Etablissement as integer) UNION ALL SELECT 'Aucune' as label, NULL as value   ORDER BY structure.classe ASC) having :Etablissement is not null;
     SELECT 'Référent' AS name, 'select' as type, 2 as width,
-    json_group_array(json_object("label" , nom_ens_ref, "value", id )) as options FROM (select nom_ens_ref, id FROM referent union all
-   select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC) having :Etablissement is not null;
+    json_group_array(json_object("label" , UPPER(username), "value", id )) as options FROM (select username, id FROM referent union all
+   select 'Aucun' as label, NULL as value ORDER BY username ASC) having :Etablissement is not null;
     SELECT 'Commentaire' AS label,'textarea' as type, 'comm_eleve' AS name where :Etablissement is not null;
 
 --Bouton du formulaire

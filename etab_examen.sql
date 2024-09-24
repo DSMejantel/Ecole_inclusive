@@ -109,6 +109,7 @@ SELECT 'table' as component,
     TRUE    as hover,
     TRUE    as small,
     'Actions' as markdown,
+    'aucune notification à cette date' as empty_description,
     1 as sort,
     1 as search
     where $tab='Élèves';

@@ -65,6 +65,15 @@ SELECT 'dispositif[]' as name, 'nouvelle situation' as label, 6 as width, 'selec
      Left Join affectation on affectation.dispositif_id=dispositif.id 
      AND affectation.eleve_id=$id;
 
-
+--Bouton supprimer le dispositif
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'sortir de tous les dispositifs' as title,
+    'suivi_dispo_delete_confirm.sql?id='||$id||'&eleve_edit='||$id as link,
+    'trash' as icon,
+    'red' as outline;    
 
 

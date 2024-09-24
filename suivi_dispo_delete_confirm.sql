@@ -6,13 +6,13 @@ SELECT 'redirect' AS component,
         'index.sql?restriction' AS link
         WHERE $group_id<'3';
 
---Menu
-SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
-  
-DELETE FROM eleve
-WHERE eleve.id = $id
+DELETE FROM affectation
+WHERE affectation.eleve_id = $eleve_edit
 RETURNING
-   'text' AS component,
-   'élève ' || nom ||  ' ' || prenom ||' supprimé.
+   'redirect' AS component,
+   'notification.sql?id='||$eleve_edit||'&tab=Profil' as link;
 
-[Retour à la liste des élèves](eleves.sql)' as contents_md;
+
+  
+
+

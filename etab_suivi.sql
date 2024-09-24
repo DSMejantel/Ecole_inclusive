@@ -101,13 +101,43 @@ SELECT
     $NB_aesh as description,
     'user-plus' as icon;
 --Onglets
-SET tab=coalesce($tab,'Acc');
+SET tab=coalesce($tab,'Tous');
 select 'tab' as component,
 1 as center;
+select  'Tous'  as title, 'users-group' as icon, 1  as active, 'etab_suivi.sql?id='||$id||'&tab=Tous' as link, CASE WHEN $tab='Tous' THEN 'orange' ELSE 'green' END as color;
 select  'Élèves avec Accompagnement'  as title, 'user-plus' as icon, 1  as active, 'etab_suivi.sql?id='||$id||'&tab=Acc' as link, CASE WHEN $tab='Acc' THEN 'orange' ELSE 'green' END as color;
 select  'Élèves sans Accompagnement' as title, 'user-off' as icon, 0 as active, 'etab_suivi.sql?id='||$id||'&tab=SansAcc' as link, CASE WHEN $tab='SansAcc' THEN 'orange' ELSE 'green' END as color;
 select  'Élèves en attente' as title, 'alert-triangle-filled' as icon, 1 as active, 'etab_suivi.sql?id='||$id||'&tab=Att' as link, CASE WHEN $tab='Att' THEN 'orange' ELSE 'green' END as color;
 select  'Derniers changements' as title, 'clock' as icon, 1 as active, 'etab_suivi.sql?id='||$id||'&tab=Last' as link, CASE WHEN $tab='Last' THEN 'orange' ELSE 'green' END as color;
+
+
+select 
+    'divider' as component,
+    'Tous les élèves de l''établissement' as contents,
+    'orange' as color
+        WHERE $tab='Tous';
+        
+SELECT 'table' as component,   
+    'Actions' as markdown,
+    1 as sort,
+    1 as search
+        WHERE $tab='Tous';
+ SELECT 
+    eleve.nom ||' '||eleve.prenom as Élève,
+    eleve.classe AS Classe,
+    eleve.niveau AS Niveau,
+    group_concat(DISTINCT dispositif.dispo) as Dispositif,    
+CASE WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id = amenag.eleve_id)
+THEN
+'[
+    ![](./icons/briefcase.svg)
+](notification.sql?id='||eleve.id||')' 
+ELSE
+'[
+    ![](./icons/alert-triangle-filled.svg)
+](notification.sql?id='||eleve.id||')' 
+END as Actions
+FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.etab_id=$id AND $tab='Tous' GROUP BY eleve.id ORDER BY eleve.nom; 
 
 -- Liste des suivis avec accompagnement
 -- create a temporary table to preprocess the data
@@ -123,6 +153,7 @@ SUBSTR(referent.prenom_ens_ref, 1, 1) ||'. '||referent.nom_ens_ref as ens_ref,
 datefin as datefin
 FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id LEFT JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where eleve.etab_id=$id group by notification.id;
 
+
 select 
     'divider' as component,
     'Liste des élèves avec accompagnement' as contents,
@@ -134,7 +165,7 @@ SELECT 'table' as component,
     'Temps' as markdown,
     'AESH' as markdown,
     'Suivi' as markdown,
-    'Fin_de_droit' as markdown,
+    'Expirés' as markdown,
     1 as small,
     1 as sort,
     1 as search
@@ -143,10 +174,10 @@ SELECT 'table' as component,
     eleve.id as _sqlpage_id,
     eleve.nom ||' '||eleve.prenom as Élève,
     CASE WHEN $group_id>2 THEN     suivi.temps||' h[
-    ![](./icons/triangle-inverted.svg)
+    ![](./icons/circle-minus.svg)
 ](/suivi/diminuer.sql?suivi='||suivi.id||'&ligne='||eleve.id||'&etab='||$id||' "diminuer")
      [
-    ![](./icons/triangle.svg)
+    ![](./icons/circle-plus.svg)
 ](/suivi/augmenter.sql?suivi='||suivi.id||'&ligne='||eleve.id||'&etab='||$id||' "augmenter")' 
     ELSE suivi.temps||' h' END as Temps,
     eleve.classe AS Classe,
@@ -155,9 +186,9 @@ SELECT 'table' as component,
     group_concat(distinct Etab_notif.droits_ouverts) as Droits,
     CASE
        WHEN group_concat(distinct Etab_notif.droits_fermes) <> '-' THEN   '[
-    ![](./icons/alert-octagon.svg)
+    ![](./icons/first-aid-kit-off.svg)
 ](/ "Fin de droit pour : '||group_concat(distinct Etab_notif.droits_fermes)||'")' 
-    ELSE '' END as Fin_de_droit,
+    ELSE '' END as Expirés,
     SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name||' ('||AESH_suivi.temps_calcul||'/'||aesh.quotite||')' as AESH,
        CASE
        WHEN ind=1 THEN 'ind'
@@ -167,7 +198,7 @@ SELECT 'table' as component,
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")[
     ![](./icons/pencil.svg)
-](/suivi/suivi_edit.sql?suivi='||suivi.id||'&etab='||$id||' "Éditer le suivi")[
+](/suivi/suivi_edit.sql?suivi='||suivi.id||'&eleve='||eleve.id||'&etab='||$id||' "Éditer le suivi")[
     ![](./icons/trash.svg)
 ](/suivi/suivi_delete_confirm.sql?suivi='||suivi.id||'&etab='||$id||' "Supprimer définitivement le suivi")'
     END as Suivi, 

@@ -80,9 +80,10 @@ SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on 
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id=$id);
 
 SET NB_aesh = coalesce((SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id),(SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id));
+SET NB_aesh = (SELECT count(distinct aesh.id) FROM aesh join user_info on user_info.username=aesh.username WHERE user_info.etab=$id);
 SET NB_accomp_ind = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and suivi.ind=1);
 SET NB_accomp_mut = $NB_accomp-$NB_accomp_ind;
-SET TPS_suivi_ind=(SELECT sum(distinct(suivi.temps*ind)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
+SET TPS_suivi_ind=(SELECT sum((suivi.temps*ind)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
 SET TPS_suivi_ext=(SELECT sum((suivi.temps)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on aesh.id=suivi.aesh_id JOIN user_info on user_info.username=aesh.username WHERE eleve.etab_id<>$id and user_info.etab=$id);
 SET TPS_suivi_rec=(SELECT sum((suivi.temps)) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id JOIN aesh on aesh.id=suivi.aesh_id JOIN user_info on user_info.username=aesh.username WHERE eleve.etab_id=$id and user_info.etab<>$id);
 SET AESH_quot=coalesce((SELECT sum(aesh.quotite) FROM aesh join user_info on user_info.username=aesh.username where user_info.etab=$id),0)-coalesce($TPS_suivi_ext,0) + coalesce($TPS_suivi_rec,0);
@@ -129,9 +130,15 @@ SELECT
     $TPS_suivi_ind as description,
     TRUE           as active,
     'clock' as icon;
-SELECT 
+/*SELECT 
 ' Heures brutes mutualisables par élève notifié (hors accompagnement individuel) ' as title,
     printf("%.2f",$Ratio_brut) as description,
+    TRUE           as active,
+    'clock-question' as icon;
+    */
+SELECT 
+' Heures en ULIS ' as title,
+    printf("%.2f",$AESH_ULIS) as description,
     TRUE           as active,
     'clock-question' as icon;
 SELECT 
@@ -157,7 +164,7 @@ SELECT 'table' as component,
     aesh.aesh_firstname as Prénom,
    aesh.quotite AS Quotité,
    sum((suivi.temps)*2/mut)/2 AS Suivis,
-   sum(distinct(suivi.temps*ind)) AS Individuel,  
+   sum((suivi.temps*ind)) AS Individuel,  
    coalesce(sum(distinct(aesh.tps_ULIS)),0) as ULIS, 
    coalesce(sum(distinct(aesh.tps_mission)),0) as Activités,
    coalesce(sum(distinct(aesh.tps_synthese)),0) as Synthèse,
@@ -171,7 +178,7 @@ SELECT 'table' as component,
          '[
     ![](./icons/user-plus.svg)
 ](aesh_suivi.sql?id='||aesh.id||'&tab=Profils "Fiche AESH")' as Actions
-  FROM suivi LEFT JOIN aesh on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id GROUP BY aesh.id;  
+  FROM aesh JOIN suivi on suivi.aesh_id=aesh.id JOIN eleve on suivi.eleve_id=eleve.id JOIN etab on eleve.etab_id = etab.id WHERE eleve.etab_id=$id  GROUP BY aesh.id;  
 /*
 -- Graphique
 select 

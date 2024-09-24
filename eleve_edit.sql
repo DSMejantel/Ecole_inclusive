@@ -108,8 +108,8 @@ select
    select '-' as label, NULL as value ORDER BY niv ASC);
   SELECT 'Classe' AS label, 'select' as type, 'classe' AS name, 2 as width, $classe_edit as value, json_group_array(json_object('value', classe, 'label', classe)) as options from(select classe, classe from structure where etab_id=CAST($etab_edit as integer) UNION ALL SELECT 'Aucune' as label, NULL as value   ORDER BY structure.classe ASC);
     SELECT 'Référent' AS name, 'select' as type, 3 as width, CAST($referent_edit as integer) as value,
-    json_group_array(json_object("label", nom_ens_ref, "value", id)) as options FROM (select nom_ens_ref, id FROM referent union all
-   select 'Aucun' as label, NULL as value ORDER BY nom_ens_ref ASC);
+    json_group_array(json_object("label", UPPER(username), "value", id)) as options FROM (select username, id FROM referent union all
+   select 'Aucun' as label, NULL as value ORDER BY username ASC);
     SELECT 'Commentaire' AS label, 'comm_eleve' AS name, $comm_edit as value,'textarea' as type, 12 as width;
     
 --Bouton du formulaire

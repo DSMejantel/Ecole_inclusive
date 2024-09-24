@@ -125,6 +125,7 @@ SELECT
     END AS _sqlpage_color,
       eleve.nom as Nom,
       eleve.prenom as Prénom,
+      eleve.classe as Classe,
     group_concat(distinct Etab_notif.droits_ouverts) as Droits,
     CASE
        WHEN group_concat(distinct Etab_notif.droits_fermes) <> '-' THEN   '[
