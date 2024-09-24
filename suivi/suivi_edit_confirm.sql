@@ -14,4 +14,4 @@ UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$eleve_edit;
 UPDATE suivi SET aesh_id=:AESH2, temps=:temps2, mut=:mutualisation2, ind=:individuel2, mission=:mission2 WHERE id=$id
 RETURNING
    'redirect' AS component,
-   '../etab_suivi.sql?id='||$etab||'&tab=Acc' as link;
+   '../etab_suivi.sql?id='||$etab||'&tab=Acc#'||$eleve as link;

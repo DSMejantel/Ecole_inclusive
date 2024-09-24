@@ -28,7 +28,7 @@ select
     'pill'   as shape;
 select 
     'Retour à la fiche élève' as title,
-    'notification.sql?id='||$eleve_edit|| '&tab=Suivi' as link,
+    '../etab_suivi.sql?id='||$etab||'&tab=Acc#'||$eleve as link,
     'arrow-back-up' as icon,
     'green' as outline;    
 
@@ -65,11 +65,11 @@ select
     SELECT 
     'form' as component,
     'Valider' as validate,
-    'suivi_edit_confirm.sql?id='||$suivi||'&etab='||$etab as action,
+    'suivi_edit_confirm.sql?id='||$suivi||'&etab='||$etab||'&eleve='||$eleve as action,
     'orange'           as validate_color;
     
      SELECT 'AESH' as label, 'AESH2' as name, 3 as width, CAST($aesh_edit as integer) as value, 'select' AS type, 
-     json_group_array(json_object("label", aesh_name, "value", id)) as options FROM aesh;
+     json_group_array(json_object("label", username, "value", id)) as options FROM (select * FROM aesh ORDER BY aesh_name ASC);
      SELECT 'Temps de suivi hebdomadaire' AS label, 'clock' as prefix_icon, 'temps2' AS name, 'number' as type, 0.5 as step, $temps_edit as value, 3 as width;     
      SELECT 'mutualisation' as label, 'mutualisation2' as name, 3 as width, CAST($mut_edit as integer) as value,'select' as type, '[{"label": "non", "value": 1}, {"label": "oui", "value": 2}]' as options;
      SELECT 'individuel' as label, 'individuel2' as name, 3 as width, CAST($ind_edit as integer) as value,'select' as type, '[{"label": "non", "value": 0}, {"label": "oui", "value": 1}]' as options;

@@ -27,7 +27,7 @@ SELECT 'form' as component,
     'suivi_ajout_confirm.sql?id='||$id||'&etab='||$etab as action,
     'Ajouter' as validate,
     'green'           as validate_color;
-SELECT 'AESH' as name, 'select' AS type, 3 as width, json_group_array(json_object("label", aesh_name, "value", id)) as options FROM (select * FROM aesh ORDER BY aesh_name ASC);
+SELECT 'AESH' as name, 'select' AS type, 3 as width, json_group_array(json_object("label", username, "value", id)) as options FROM (select * FROM aesh ORDER BY aesh_name ASC);
      SELECT 'Temps de suivi hebdomadaire' AS label, 'clock' as prefix_icon, 'temps' AS name, 'number' as type, 0.5 as step, 0 as value, 3 as width;     
      SELECT 'mutualisation' as name, 'select' as type, 3 as width, '[{"label": "non", "value": 1}, {"label": "oui", "value": 2}]' as options;
      SELECT 'individuel' as name, 'select' as type, 3 as width, '[{"label": "non", "value": 0}, {"label": "oui", "value": 1}]' as options, 0 as value;
