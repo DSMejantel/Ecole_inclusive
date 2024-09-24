@@ -114,7 +114,9 @@ SELECT
         coalesce(:important,0) as tracing
 	WHERE $intervention=1;
 
-UPDATE intervention SET horodatage=:horodatage,	nature=:nature, notes=:notes, tracing=coalesce(:important,0) WHERE eleve_id=$id and $intervention=2;
+UPDATE intervention SET horodatage=:horodatage,	nature=:nature, notes=:notes, tracing=coalesce(:important,0) WHERE intervention.id=$intervention_id and $intervention=2;
+
+UPDATE eleve SET modification=$modif, editeur=$edition WHERE id=$id and $intervention IS NOT NULL;
 	
 -- Menu spécifique élève : modifier, ajouter notif, ajouter suivi
 select 
@@ -122,7 +124,7 @@ select
     'sm'     as size,
     'pill'   as shape;
 select 
-    'Fiche élève' as title,
+    'Fiche' as title,
     'pencil' as icon,
     'red' as outline,
         $group_id<3 as disabled,
@@ -139,7 +141,7 @@ select
     'sm'     as size,
     'pill'   as shape;*/
 select 
-    '+ Document' as title,
+    '+ Docs' as title,
     'upload_documents_form.sql?id=' || $id as link,
         $group_bouton<3 as disabled,
     'book' as icon,
@@ -174,6 +176,12 @@ select
         $group_bouton<3 as disabled,
     'user-plus' as icon,
     'orange' as outline;
+select 
+    '+ Inclusion' as title,
+    'inclusion_ajout.sql?id=' || $id as link,
+        $group_bouton<3 as disabled,
+    'circles-relation' as icon,
+    'orange' as outline;
 
 -- écrire le nom de l'élève dans le titre de la page
 SELECT 
@@ -200,13 +208,15 @@ SELECT
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id = $id;
 select 
     etab.type||' '||etab.nom_etab||' ( UAI : '||etab.UAI||' )' as title,
-    CASE WHEN classe<>coalesce('Aucune','')
-    THEN 'Classe : ' || classe 
+    CASE WHEN classe<>coalesce('Aucune','') AND NOT EXISTS (SELECT $id FROM inclusion WHERE $id=inclusion.eleve_id)
+    THEN 'Classe : ' || classe
+    WHEN classe<>coalesce('Aucune','') AND EXISTS (SELECT $id FROM inclusion WHERE $id=inclusion.eleve_id)
+    THEN 'Classe : ' || classe ||' ('|| coalesce((SELECT group_concat(classe) FROM structure JOIN inclusion on structure.id=inclusion.classe_id WHERE inclusion.eleve_id = $id),'')||')' 
     ELSE 'Niveau : ' || (SELECT niv FROM niveaux JOIN eleve on niveaux.niv=eleve.niveau WHERE eleve.id = $id)
     END as description,
     1 as active, 'green' as color,
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
-    FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
+    FROM eleve JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
 
 -- Informations sur la dernière intervention     
 

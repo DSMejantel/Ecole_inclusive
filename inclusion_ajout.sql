@@ -3,7 +3,7 @@ SELECT 'redirect' AS component,
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 SELECT 'redirect' AS component,
-        'notification.sql?id='||$id||'&restriction' AS link
+        'notification.sql?restriction&id='||$id AS link
         WHERE $group_id<'3';
 
 --Menu
@@ -15,16 +15,12 @@ select
     'sm'     as size,
     'pill'   as shape;
 select 
-    'Retour à la liste' as title,
-    'eleves.sql' as link,
-    'arrow-back-up' as icon,
-    'green' as outline;      
-select 
     'Retour à la fiche élève' as title,
-    'notification.sql?id='|| $id || '&tab=Historique' as link,
-    'briefcase' as icon,
-    'green' as outline; 
-
+    'notification.sql?id='||$id|| '&tab=Profil' as link,
+    'arrow-back-up' as icon,
+    'green' as outline
+    FROM eleve WHERE eleve.id = $id;     
+  
 -- écrire le nom de l'élève dans le titre de la page
 SELECT 
     'datagrid' as component,
@@ -32,12 +28,11 @@ SELECT
   THEN image_url 
   ELSE './icons/profil.png'
   END as image_url,
-    UPPER(nom) || ' ' || prenom as title,
-    'Sexe : '||sexe||' - INE : '||INE as description
+    UPPER(nom) || ' ' || prenom as title
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
-    adresse||' '||code_postal||' '||commune as title,
-    'né(e) le :'||strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
+    'né(e) le :' as title,
+    strftime('%d/%m/%Y',eleve.naissance)   as description, 'black' as color,
     0 as active
     FROM eleve LEFT JOIN image on image.eleve_id=eleve.id WHERE eleve.id = $id;
 SELECT 
@@ -52,23 +47,33 @@ select
     1 as active, 'green' as color,
     'etab_classes.sql?id='||etab.id||'&classe_select='||eleve.classe as link
     FROM eleve INNER JOIN etab on eleve.etab_id=etab.id WHERE eleve.id = $id;
+  
+   
+SELECT 
+    'form' as component,
+    'Enregistrer' as validate,
+    'inclusion_confirm.sql?id='||$id||'&eleve_edit='||$id as action,    
+    'orange'           as validate_color;
     
--- Formulaire pour ajouter une intervention
-SELECT 'form' as component, 
-    'Noter un événement dans l''historique' as title, 
-    'notification.sql?id='||$id|| '&tab=Historique&intervention=1' as action,
-    'Ajouter' as validate,
-    'green'           as validate_color,
-    'Recommencer'           as reset;
-    
-    SELECT 'Date' AS label, 'horodatage' AS name, 'date' as type, (select date('now')) as value, 4 as width;
-    SELECT 'Nature' AS label, 'nature' AS name, 'select' as type,'[{"label": "ESS", "value": "ESS"}, {"label": "Info", "value": "Info"}, {"label": "RDV", "value": "RDV"}, {"label": "Tel", "value": "Tel"}, {"label": "Courrier", "value": "Courrier"}]' as options, 4 as width;
-    SELECT 'Important' AS label, 'important' AS name, 'checkbox' as type, 1 as value, 4 as width; 
-    SELECT 'Notes' AS label, 'notes' AS name, 'textarea' as type, 12 as width;
+SELECT 'inc[]' as name, 'classes d''inclusion' as label, 6 as width, 'select' as type, TRUE as required, TRUE as multiple, TRUE as dropdown,
+     'Les classes connues sont déjà sélectionnées.' as description,
+     json_group_array(json_object("label", classe, 
+     "value", structure.id,
+     'selected', inclusion.classe_id is not null
+     )) as options  
+     FROM structure
+     Left Join inclusion on inclusion.classe_id=structure.id 
+     AND inclusion.eleve_id=$id WHERE structure.etab_id=(SELECT etab_id from eleve WHERE eleve.id=$id);
 
-
-
-
-    
+--Bouton supprimer le dispositif
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape;
+select 
+    'supprimer toutes les inclusions' as title,
+    'inclusion_delete_confirm.sql?id='||$id||'&eleve_edit='||$id as link,
+    'trash' as icon,
+    'red' as outline;    
 
 

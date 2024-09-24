@@ -64,13 +64,22 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $cas_user=0;
 
+-- Insère ESS dans la base
+INSERT INTO intervention(eleve_id, horodatage,nature,notes)
+SELECT 
+	:eleve as eleve_id, 
+	:horodatage as horodatage, 
+	'ESS' as nature, 
+	:notes as notes
+	WHERE :notes is not null and $ess=1;
+
 -------Sous-Menu
 select 
     'button' as component,
     'lg'     as size,
     'center' as justify,
     'pill'   as shape;
-select 
+/*select 
     CASE COALESCE(sqlpage.cookie('session'), '')
         WHEN '' THEN 'Se connecter'
         ELSE 'Se déconnecter'
@@ -99,7 +108,7 @@ select
     END AS icon,
         'orange' as outline
         WHERE (SELECT etat FROM cas_service)=1;
-        
+*/        
         
 select 
     'Tableau de bord' as title,
@@ -145,7 +154,17 @@ select
     'calendrier_etab.sql' as link
     WHERE $group_id=1;    
 
-    
+select 
+    'card' as component,
+    2  as columns WHERE $group_id>0;
+select 
+    '/accueil/calendrier_etab.sql?_sqlpage_embed' as embed WHERE $group_id>0;
+select 
+    '/accueil/calendrier_form.sql?_sqlpage_embed' as embed WHERE $group_id>2 and $ess=1;
+select 
+    '/accueil/eleves_historique.sql?_sqlpage_embed' as embed WHERE $group_id>0;
+
+                
 SELECT 'hero' as component,
 'École Inclusive' as title,
     'Pôle d''Appui à la Scolarité' as description,

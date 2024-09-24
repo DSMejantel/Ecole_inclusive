@@ -70,7 +70,8 @@ select
 
 -- Sous-menu / classes
 SET classe_etab = (SELECT classe FROM eleve INNER JOIN etab on eleve.etab_id = etab.id where etab.id=$id)
-SET classe_select = coalesce($Classe, coalesce($classe_select, $classe_etab));
+SET classe_select = coalesce(:Classe, coalesce($classe_select, $classe_etab));
+SET classe_id_select = (SELECT structure.id FROM structure INNER JOIN etab on structure.etab_id=etab.id where structure.classe=$classe_select);
 /*
 select 
     'button' as component,
@@ -193,7 +194,52 @@ ELSE
 ]()'
 END
 as Admin
-  FROM eleve INNER JOIN etab on eleve.etab_id = etab.id LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id WHERE eleve.etab_id=$id and eleve.classe=$classe_select and $tab='Résumé' GROUP BY eleve.id ORDER BY eleve.nom ASC;  
+  FROM eleve LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id WHERE eleve.classe=$classe_select and $tab='Résumé' GROUP BY eleve.id 
+  UNION ALL
+SELECT 
+    eleve.nom as Nom,
+    eleve.prenom as Prénom,
+    group_concat(DISTINCT dispositif.dispo) as Dispositif,
+    group_concat(DISTINCT SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name) as AESH,
+     --    suivi.objectifs as Objectifs,
+   CASE
+       WHEN EXISTS (SELECT eleve.id FROM amenag 
+    WHERE eleve.id = amenag.eleve_id) THEN 'black'
+        ELSE 'red'
+    END AS _sqlpage_color,
+      CASE WHEN suivi.aesh_id>1 and $group_id>1 THEN  '[
+    ![](./icons/user-plus.svg)
+](aesh_suivi.sql?id='||suivi.aesh_id||'&tab=Profils "Fiche AESH") [
+    ![](./icons/briefcase.svg)
+](notification.sql?id='||eleve.id||'&tab=Profil "Dossier élève")' 
+WHEN EXISTS (SELECT eleve.id FROM amenag WHERE eleve.id = amenag.eleve_id)
+THEN
+'[
+    ![](./icons/briefcase.svg)
+](notification.sql?id='||eleve.id||' "Dossier élève")' 
+ELSE
+'[
+    ![](./icons/alert-triangle-filled.svg)
+](notification.sql?id='||eleve.id||' "Dossier incomplet pour l''élève")' 
+END as Actions,
+CASE WHEN EXISTS (SELECT eleve.id FROM examen_eleve WHERE eleve.id = examen_eleve.eleve_id)
+THEN
+'[
+    ![](./icons/school.svg)
+](notification.sql?id='||eleve.id||'&tab=Examen "Aménagements d''examen")' 
+ELSE ''
+END as Actions,
+CASE WHEN $group_id>2 THEN
+'[
+    ![](./icons/pencil.svg)
+](eleve_edit.sql?id='||eleve.id||')'
+ELSE
+'[
+    ![](./icons/pencil-off.svg)
+]()'
+END
+as Admin
+  FROM eleve JOIN inclusion on eleve.id=inclusion.eleve_id LEFT JOIN affectation on eleve.id=affectation.eleve_id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id WHERE inclusion.classe_id=$classe_id_select and $tab='Résumé' GROUP BY eleve.id ORDER BY eleve.nom ASC;  
   
 -- Télécharger les données
 SELECT 
