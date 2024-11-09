@@ -4,11 +4,11 @@ SELECT 'redirect' AS component,
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
 
 --Insertion dans la base
- INSERT INTO biblio(auteur, titre, salle) 
-    SELECT :auteur, :titre, :salle WHERE :titre IS NOT NULL  and $update is Null;
+ INSERT INTO audiolivre(auteur, titre, salle) 
+    SELECT :auteur, :titre, :salle WHERE :titre IS NOT NULL and $maj is Null;
     
-  UPDATE biblio 
-  SET  auteur=:auteur_edit, titre=:titre, salle=:salle WHERE id=$id and $update=1;
+  UPDATE audiolivre 
+  SET  auteur=:auteur_edit, titre=:titre, salle=:salle WHERE id=$id and $maj=1;
 
 --Menu
 SELECT 'dynamic' AS component,
@@ -31,6 +31,6 @@ select
     'card' as component,
      CASE WHEN $group_id>1 THEN 2 ELSE 1 END as columns;
 select 
-    '/biblio/liste.sql?_sqlpage_embed' as embed;
+    '/audiolivre/liste.sql?_sqlpage_embed' as embed;
 select 
-    '/biblio/form.sql?_sqlpage_embed' as embed where $group_id>1;
+    '/audiolivre/form.sql?_sqlpage_embed' as embed where $group_id>1;

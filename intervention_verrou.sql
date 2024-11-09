@@ -11,7 +11,7 @@ SELECT 'redirect' AS component,
 
 -- Suppression
 UPDATE intervention
-SET tracing=($imp-1)*(-1)
+SET verrou=($verrou-1)*(-1)
 WHERE id = $id 
 RETURNING
  'redirect' as component,

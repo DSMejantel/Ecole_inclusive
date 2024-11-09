@@ -11,6 +11,7 @@ SELECT 'redirect' AS component,
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
 -- Sous Menu   
+SET page='Types de notifications';
 select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
 
 -- Sous Menu Ajout/suppression modalité

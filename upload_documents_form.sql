@@ -60,7 +60,7 @@ select
 
 -- Formulaire pour ajouter une fiche
 select 'form' as component, 'Ajouter un document' as title, 'upload_documents.sql?id='||$id as action;
-select 'select' as type, 'type' as name, 'Catégorie' as label, '[{"label": "PPRE", "value": "PPRE"}, {"label": "PAP", "value": "PAP"}, {"label": "PAI", "value": "PAI"}, {"label": "Gevasco", "value": "Gevasco"}, {"label": "Notification", "value": "Notification"}, {"label": "Autre", "value": "Autre"}]' as options, 6 as width;
+select 'select' as type, 'type' as name, 'Catégorie' as label, '[{"label": "PPRE", "value": "PPRE"}, {"label": "PAP", "value": "PAP"}, {"label": "PAI", "value": "PAI"}, {"label": "Gevasco", "value": "Gevasco"}, {"label": "Notification", "value": "Notification"}, {"label": "Affectation", "value": "Affectation"}, {"label": "Évaluation", "value": "Évaluation"}, {"label": "Autre", "value": "Autre"}]' as options, 6 as width;
 select 'date' as type, 'datation' as name, 'Date' as label, TRUE as required, 6 as width;
 select 'file' as type, 'doc' as name, 'Document (en pdf)' as label, TRUE as required;
 

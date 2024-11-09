@@ -75,14 +75,15 @@ FROM Ref_notif LEFT JOIN eleve on Ref_notif.eleve_id = eleve.id LEFT JOIN suivi 
 SELECT 
     'csv' as component,
     'Exporter' as title,
-    'notifications_ref' as filename,
+    'notifications_'||nom_ens_ref||'_'||prenom_ens_ref as filename,
     'file-download' as icon,
-    'green' as color;
+    'green' as color
+          FROM referent WHERE referent.id = $id;;
 SELECT 
-     eleve.nom as Nom,
+   Ref_notif.etab_nom as Établissement,
+      eleve.nom as Nom,
       eleve.prenom as Prénom,
-   group_concat(DISTINCT modalite.type) as Droits,
-  etab.nom_etab as Établissement,
-  nom_ens_ref as Référent,
+   group_concat(DISTINCT Ref_notif.droits_ouverts) as Droits,
+   Ref_notif.Dpt as Dpt,
   strftime('%d/%m/%Y',datefin) AS Fin  
-FROM notification INNER JOIN eleve on notification.eleve_id = eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id JOIN referent on eleve.referent_id=referent.id JOIN etab on eleve.etab_id=etab.id Where referent.id=$id GROUP BY notification.eleve_id ORDER BY eleve.nom ASC;
+FROM Ref_notif LEFT JOIN eleve on Ref_notif.eleve_id = eleve.id LEFT JOIN suivi on eleve.id=suivi.eleve_id GROUP BY eleve.id ORDER BY eleve.nom, eleve.prenom;

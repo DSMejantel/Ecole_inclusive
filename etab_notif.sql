@@ -14,6 +14,9 @@ THEN sqlpage.read_file_as_text('index.json')
 ELSE sqlpage.read_file_as_text('menu.json')
             END    AS properties; 
 
+select 'dynamic' as component, sqlpage.run_sql('etab_menu.sql') as properties;
+
+/*
 select 
     'button' as component,
     'sm'     as size,
@@ -64,7 +67,7 @@ select
     'etab_trombi.sql?id=' || $id as link,
     'camera' as icon,
     'teal' as outline;
-
+*/
 
 
 -- Set a variable 

@@ -67,7 +67,7 @@ SELECT 'form' as component,
     'green'           as validate_color;
     
     SELECT 'Date' AS label, 'horodatage' AS name, 'date' as type, $date_edit as value, 4 as width;
-    SELECT 'Nature' AS label, 'nature' AS name, 'select' as type,'[{"label": "ESS", "value": "ESS"}, {"label": "Info", "value": "Info"}, {"label": "RDV", "value": "RDV"}, {"label": "Tel", "value": "Tel"}, {"label": "Courrier", "value": "Courrier"}]' as options, $nature_edit as value, 4 as width;
+    SELECT 'Nature' AS label, 'nature' AS name, 'select' as type,'[{"label": "ESS", "value": "ESS"}, {"label": "Synthèse", "value": "Synthèse"}, {"label": "Info", "value": "Info"}, {"label": "RDV", "value": "RDV"}, {"label": "Tel", "value": "Tel"}, {"label": "Courrier", "value": "Courrier"}]' as options, $nature_edit as value, 4 as width;
     SELECT 'Important' AS label, 'important' AS name, tracing=1 as checked, 'checkbox' as type, 1 as value, 4 as width FROM intervention WHERE id = $id; 
     SELECT 'Notes' AS label, 'notes' AS name, 'textarea' as type, $notes_edit as value, 12 as width;
 

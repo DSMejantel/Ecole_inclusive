@@ -69,9 +69,9 @@ select
 
 
 -- Sous-menu / classes
-SET classe_etab = (SELECT classe FROM eleve INNER JOIN etab on eleve.etab_id = etab.id where etab.id=$id)
-SET classe_select = coalesce(:Classe, coalesce($classe_select, $classe_etab));
-SET classe_id_select = (SELECT structure.id FROM structure INNER JOIN etab on structure.etab_id=etab.id where structure.classe=$classe_select);
+--SET classe_etab = (SELECT classe FROM eleve INNER JOIN etab on eleve.etab_id = etab.id where etab.id=$id)
+--SET classe_select = coalesce(:Classe, coalesce($classe_select, $classe_etab));
+--SET classe_id_select = (SELECT structure.id FROM structure INNER JOIN etab on structure.etab_id=etab.id where structure.classe=$classe_select);
 /*
 select 
     'button' as component,
@@ -99,13 +99,17 @@ select
     'Valider' as validate,
     'green'           as validate_color;   
      SELECT 'Classe' AS name, 'select' as type, 3 as width, $classe_select as value, json_group_array(json_object('label', classe, 'value', classe)) as options FROM (select distinct eleve.classe as classe, eleve.classe as value FROM eleve JOIN etab on eleve.etab_id=etab.id WHERE eleve.etab_id=$id  ORDER BY eleve.classe DESC);
-
+*/
 -- Calcul des variables établissement
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id and eleve.classe=$classe_select);
 -- Personnalisation NB_accomp pour version classe :
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id and eleve.classe=$classe_select);
 SET NB_notif = (SELECT count(notification.id) FROM notification JOIN eleve on notification.eleve_id = eleve.id WHERE eleve.etab_id = $id and eleve.classe=$classe_select);
 SET NB_aesh = (SELECT count(distinct suivi.aesh_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id and eleve.classe=$classe_select and suivi.aesh_id<>1);
+
+
+-- En-tête
+select 'dynamic' as component, sqlpage.run_sql('etab_menu.sql') as properties;
 
 -- écrire les infos de l'établissement dans le titre de la page [GRILLE]
 SELECT 
@@ -124,16 +128,18 @@ SELECT
 ' AESH ' as title,
     $NB_aesh as description,
     'user-plus' as icon;
-*/    
--- En-tête
-select 
+    
+
+
+/*select 
     'card' as component,
      2      as columns;
 select 
     '/classe/choix.sql?_sqlpage_embed'|| '&classe_select=' ||$classe_select||'&id=' || $id  as embed;
 select 
     '/classe/tableau.sql?_sqlpage_embed'|| '&classe_select=' ||$classe_select||'&id=' || $id as embed;
-  
+*/
+ 
 --Onglets
 SET tab=coalesce($tab,'Résumé');
 select 'tab' as component;
@@ -141,14 +147,19 @@ select 'tab' as component;
 select  'Résumé' as title, 'list-check' as icon, 1 as active, 'etab_classes.sql?id='||$id||'&classe_select='|| $classe_select||'&tab=Résumé' as link, CASE WHEN $tab='Résumé' THEN 'orange' ELSE 'green' END as color;    
 select  'Détails' as title, 'printer' as icon, 1 as active,'etab_classes.sql?id='||$id||'&classe_select='|| $classe_select||'&tab=Détails' as link, CASE WHEN $tab='Détails' THEN 'orange' ELSE 'green' END as color; 
 
+select 
+    'divider' as component,
+    4 as size,
+    'center' as position, 
+    $classe_select   as contents;
+
 -- Liste des élèves
 SELECT 'table' as component,
     TRUE    as hover,
     TRUE    as small,
     'Actions' as markdown,
     'Admin' as markdown,
-    1 as sort,
-    1 as search
+    1 as sort
     where $tab='Résumé';
     
 SELECT 
@@ -278,9 +289,6 @@ select
     'green' as outline
                where $tab='Détails';
 
-SELECT 'text' as component,
-   'Fiches des élèves suivis' as title
-           where $tab='Détails';
 
   SELECT 'table' as component, 
     TRUE    as hover,

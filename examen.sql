@@ -14,7 +14,8 @@ SELECT 'redirect' AS component,
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
--- Sous Menu   
+-- Sous Menu  
+SET page='Aménagements d''examen';   
 select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
 
 -- Liste et ajout

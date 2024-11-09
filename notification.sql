@@ -23,6 +23,11 @@ SET coordo = (SELECT sum(DISTINCT coordo) from eleve LEFT JOIN affectation on af
 -- Ouverture exceptionnelle de droits pour le professeur principal de la classe        
 SET group_id = coalesce((SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username join eleve WHERE login_session.id = sqlpage.cookie('session') and eleve.id=$id and user_info.classe<>eleve.classe), (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username join eleve WHERE login_session.id = sqlpage.cookie('session') and eleve.id=$id and user_info.classe is null), (coalesce((SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE login_session.id = sqlpage.cookie('session') and $coordo=1),3)));
 
+-- Ouverture exceptionnelle de droits pour l'équipe des réunions de synthèse        
+SET classe_eleve_id = (SELECT structure.id FROM structure JOIN eleve WHERE eleve.etab_id=structure.etab_id and eleve.classe=structure.classe and eleve.id=$id);
+SET group_synthese = coalesce((SELECT equipe_synthese.classe_id FROM equipe_synthese LEFT join user_info on  user_info.username=equipe_synthese.username  LEFT join login_session on user_info.username=login_session.username WHERE login_session.id = sqlpage.cookie('session') and equipe_synthese.classe_id=$classe_eleve_id), 0);
+  
+
 
 -- Message si droits insuffisants sur une page
 SELECT 'alert' as component,
@@ -105,13 +110,14 @@ SELECT
 	FROM eleve LEFT JOIN affectation on affectation.eleve_id=eleve.id LEFT JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE eleve.id=$id;
 	
 -- Insère note et info de l'historique dans la base
-INSERT INTO intervention(eleve_id, horodatage,nature,notes, tracing)
+INSERT INTO intervention(eleve_id, horodatage,nature,notes, tracing, verrou)
 SELECT 
 	$id as eleve_id, 
 	:horodatage as horodatage, 
 	:nature as nature, 
 	:notes as notes,
-        coalesce(:important,0) as tracing
+        coalesce(:important,0) as tracing,
+        coalesce(:verrou,0) as verrou        
 	WHERE $intervention=1;
 
 UPDATE intervention SET horodatage=:horodatage,	nature=:nature, notes=:notes, tracing=coalesce(:important,0) WHERE intervention.id=$intervention_id and $intervention=2;
@@ -511,19 +517,7 @@ SELECT
     WHERE $tab='Examen';
     
 -- Historique
-select 
-    'button' as component,
-    'sm'     as size,
-    'pill'   as shape,
-    'end' as justify
-    where $tab='Historique';
-select 
-    'intervention_ajout.sql?id=' || $id as link,
-    'plus' as icon,
-    'Ajouter'    as tooltip,
-    ''            as title
-    where $tab='Historique';
-    
+-- Parcours   
 SELECT 'table' as component
         where $tab='Historique';
 SELECT 
@@ -535,26 +529,76 @@ SELECT
 	referent_id as Référent,
 	aesh_id as AESH
 	FROM parcours JOIN etab on parcours.etab_id=etab.id WHERE eleve_id=$id and $tab='Historique' ORDER by annee_id;
-
+-- Ajout info dans historique
+select 
+    'button' as component,
+    'sm'     as size,
+    'pill'   as shape,
+    'end' as justify
+    where $tab='Historique';
+select 
+    'intervention_ajout.sql?id=' || $id as link,
+    'plus' as icon,
+    'orange' as color,
+    'Ajouter'    as tooltip,
+    ''            as title
+    where $tab='Historique';
+    
+-- Historique
 SELECT 'table' as component,
 	'Important' as markdown,
+	'Confidentiel'  as markdown,
 	'Actions' as markdown,
 	TRUE as sort
         where $tab='Historique';
 SELECT 
+	id as _sqlpage_id,
 	strftime('%d/%m/%Y',horodatage) as Date,
 	nature as Nature,
-	notes as Notes,
+	CASE WHEN verrou=1 and $group_id>2
+	THEN notes
+	WHEN verrou=1 and $group_synthese<>0
+	THEN notes
+	WHEN coalesce(verrou,0)=0
+	THEN notes
+	ELSE 'information masquée' END as Notes,
 	CASE WHEN tracing=1
-        THEN 'red' END as _sqlpage_color,
-        CASE WHEN tracing=1
+        THEN 'red' 
+        WHEN verrou=1
+        THEN 'vk' END as _sqlpage_color,
+        
+        CASE WHEN $group_id>2 and tracing=1
         THEN '[
     ![](./icons/select.svg)
 ](intervention_signale.sql?id='||intervention.id||'&imp=1&eleve='||eleve_id||' "Décocher")' 
-       ELSE '[
+       WHEN $group_id>2 and tracing=0 
+       THEN '[
     ![](./icons/square.svg)
 ](intervention_signale.sql?id='||intervention.id||'&imp=0&eleve='||eleve_id||' "Cocher")' 
+       WHEN $group_id<3 and tracing=1
+        THEN '[
+    ![](./icons/select.svg)](#'||intervention.id||')'
+           WHEN $group_id<3 and tracing=0 
+        THEN '[
+    ![](./icons/square.svg)](#'||intervention.id||')' 
        END as Important,
+       
+        CASE WHEN $group_id>2 and verrou=1
+        THEN '[
+    ![](./icons/lock.svg)
+](intervention_verrou.sql?id='||intervention.id||'&verrou=1&eleve='||eleve_id||' "Déverrouiller")' 
+       WHEN $group_id>2 and coalesce(verrou,0)=0
+       THEN '[
+    ![](./icons/lock-open-2.svg)
+](intervention_verrou.sql?id='||intervention.id||'&verrou=0&eleve='||eleve_id||' "Verrouiller")' 
+       WHEN $group_id<3 and verrou=1
+        THEN '[
+    ![](./icons/lock.svg)](#'||intervention.id||')' 
+       WHEN $group_id<3 and coalesce(verrou,0)=0
+        THEN '[
+    ![](./icons/lock-open-2.svg)](#'||intervention.id||')' 
+END as Confidentiel,
+
        CASE WHEN $group_id>2 THEN 
          '[
     ![](./icons/trash.svg)

@@ -12,6 +12,7 @@
             {"link": "fiches.sql", "title": "Fiches-outils" },
             {"link": "site.sql", "title": "Ressources en ligne" },
             {"link": "biblio.sql", "title": "Ressources bibliographiques" },
+            {"link": "audiolivre.sql", "title": "Livres audio" },
             {"link": "jeux.sql", "title": "Matériel de jeu" }
         ]},
         {"title": "Calendrier", "submenu": [

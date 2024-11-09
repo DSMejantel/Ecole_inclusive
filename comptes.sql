@@ -51,6 +51,7 @@ SELECT 'table' as component,
     1 as sort,
     1 as search;
 SELECT 
+  username as _sqlpage_id,
   nom AS Nom,
   prenom AS Prénom,
   username as Identifiant,
@@ -64,6 +65,9 @@ SELECT
   activation as Code,
   connexion as Connexion,
       '[
+    ![](./icons/circles-relation.svg)
+](equipe_ajout.sql?id='||username||')
+      [
     ![](./icons/pencil.svg)
 ](comptes_edit.sql?id='||username||')[
     ![](./icons/trash.svg)

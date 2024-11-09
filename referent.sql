@@ -18,7 +18,8 @@ SELECT 'alert' as component,
     'red' as color
 WHERE $restriction IS NOT NULL;  
 
--- Sous Menu   
+-- Sous Menu 
+SET page='Référents';  
 select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
         
 -- Sous Menu référent

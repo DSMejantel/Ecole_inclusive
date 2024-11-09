@@ -14,7 +14,10 @@ THEN sqlpage.read_file_as_text('index.json')
 ELSE sqlpage.read_file_as_text('menu.json')
             END    AS properties; 
 
+-- En-tête
+select 'dynamic' as component, sqlpage.run_sql('etab_menu.sql') as properties;
 
+/*
 -- Sous-menu / bascule
 select 
     'button' as component,
@@ -67,7 +70,8 @@ select
     'etab_trombi.sql?id=' || $id as link,
     'camera' as icon,
     'teal' as outline;
-    
+*/  
+/*  
 -- Sous-menu / dispositifs
 select 
     'button' as component,
@@ -88,7 +92,7 @@ select
     'lifebuoy' as icon,
     'green' as outline
     FROM etab INNER JOIN eleve on eleve.etab_id=etab.id JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id where etab.id=$id GROUP BY dispositif.dispo ORDER BY dispositif.dispo ASC;
-
+*/
 
 -- Personnalisation NB_eleve pour version dispositif :
 SET NB_accomp = (SELECT count(distinct affectation.eleve_id) FROM affectation JOIN eleve on affectation.eleve_id=eleve.id JOIN dispositif on dispositif.id=affectation.dispositif_id WHERE  eleve.etab_id=$id and affectation.dispositif_id=$dispo_select);

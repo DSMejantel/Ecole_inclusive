@@ -2,9 +2,17 @@ SELECT 'redirect' AS component,
         'signin.sql?error' AS link
  WHERE NOT EXISTS (SELECT 1 FROM login_session WHERE id=sqlpage.cookie('session'));
 SET group_id = (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE id = sqlpage.cookie('session'));
+
+-- Ouverture exceptionnelle de droits pour le professeur principal de la classe        
+SET group_id = coalesce((SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username join eleve WHERE login_session.id = sqlpage.cookie('session') and eleve.id=$id and user_info.classe<>eleve.classe), (SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username join eleve WHERE login_session.id = sqlpage.cookie('session') and eleve.id=$id and user_info.classe is null), (coalesce((SELECT user_info.groupe FROM login_session join user_info on user_info.username=login_session.username WHERE login_session.id = sqlpage.cookie('session') and $coordo=1),3)));
+
+-- Ouverture exceptionnelle de droits pour l'équipe des réunions de synthèse        
+SET classe_eleve_id = (SELECT structure.id FROM structure JOIN eleve WHERE eleve.etab_id=structure.etab_id and eleve.classe=structure.classe and eleve.id=$id);
+SET group_synthese = coalesce((SELECT equipe_synthese.classe_id FROM equipe_synthese LEFT join user_info on  user_info.username=equipe_synthese.username  LEFT join login_session on user_info.username=login_session.username WHERE login_session.id = sqlpage.cookie('session') and equipe_synthese.classe_id=$classe_eleve_id), 0);
+
 SELECT 'redirect' AS component,
         'notification.sql?id='||$id||'&restriction' AS link
-        WHERE $group_id<'3';
+        WHERE $group_id<3 AND $group_synthese=0;
 
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
@@ -62,8 +70,9 @@ SELECT 'form' as component,
     'Recommencer'           as reset;
     
     SELECT 'Date' AS label, 'horodatage' AS name, 'date' as type, (select date('now')) as value, 4 as width;
-    SELECT 'Nature' AS label, 'nature' AS name, 'select' as type,'[{"label": "ESS", "value": "ESS"}, {"label": "Info", "value": "Info"}, {"label": "RDV", "value": "RDV"}, {"label": "Tel", "value": "Tel"}, {"label": "Courrier", "value": "Courrier"}]' as options, 4 as width;
-    SELECT 'Important' AS label, 'important' AS name, 'checkbox' as type, 1 as value, 4 as width; 
+    SELECT 'Nature' AS label, 'nature' AS name, 'select' as type,'[{"label": "ESS", "value": "ESS"}, {"label": "Synthèse", "value": "Synthèse"},{"label": "Info", "value": "Info"}, {"label": "RDV", "value": "RDV"}, {"label": "Tel", "value": "Tel"}, {"label": "Courrier", "value": "Courrier"}]' as options, 4 as width;
+    SELECT 'Important' AS label, 'important' AS name, 'checkbox' as type, 1 as value, 2 as width; 
+    SELECT 'Masqué' AS label, 'verrou' AS name, 'checkbox' as type, 1 as value, 2 as width; 
     SELECT 'Notes' AS label, 'notes' AS name, 'textarea' as type, 12 as width;
 
 

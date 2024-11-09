@@ -10,6 +10,7 @@ SELECT 'redirect' AS component,
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
 -- Sous Menu   
+SET page='Établissements';  
 select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
     
     -- Enregistrer l''établissement dans la base

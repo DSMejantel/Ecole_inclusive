@@ -16,7 +16,8 @@ UPDATE structure SET etab_id=$etablissement_id WHERE etab_UAI=:etab
 --Menu
 SELECT 'dynamic' AS component, sqlpage.read_file_as_text('menu.json') AS properties;
   
--- Sous Menu   
+-- Sous Menu  
+SET page='Classes';   
 select 'dynamic' as component, sqlpage.run_sql('menu_parametres.sql') as properties;
     
 

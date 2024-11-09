@@ -14,7 +14,9 @@ THEN sqlpage.read_file_as_text('index.json')
 ELSE sqlpage.read_file_as_text('menu.json')
             END    AS properties; 
 
-
+-- En-tête
+select 'dynamic' as component, sqlpage.run_sql('etab_menu.sql') as properties;
+/*
 -- basculer vers notifications / Aesh
 select 
     'button' as component,
@@ -67,7 +69,7 @@ select
     'etab_trombi.sql?id=' || $id as link,
     'camera' as icon,
     'teal' as outline;
-
+*/
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE eleve.etab_id=$id);
@@ -239,18 +241,19 @@ SELECT
     WHERE $tab='Acc';
     SELECT 
     eleve.nom ||' '||eleve.prenom as Élève,
-    suivi.temps||' h' as Temps,
+    coalesce(suivi.temps,0)||' h' as Temps,
     eleve.classe AS Classe,
     eleve.niveau AS Niveau,
     group_concat(DISTINCT dispositif.dispo) as Dispositif,
-    group_concat(DISTINCT modalite.type) as Droits,
-    SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name||' ('||AESH_suivi.temps_calcul||'/'||aesh.quotite||')' as AESH,
+    coalesce((group_concat(distinct Etab_notif.droits_ouverts)),0) as Droits,
+    coalesce(SUBSTR(aesh.aesh_firstname, 1, 1) ||'. '||aesh.aesh_name||' ('||AESH_suivi.temps_calcul||'/'||aesh.quotite||')',0) as AESH,
        CASE
        WHEN ind=1 THEN 'ind'
        WHEN mut=2 THEN 'mut'
+       ELSE '-'
        END  AS Suivi,
-    datefin AS Fin 
-    FROM eleve JOIN etab on eleve.etab_id = etab.id JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN AESH_suivi on AESH_suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id WHERE eleve.etab_id=$id and dispositif.accomp=1 and $tab='Acc' GROUP BY eleve.id, suivi.id ORDER BY eleve.nom;
+    notification.datefin AS Fin 
+    FROM eleve JOIN etab on eleve.etab_id = etab.id LEFT JOIN Etab_notif on Etab_notif.eleve_id=eleve.id JOIN affectation on eleve.id=affectation.eleve_id JOIN dispositif on dispositif.id=affectation.dispositif_id LEFT JOIN suivi on suivi.eleve_id=eleve.id LEFT JOIN aesh on suivi.aesh_id=aesh.id LEFT JOIN AESH_suivi on AESH_suivi.aesh_id=aesh.id LEFT JOIN notification on notification.eleve_id=eleve.id LEFT join notif on notif.notification_id=notification.id LEFT join modalite on modalite.id=notif.modalite_id WHERE eleve.etab_id=$id and dispositif.accomp=1 and $tab='Acc' GROUP BY eleve.id, suivi.id ORDER BY eleve.classe; 
 
   -- Liste des suivis sans accompagnement
 select 

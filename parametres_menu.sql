@@ -3,8 +3,7 @@ select
 
 
 select 
-    'Paramètres' as title,
-    $page as value,
+    'Outils' as title,
     'orange'    as color,
     json_array(
     json_object(

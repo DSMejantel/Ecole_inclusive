@@ -11,6 +11,7 @@ sqlpage.read_file_as_text('menu.json')  AS properties where $group_id>1;
 
 set id_ent = coalesce((select user_cas from login_session where id = sqlpage.cookie('session')),'inactif');
 
+
 ---- Ligne d'identification de l'utilisateur et de son mode de connexion
 SELECT 'text' AS component;
 SELECT
@@ -123,7 +124,13 @@ SELECT
     'building-community' as icon,  
     'green' as outline
     where $group_id>1; 
-    
+select 
+    'Équipes de synthèse '||nom_etab as title,
+    'messages' as icon,
+    'green' as color,
+    'etab_synthese.sql?id=' || etab.id as link
+    FROM equipe_synthese JOIN structure on structure.id=equipe_synthese.classe_id  LEFT JOIN etab on etab.id=structure.etab_id where $group_id>2 GROUP BY etab.id; 
+        
 select 
     'button' as component,
     'sm'     as size,
@@ -134,6 +141,12 @@ select
     'building-community' as icon,
     'green' as color,
     'etab_carte.sql?id=' || user_info.etab as link
+     FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
+select 
+    'Équipes de synthèse' as title,
+    'messages' as icon,
+    'green' as color,
+    'etab_synthese.sql?id=' || user_info.etab as link
      FROM etab JOIN user_info on user_info.etab=etab.id join login_session on user_info.username=login_session.username WHERE $group_id=1 and login_session.id = sqlpage.cookie('session') GROUP BY etab.id;
 select 
     'Fiches des classes' as title,

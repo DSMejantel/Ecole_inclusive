@@ -13,7 +13,9 @@ CASE WHEN $group_id=1
 THEN sqlpage.read_file_as_text('index.json')
 ELSE sqlpage.read_file_as_text('menu.json')
             END    AS properties; 
-
+            
+select 'dynamic' as component, sqlpage.run_sql('etab_menu.sql') as properties;
+/*
 -- Sous-menu / bascule
 select 
     'button' as component,
@@ -67,7 +69,7 @@ select
     'etab_trombi.sql?id=' || $id as link,
     'camera' as icon,
     'teal' as outline;
-
+*/
 -- Set a variable 
 SET NB_eleve = (SELECT count(distinct eleve.id) FROM eleve where eleve.etab_id=$id);
 SET NB_accomp = (SELECT count(distinct suivi.eleve_id) FROM suivi JOIN eleve on suivi.eleve_id=eleve.id WHERE suivi.aesh_id<>1 and eleve.etab_id=$id);
