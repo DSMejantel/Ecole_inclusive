@@ -30,7 +30,7 @@ select
 select 
     strftime('%d/%m/%Y',horodatage) as Date,
     eleve.nom||' '||eleve.prenom||' ('||eleve.classe||')' as Élève,
-    notes as description,
+    SUBSTR(notes,0,15) as description,
     '[
     ![](./icons/briefcase.svg)
 ](notification.sql?id='||eleve.id||'&tab=Profil "Dossier de l''élève")' as Actions
