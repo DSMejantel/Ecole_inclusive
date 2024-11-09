@@ -7,6 +7,8 @@ SET group_id = (SELECT user_info.groupe FROM login_session join user_info on use
 -- Liste des dispositifs
 SELECT 'table' as component,
   TRUE as small,
+    TRUE as search,
+    'Aucune ressource pour le moment...' as empty_description,
   'Éditer' as markdown;
 SELECT 
   auteur AS Auteur,
